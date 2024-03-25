@@ -1,0 +1,1 @@
+typeSearchIndex = [{"p":"dev.creoii.greatbigworld.adventures","l":"Adventures"},{"p":"dev.creoii.greatbigworld.adventures.client","l":"AdventuresClient"},{"l":"All Classes and Interfaces","u":"allclasses-index.html"},{"p":"dev.creoii.greatbigworld.adventures.mixin","l":"InGameHudMixin"}];updateSearchResults();

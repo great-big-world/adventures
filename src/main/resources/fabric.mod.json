@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "id": "adventures",
+  "version": "${version}",
+  "name": "Adventures",
+  "description": "",
+  "authors": [
+    "creoii"
+  ],
+  "contact": {},
+  "license": "All Rights Reserved",
+  "icon": "assets/adventures/icon.png",
+  "environment": "*",
+  "accessWidener": "adventures.accesswidener",
+  "entrypoints": {
+    "main": [
+      "dev.creoii.greatbigworld.adventures.Adventures"
+    ],
+    "client": [
+      "dev.creoii.greatbigworld.adventures.client.AdventuresClient"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "fabric": "*",
+    "minecraft": "${minecraft_version}"
+  },
+  "mixins": [
+    "adventures.mixins.json"
+  ],
+  "custom": {
+    "modmenu": {
+      "parent": {
+        "id": "great_big_world",
+        "name": "Great Big World",
+        "description": ""
+      }
+    }
+  }
+}

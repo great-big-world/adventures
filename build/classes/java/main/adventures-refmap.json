@@ -1,0 +1,16 @@
+{
+  "mappings": {
+    "dev/creoii/greatbigworld/adventures/mixin/InGameHudMixin": {
+      "Lnet/minecraft/client/gui/hud/SubtitlesHud;render(Lnet/minecraft/client/gui/DrawContext;)V": "Lnet/minecraft/class_359;method_1957(Lnet/minecraft/class_332;)V",
+      "render": "Lnet/minecraft/class_329;method_1753(Lnet/minecraft/class_332;F)V"
+    }
+  },
+  "data": {
+    "named:intermediary": {
+      "dev/creoii/greatbigworld/adventures/mixin/InGameHudMixin": {
+        "Lnet/minecraft/client/gui/hud/SubtitlesHud;render(Lnet/minecraft/client/gui/DrawContext;)V": "Lnet/minecraft/class_359;method_1957(Lnet/minecraft/class_332;)V",
+        "render": "Lnet/minecraft/class_329;method_1753(Lnet/minecraft/class_332;F)V"
+      }
+    }
+  }
+}
