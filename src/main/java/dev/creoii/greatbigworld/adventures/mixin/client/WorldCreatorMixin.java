@@ -1,4 +1,4 @@
-package dev.creoii.greatbigworld.adventures.mixin;
+package dev.creoii.greatbigworld.adventures.mixin.client;
 
 import dev.creoii.greatbigworld.adventures.util.ExtendedWorldCreator;
 import dev.creoii.greatbigworld.adventures.util.WorldStartWeather;

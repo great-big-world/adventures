@@ -15,8 +15,12 @@
   "time.midnight": "Midnight",
   "time.sunrise": "Sunrise",
   "worldSize.infinite": "Infinite",
+  "worldSize.2x": "2 x 2",
+  "worldSize.4x": "4 x 4",
+  "worldSize.8x": "8 x 8",
   "worldSize.16x": "16 x 16",
   "worldSize.32x": "32 x 32",
+  "worldSize.48x": "48 x 48",
   "worldSize.64x": "64 x 64",
   "worldSize.128x": "128 x 128",
   "worldSize.256x": "256 x 256",
@@ -24,5 +28,7 @@
   "worldSize.1028x": "1028 x 1028",
   "worldSize.2056x": "2056 x 2056",
   "worldSize.4092x": "4092 x 4092",
-  "worldSize.16368x": "16368 x 16368"
+  "worldSize.8184x": "8184 x 8184",
+  "worldSize.16368x": "16368 x 16368",
+  "worldSize.32736x": "32736 x 32736"
 }

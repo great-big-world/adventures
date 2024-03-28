@@ -1,4 +1,4 @@
-package dev.creoii.greatbigworld.adventures.mixin;
+package dev.creoii.greatbigworld.adventures.mixin.client;
 
 import com.llamalad7.mixinextras.sugar.Local;
 import dev.creoii.greatbigworld.adventures.client.gui.OptionSliderWidget;

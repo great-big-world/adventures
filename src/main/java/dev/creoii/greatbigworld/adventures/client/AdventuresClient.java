@@ -24,16 +24,14 @@ public class AdventuresClient implements ClientModInitializer {
                     List<String> texts = new ArrayList<>();
                     if (clientPlayer.getInventory().containsAny(stack -> stack.isOf(Items.COMPASS))) {
                         String text = clientPlayer.getBlockX() + ", " + clientPlayer.getBlockY() + ", " + clientPlayer.getBlockZ();
-                        texts.add("\uD83E\uDDED " + text);
-                        // add cardinal direction?
+                        texts.add(clientPlayer.getHorizontalFacing().name().charAt(0) + ": " + text);
                     }
                     if (clientPlayer.getInventory().containsAny(stack -> stack.isOf(Items.RECOVERY_COMPASS))) {
                         Optional<GlobalPos> deathPos = clientPlayer.getLastDeathPos();
                         if (deathPos.isPresent()) {
                             BlockPos pos = deathPos.get().getPos();
                             String text = pos.getX() + ", " + pos.getY() + ", " + pos.getZ();
-                            texts.remove(0);
-                            texts.add(0, "\uD83E\uDEA6 " + text);
+                            texts.set(0, "\uD83E\uDEA6 " + text);
                         }
                     }
                     if (clientPlayer.getInventory().containsAny(stack -> stack.isOf(Items.CLOCK))) {

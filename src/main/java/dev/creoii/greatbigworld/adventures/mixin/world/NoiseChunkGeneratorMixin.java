@@ -1,4 +1,4 @@
-package dev.creoii.greatbigworld.adventures.mixin;
+package dev.creoii.greatbigworld.adventures.mixin.world;
 
 import dev.creoii.greatbigworld.adventures.util.ExtendedChunkGenerator;
 import net.minecraft.world.ChunkRegion;

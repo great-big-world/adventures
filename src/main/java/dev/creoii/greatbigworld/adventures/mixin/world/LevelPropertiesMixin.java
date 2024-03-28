@@ -1,4 +1,4 @@
-package dev.creoii.greatbigworld.adventures.mixin;
+package dev.creoii.greatbigworld.adventures.mixin.world;
 
 import com.mojang.serialization.Dynamic;
 import com.mojang.serialization.Lifecycle;
