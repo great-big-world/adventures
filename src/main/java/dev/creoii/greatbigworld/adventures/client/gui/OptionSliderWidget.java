@@ -7,23 +7,27 @@ import java.util.Arrays;
 import java.util.function.Consumer;
 
 public abstract class OptionSliderWidget<T> extends SliderWidget {
+    public T tValue;
+    private final boolean clamp;
     private final Consumer<T> valueApplier;
     private final T[] values;
-    public T tValue;
 
     @SafeVarargs
-    public OptionSliderWidget(int x, int y, int width, int height, T value, Consumer<T> valueApplier, T... values) {
+    public OptionSliderWidget(int x, int y, int width, int height, T value, boolean clamp, Consumer<T> valueApplier, T... values) {
         super(x, y, width, height, Text.empty(), 0d);
-        this.valueApplier = valueApplier;
-        this.values = values;
         tValue = value;
         this.value = findPercentValue(values, value);
+        this.clamp = clamp;
+        this.valueApplier = valueApplier;
+        this.values = values;
         updateMessage();
     }
 
     @Override
     protected void applyValue() {
         tValue = findClosestValue(values, value);
+        if (clamp)
+            value = findPercentValue(values, tValue);
         valueApplier.accept(tValue);
     }
 

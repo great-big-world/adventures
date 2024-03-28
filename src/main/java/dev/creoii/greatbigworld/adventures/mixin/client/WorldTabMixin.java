@@ -35,7 +35,7 @@ public class WorldTabMixin {
         adder.add(CyclingButtonWidget.builder(WorldStartWeather::getTranslatableName).values(WorldStartWeather.values()).build(0, 0, 150, 20, START_WEATHER_TEXT, (button, weather) -> {
             ((ExtendedWorldCreator) createWorldScreen.getWorldCreator()).gbw$setStartWeather(weather);
         }));
-        adder.add(new OptionSliderWidget<WorldStartTime>(0, 0, 150, 20, WorldStartTime.MORNING, value -> {
+        adder.add(new OptionSliderWidget<WorldStartTime>(0, 0, 150, 20, WorldStartTime.MORNING, true, value -> {
             ((ExtendedWorldCreator) createWorldScreen.getWorldCreator()).gbw$setStartTime(value.getTime());
         }, WorldStartTime.values()) {
             @Override
@@ -50,7 +50,7 @@ public class WorldTabMixin {
     @Unique
     @NotNull
     private static OptionSliderWidget<WorldSize> createWorldSizeWidget(CreateWorldScreen createWorldScreen) {
-        OptionSliderWidget<WorldSize> worldSizeWidget = new OptionSliderWidget<>(0, 0, 150, 20, WorldSize.INFINITE, value -> {
+        OptionSliderWidget<WorldSize> worldSizeWidget = new OptionSliderWidget<>(0, 0, 150, 20, WorldSize.INFINITE, true, value -> {
             ((ExtendedWorldCreator) createWorldScreen.getWorldCreator()).gbw$setWorldSize(value.getSize() / 2);
         }, WorldSize.values()) {
             @Override
