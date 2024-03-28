@@ -44,4 +44,15 @@ public abstract class NoiseChunkGeneratorMixin extends ChunkGenerator {
             }
         }
     }
+
+    @Inject(method = "buildSurface(Lnet/minecraft/world/ChunkRegion;Lnet/minecraft/world/gen/StructureAccessor;Lnet/minecraft/world/gen/noise/NoiseConfig;Lnet/minecraft/world/chunk/Chunk;)V", at = @At("HEAD"), cancellable = true)
+    private void gbw$limitBuildSurface(ChunkRegion region, StructureAccessor structures, NoiseConfig noiseConfig, Chunk chunk, CallbackInfo ci) {
+        if (this instanceof ExtendedChunkGenerator extendedChunkGenerator) {
+            int x = chunk.getPos().x;
+            int z = chunk.getPos().z;
+            if (extendedChunkGenerator.gbw$getWorldSize() > 0 && (x >= extendedChunkGenerator.gbw$getWorldSize() || x < -extendedChunkGenerator.gbw$getWorldSize() || z >= extendedChunkGenerator.gbw$getWorldSize() || z < -extendedChunkGenerator.gbw$getWorldSize())) {
+                ci.cancel();
+            }
+        }
+    }
 }

@@ -2,7 +2,7 @@ package dev.creoii.greatbigworld.adventures.util;
 
 import net.minecraft.text.Text;
 
-public enum Weather {
+public enum WorldStartWeather {
     CLEAR("clear"),
     RAIN("rain"),
     THUNDER("thunder"),
@@ -10,7 +10,7 @@ public enum Weather {
 
     private final String name;
 
-    Weather(String name) {
+    WorldStartWeather(String name) {
         this.name = name;
     }
 

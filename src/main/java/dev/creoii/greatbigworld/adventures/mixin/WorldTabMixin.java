@@ -1,14 +1,19 @@
 package dev.creoii.greatbigworld.adventures.mixin;
 
 import com.llamalad7.mixinextras.sugar.Local;
+import dev.creoii.greatbigworld.adventures.client.gui.OptionSliderWidget;
 import dev.creoii.greatbigworld.adventures.util.ExtendedWorldCreator;
-import dev.creoii.greatbigworld.adventures.util.Weather;
+import dev.creoii.greatbigworld.adventures.util.WorldStartTime;
+import dev.creoii.greatbigworld.adventures.util.WorldStartWeather;
+import dev.creoii.greatbigworld.adventures.util.WorldSize;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screen.world.CreateWorldScreen;
+import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.*;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
+import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -27,39 +32,33 @@ public class WorldTabMixin {
 
     @Inject(method = "<init>", at = @At("TAIL"))
     private void gbw$addNewWorldOptions(CreateWorldScreen createWorldScreen, CallbackInfo ci, @Local GridWidget.Adder adder) {
-        adder.add(CyclingButtonWidget.builder(Weather::getTranslatableName).values(Weather.values()).build(0, 0, 150, 20, START_WEATHER_TEXT, (button, weather) -> {
+        adder.add(CyclingButtonWidget.builder(WorldStartWeather::getTranslatableName).values(WorldStartWeather.values()).build(0, 0, 150, 20, START_WEATHER_TEXT, (button, weather) -> {
             ((ExtendedWorldCreator) createWorldScreen.getWorldCreator()).gbw$setStartWeather(weather);
         }));
-        adder.add(new SliderWidget(0, 0, 150, 20, MutableText.of(START_TIME_TEXT.getContent()).append(": 0"), 0d) {
+        adder.add(new OptionSliderWidget<WorldStartTime>(0, 0, 150, 20, WorldStartTime.MORNING, value -> {
+            ((ExtendedWorldCreator) createWorldScreen.getWorldCreator()).gbw$setStartTime(value.getTime());
+        }, WorldStartTime.values()) {
             @Override
             protected void updateMessage() {
-                setMessage(MutableText.of(START_TIME_TEXT.getContent()).append(": " + (long) (value * 24000L)));
-            }
-
-            @Override
-            protected void applyValue() {
-                ((ExtendedWorldCreator) createWorldScreen.getWorldCreator()).gbw$setStartTime((long) (value * 24000L));
+                setMessage(MutableText.of(START_TIME_TEXT.getContent()).append(": ").append(tValue.getTranslatableName()));
             }
         });
-        adder.add(new SliderWidget(0, 0, 150, 20, MutableText.of(WORLD_SIZE_TEXT.getContent()).append(": Infinite"), 0d) {
+        OptionSliderWidget<WorldSize> worldSizeWidget = createWorldSizeWidget(createWorldScreen);
+        adder.add(worldSizeWidget);
+    }
+
+    @Unique
+    @NotNull
+    private static OptionSliderWidget<WorldSize> createWorldSizeWidget(CreateWorldScreen createWorldScreen) {
+        OptionSliderWidget<WorldSize> worldSizeWidget = new OptionSliderWidget<>(0, 0, 150, 20, WorldSize.FIVE_HUNDRED_TWELVE, value -> {
+            ((ExtendedWorldCreator) createWorldScreen.getWorldCreator()).gbw$setWorldSize(value.getSize() / 2);
+        }, WorldSize.values()) {
             @Override
             protected void updateMessage() {
-                if (value == 0d) {
-                    setMessage(MutableText.of(WORLD_SIZE_TEXT.getContent()).append(": Infinite"));
-                } else {
-                    int worldSizeRadius = (int) (value * 4800);
-                    setMessage(MutableText.of(WORLD_SIZE_TEXT.getContent()).append(": " + worldSizeRadius + " x " + worldSizeRadius));
-                }
+                setMessage(MutableText.of(WORLD_SIZE_TEXT.getContent()).append(": ").append(tValue.getTranslatableName()));
             }
-
-            @Override
-            protected void applyValue() {
-                if (value == 0d) {
-                    ((ExtendedWorldCreator) createWorldScreen.getWorldCreator()).gbw$setWorldSize(-1);
-                } else {
-                    ((ExtendedWorldCreator) createWorldScreen.getWorldCreator()).gbw$setWorldSize((int) ((value * 4800) / 2));
-                }
-            }
-        });
+        };
+        worldSizeWidget.setTooltip(Tooltip.of(Text.translatable("selectWorld.worldSize.description")));
+        return worldSizeWidget;
     }
 }

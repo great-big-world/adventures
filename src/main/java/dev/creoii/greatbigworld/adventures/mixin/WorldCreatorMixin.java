@@ -1,7 +1,7 @@
 package dev.creoii.greatbigworld.adventures.mixin;
 
 import dev.creoii.greatbigworld.adventures.util.ExtendedWorldCreator;
-import dev.creoii.greatbigworld.adventures.util.Weather;
+import dev.creoii.greatbigworld.adventures.util.WorldStartWeather;
 import net.minecraft.client.gui.screen.world.WorldCreator;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -13,7 +13,7 @@ public class WorldCreatorMixin implements ExtendedWorldCreator {
     @Unique
     private long startTime = 0L;
     @Unique
-    private Weather startWeather = Weather.CLEAR;
+    private WorldStartWeather startWeather = WorldStartWeather.CLEAR;
 
     @Override
     public void gbw$setWorldSize(int worldSize) {
@@ -26,7 +26,7 @@ public class WorldCreatorMixin implements ExtendedWorldCreator {
     }
 
     @Override
-    public void gbw$setStartWeather(Weather startWeather) {
+    public void gbw$setStartWeather(WorldStartWeather startWeather) {
         this.startWeather = startWeather;
     }
 
@@ -41,7 +41,7 @@ public class WorldCreatorMixin implements ExtendedWorldCreator {
     }
 
     @Override
-    public Weather gbw$getStartWeather() {
+    public WorldStartWeather gbw$getStartWeather() {
         return startWeather;
     }
 }
