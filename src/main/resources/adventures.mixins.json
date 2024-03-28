@@ -5,9 +5,11 @@
   "compatibilityLevel": "JAVA_17",
   "mixins": [
     "ChunkGeneratorMixin",
+    "FlowableFluidMixin",
     "LevelPropertiesMixin",
     "NoiseChunkGeneratorMixin",
-    "ServerWorldMixin"
+    "ServerWorldMixin",
+    "WorldMixin"
   ],
   "client": [
     "CreateWorldScreenMixin",

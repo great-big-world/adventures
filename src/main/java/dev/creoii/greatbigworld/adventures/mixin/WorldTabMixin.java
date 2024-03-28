@@ -50,7 +50,7 @@ public class WorldTabMixin {
     @Unique
     @NotNull
     private static OptionSliderWidget<WorldSize> createWorldSizeWidget(CreateWorldScreen createWorldScreen) {
-        OptionSliderWidget<WorldSize> worldSizeWidget = new OptionSliderWidget<>(0, 0, 150, 20, WorldSize.FIVE_HUNDRED_TWELVE, value -> {
+        OptionSliderWidget<WorldSize> worldSizeWidget = new OptionSliderWidget<>(0, 0, 150, 20, WorldSize.INFINITE, value -> {
             ((ExtendedWorldCreator) createWorldScreen.getWorldCreator()).gbw$setWorldSize(value.getSize() / 2);
         }, WorldSize.values()) {
             @Override

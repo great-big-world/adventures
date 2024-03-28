@@ -49,7 +49,7 @@ public class CreateWorldScreenMixin {
                 int worldSize = extendedWorldCreator.gbw$getWorldSize();
                 extendedLevelProperties.gbw$setWorldSize(worldSize);
                 if (worldSize > 0)
-                    levelProperties.getWorldBorder().size = worldSize * 2 * 16;
+                    levelProperties.getWorldBorder().size = (worldSize * 2d * 16d) - .5d;
             }
         }
     }
