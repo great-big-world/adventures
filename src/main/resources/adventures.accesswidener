@@ -1,1 +1,6 @@
 accessWidener v2 named
+accessible class net/minecraft/client/gui/screen/world/CreateWorldScreen$WorldTab
+
+accessible field net/minecraft/client/gui/screen/Screen client Lnet/minecraft/client/MinecraftClient;
+accessible field net/minecraft/world/border/WorldBorder$Properties size D
+mutable field net/minecraft/world/border/WorldBorder$Properties size D

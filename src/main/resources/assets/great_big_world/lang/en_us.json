@@ -1,0 +1,10 @@
+{
+  "selectWorld.furtherCustomizationOptions": "Further Customization Options",
+  "selectWorld.startTime": "Start Time",
+  "selectWorld.startWeather": "Start Weather",
+  "selectWorld.worldSize": "World Size",
+  "weather.clear": "Clear",
+  "weather.rain": "Rain",
+  "weather.thunder": "Thunder",
+  "weather.random": "Random"
+}
