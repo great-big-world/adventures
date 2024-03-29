@@ -27,6 +27,6 @@ public enum WorldStartTime {
     }
 
     public Text getTranslatableName() {
-        return Text.translatable("time." + name);
+        return Text.translatable("time." + getName());
     }
 }

@@ -32,9 +32,6 @@ public enum WorldSize {
     }
 
     public Text getTranslatableName() {
-        if (this == INFINITE) {
-            return Text.translatable("worldSize.infinite");
-        }
-        return Text.translatable("worldSize." + getSize() + "x");
+        return this == INFINITE ? Text.translatable("worldSize.infinite") : Text.translatable("worldSize." + getSize() + "x");
     }
 }

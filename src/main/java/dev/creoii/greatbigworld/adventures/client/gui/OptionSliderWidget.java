@@ -31,27 +31,11 @@ public abstract class OptionSliderWidget<T> extends SliderWidget {
         valueApplier.accept(tValue);
     }
 
-    private static <T> T findClosestValue(T[] array, double target) {
-        if (array == null || array.length == 0) {
-            throw new IllegalArgumentException("Array must not be null or empty");
-        }
-        if (target < 0 || target > 1) {
-            throw new IllegalArgumentException("Target value must be between 0 and 1");
-        }
-
-        int index = Math.round((float) target * (array.length - 1));
-        return array[index];
+    private static <T> T findClosestValue(T[] array, double index) {
+        return array[Math.round((float) index * (array.length - 1))];
     }
 
     private static <T> float findPercentValue(T[] array, T target) {
-        if (array == null || array.length == 0) {
-            throw new IllegalArgumentException("Array must not be null or empty");
-        }
-        if (!Arrays.asList(array).contains(target)) {
-            throw new IllegalArgumentException("Target value not found in the array");
-        }
-
-        int index = Arrays.asList(array).indexOf(target);
-        return (float) index / (array.length - 1);
+        return (float) Arrays.asList(array).indexOf(target) / (array.length - 1);
     }
 }
