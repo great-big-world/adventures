@@ -1,9 +1,11 @@
 package dev.creoii.greatbigworld.adventures.client;
 
+import dev.creoii.greatbigworld.adventures.registry.AdventuresItems;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.Items;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.GlobalPos;
@@ -22,11 +24,12 @@ public class AdventuresClient implements ClientModInitializer {
                 ClientPlayerEntity clientPlayer = CLIENT.player;
                 if (clientPlayer != null && CLIENT.world != null) {
                     List<String> texts = new ArrayList<>();
-                    if (clientPlayer.getInventory().containsAny(stack -> stack.isOf(Items.COMPASS))) {
+                    PlayerInventory inventory = clientPlayer.getInventory();
+                    if (inventory.containsAny(stack -> stack.isOf(Items.COMPASS))) {
                         String text = clientPlayer.getBlockX() + ", " + clientPlayer.getBlockY() + ", " + clientPlayer.getBlockZ();
-                        texts.add(clientPlayer.getHorizontalFacing().name().charAt(0) + ": " + text);
+                        texts.add("\uD83E\uDDED " + text);
                     }
-                    if (clientPlayer.getInventory().containsAny(stack -> stack.isOf(Items.RECOVERY_COMPASS))) {
+                    if (inventory.containsAny(stack -> stack.isOf(Items.RECOVERY_COMPASS))) {
                         Optional<GlobalPos> deathPos = clientPlayer.getLastDeathPos();
                         if (deathPos.isPresent()) {
                             BlockPos pos = deathPos.get().getPos();
@@ -34,7 +37,10 @@ public class AdventuresClient implements ClientModInitializer {
                             texts.set(0, "\uD83E\uDEA6 " + text);
                         }
                     }
-                    if (clientPlayer.getInventory().containsAny(stack -> stack.isOf(Items.CLOCK))) {
+                    if (inventory.containsAny(stack -> stack.isOf(AdventuresItems.ASTROLABE))) {
+                        texts.add("\uD83D\uDD50 " + clientPlayer.getHorizontalFacing().name());
+                    }
+                    if (inventory.containsAny(stack -> stack.isOf(Items.CLOCK))) {
                         /*long time = CLIENT.world.getTimeOfDay() * 50;
                         Date date = new Date(time);
                         texts.add("\uD83D\uDD50 " + new SimpleDateFormat("HH:mm").format(date));*/
