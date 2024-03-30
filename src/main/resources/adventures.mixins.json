@@ -4,8 +4,10 @@
   "package": "dev.creoii.greatbigworld.adventures.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-    "world.ChunkGeneratorMixin",
+    "CompassItemMixin",
     "FlowableFluidMixin",
+    "PlayerEntityMixin",
+    "world.ChunkGeneratorMixin",
     "world.LevelPropertiesMixin",
     "world.NoiseChunkGeneratorMixin",
     "world.ServerWorldMixin",
