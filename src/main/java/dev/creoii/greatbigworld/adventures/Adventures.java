@@ -22,12 +22,10 @@ public class Adventures implements ModInitializer {
                 if (stack.isOf(Items.RECOVERY_COMPASS)) {
                     ItemInfoHud itemInfoHud = extendedHudPlayer.gbw$getItemInfoHuds().get(Items.RECOVERY_COMPASS);
                     itemInfoHud.invert();
-                    extendedHudPlayer.gbw$getItemInfoHuds().forEach((key, value) -> System.out.println(key.getTranslationKey() + ": " + value.isActive()));
                     return TypedActionResult.success(stack);
                 } else if (stack.isOf(Items.CLOCK)) {
                     ItemInfoHud itemInfoHud = extendedHudPlayer.gbw$getItemInfoHuds().get(Items.CLOCK);
                     itemInfoHud.invert();
-                    extendedHudPlayer.gbw$getItemInfoHuds().forEach((key, value) -> System.out.println(key.getTranslationKey() + ": " + value.isActive()));
                     return TypedActionResult.success(stack);
                 }
             }

@@ -36,10 +36,6 @@ public class ItemInfoHud {
         return active;
     }
 
-    public void setActive(boolean active) {
-        this.active = active;
-    }
-
     public void invert() {
         active = !active;
     }

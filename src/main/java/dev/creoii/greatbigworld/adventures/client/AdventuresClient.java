@@ -50,7 +50,7 @@ public class AdventuresClient implements ClientModInitializer {
 
                     for (int i = 0; i < texts.size(); ++i) {
                         Text text = texts.get(i);
-                        drawContext.drawTextWithShadow(CLIENT.textRenderer, text, 15, 5 + (i * 12), 0xffffff);
+                        drawContext.drawTextWithShadow(CLIENT.textRenderer, text, 17, 5 + (i * 12), 0xffffff);
                     }
                 }
             }
