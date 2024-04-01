@@ -11,12 +11,10 @@ import net.minecraft.registry.ServerDynamicRegistryType;
 import net.minecraft.util.math.random.LocalRandom;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.SaveProperties;
-import net.minecraft.world.border.WorldBorder;
 import net.minecraft.world.level.LevelProperties;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -33,17 +31,7 @@ public class CreateWorldScreenMixin {
             final Random random = new LocalRandom(saveProperties.getGeneratorOptions().getSeed());
             ExtendedWorldCreator extendedWorldCreator = ((ExtendedWorldCreator) worldCreator);
 
-            switch (extendedWorldCreator.gbw$getStartWeather()) {
-                case RAIN -> setRain(levelProperties, random);
-                case THUNDER -> setThunder(levelProperties, random);
-                case RANDOM -> {
-                    switch (random.nextInt(3)) {
-                        case 0 -> setRain(levelProperties, random);
-                        case 1 -> setThunder(levelProperties, random);
-                    }
-                }
-            }
-
+            extendedWorldCreator.gbw$getStartWeather().apply(levelProperties, random);
             levelProperties.setTimeOfDay(extendedWorldCreator.gbw$getStartTime());
             if (levelProperties instanceof ExtendedLevelProperties extendedLevelProperties) {
                 int worldSize = extendedWorldCreator.gbw$getWorldSize();
@@ -52,20 +40,5 @@ public class CreateWorldScreenMixin {
                     levelProperties.getWorldBorder().size = (worldSize * 2d * 16d) - .5d;
             }
         }
-    }
-
-    @Unique
-    private void setRain(LevelProperties levelProperties, Random random) {
-        levelProperties.setRaining(true);
-        levelProperties.setRainTime(random.nextBetween(18000, 180000));
-    }
-
-    @Unique
-    private void setThunder(LevelProperties levelProperties, Random random) {
-        int duration = random.nextBetween(18000, 180000);
-        levelProperties.setRaining(true);
-        levelProperties.setRainTime(duration);
-        levelProperties.setThundering(true);
-        levelProperties.setThunderTime(duration);
     }
 }
