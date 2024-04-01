@@ -8,12 +8,9 @@ import org.spongepowered.asm.mixin.Unique;
 
 @Mixin(WorldCreator.class)
 public class WorldCreatorMixin implements ExtendedWorldCreator {
-    @Unique
-    private int worldSize = -1;
-    @Unique
-    private long startTime = 0L;
-    @Unique
-    private WorldStartWeather startWeather = WorldStartWeather.CLEAR;
+    @Unique private int worldSize = -1;
+    @Unique private long startTime = 0L;
+    @Unique private WorldStartWeather startWeather = WorldStartWeather.CLEAR;
 
     @Override
     public void gbw$setWorldSize(int worldSize) {
