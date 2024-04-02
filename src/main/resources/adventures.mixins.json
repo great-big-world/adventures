@@ -11,6 +11,7 @@
     "world.LevelPropertiesMixin",
     "world.NoiseChunkGeneratorMixin",
     "world.ServerWorldMixin",
+    "world.SpringFeatureMixin",
     "world.WorldMixin"
   ],
   "client": [

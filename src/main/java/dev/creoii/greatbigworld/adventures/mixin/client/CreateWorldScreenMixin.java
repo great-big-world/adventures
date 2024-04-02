@@ -27,11 +27,8 @@ public class CreateWorldScreenMixin {
     @SuppressWarnings("deprecation")
     @Inject(method = "startServer", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/MinecraftClient;createIntegratedServerLoader()Lnet/minecraft/server/integrated/IntegratedServerLoader;"))
     private void gbw$applyWorldOptions(LevelProperties.SpecialProperty specialProperty, CombinedDynamicRegistries<ServerDynamicRegistryType> combinedDynamicRegistries, Lifecycle lifecycle, CallbackInfo ci, @Local SaveProperties saveProperties) {
-        if (saveProperties instanceof LevelProperties levelProperties) {
-            final Random random = new LocalRandom(saveProperties.getGeneratorOptions().getSeed());
-            ExtendedWorldCreator extendedWorldCreator = ((ExtendedWorldCreator) worldCreator);
-
-            extendedWorldCreator.gbw$getStartWeather().apply(levelProperties, random);
+        if (saveProperties instanceof LevelProperties levelProperties && worldCreator instanceof ExtendedWorldCreator extendedWorldCreator) {
+            extendedWorldCreator.gbw$getStartWeather().apply(levelProperties, new LocalRandom(levelProperties.getGeneratorOptions().getSeed()));
             levelProperties.setTimeOfDay(extendedWorldCreator.gbw$getStartTime());
             if (levelProperties instanceof ExtendedLevelProperties extendedLevelProperties) {
                 int worldSize = extendedWorldCreator.gbw$getWorldSize();

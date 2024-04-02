@@ -18,8 +18,7 @@ import java.util.Map;
 
 @Mixin(PlayerEntity.class)
 public class PlayerEntityMixin implements ExtendedHudPlayer {
-    @Unique
-    private Map<Item, ItemInfoHud> itemInfoHuds;
+    @Unique private Map<Item, ItemInfoHud> itemInfoHuds;
 
     @Inject(method = "<init>", at = @At("TAIL"))
     private void gbw$initItemInfoHuds(World world, BlockPos pos, float yaw, GameProfile gameProfile, CallbackInfo ci) {

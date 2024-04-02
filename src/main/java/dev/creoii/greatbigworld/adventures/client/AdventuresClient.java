@@ -24,7 +24,6 @@ public class AdventuresClient implements ClientModInitializer {
                     List<Identifier> sprites = new ArrayList<>();
                     List<Text> texts = new ArrayList<>();
                     Map<Item, ItemInfoHud> itemInfoHuds = extendedHudPlayer.gbw$getItemInfoHuds();
-
                     itemInfoHuds.forEach((item, itemInfoHud) -> {
                         if (itemInfoHud.canRender(clientPlayer.getInventory())) {
                             if (item == Items.RECOVERY_COMPASS && !texts.isEmpty()) {
@@ -36,18 +35,19 @@ public class AdventuresClient implements ClientModInitializer {
                             }
                         }
                     });
+                    if (!sprites.isEmpty()) {
+                        drawContext.getMatrices().push();
+                        drawContext.getMatrices().scale(1.5f, 1.5f, 1.5f);
+                        for (int i = 0; i < sprites.size(); ++i) {
+                            Identifier sprite = sprites.get(i);
+                            drawContext.drawTexture(sprite.withPrefixedPath("textures/gui/hud/icon/").withSuffixedPath(".png"), 2, 2 + (i * 8), 0f, 0f, 7, 7, 7, 7);
+                        }
+                        drawContext.getMatrices().pop();
 
-                    drawContext.getMatrices().push();
-                    drawContext.getMatrices().scale(1.5f, 1.5f, 1.5f);
-                    for (int i = 0; i < sprites.size(); ++i) {
-                        Identifier sprite = sprites.get(i);
-                        drawContext.drawTexture(sprite.withPrefixedPath("textures/gui/hud/icon/").withSuffixedPath(".png"), 2, 2 + (i * 8), 0f, 0f, 7, 7, 7, 7);
-                    }
-                    drawContext.getMatrices().pop();
-
-                    for (int i = 0; i < texts.size(); ++i) {
-                        Text text = texts.get(i);
-                        drawContext.drawTextWithShadow(client.textRenderer, text, 17, 5 + (i * 12), 0xffffff);
+                        for (int i = 0; i < texts.size(); ++i) {
+                            Text text = texts.get(i);
+                            drawContext.drawTextWithShadow(client.textRenderer, text, 17, 5 + (i * 12), 0xffffff);
+                        }
                     }
                 }
             }
@@ -57,11 +57,12 @@ public class AdventuresClient implements ClientModInitializer {
     public static String getDisplayTime(ClientPlayerEntity clientPlayer) {
         long time = (clientPlayer.clientWorld.getTimeOfDay() + 6000L) % 24000L;
         long hours = (time / 1000L) % 24L;
+        long minutes = (time % 1000L) * 60L / 1000L;
         if (hours == 0L) {
             hours = 12L;
         } else if (hours > 12L) {
             hours -= 12L;
         }
-        return String.format("%02d:%02d %s", hours, (time % 1000L) * 60L / 1000L, time < 12000L ? "PM" : "AM");
+        return String.format("%02d:%02d %s", hours, minutes, time < 12000L ? "PM" : "AM");
     }
 }

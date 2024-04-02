@@ -14,9 +14,8 @@ public abstract class OptionSliderWidget<T> extends SliderWidget {
 
     @SafeVarargs
     public OptionSliderWidget(int x, int y, int width, int height, T value, boolean clamp, Consumer<T> valueApplier, T... values) {
-        super(x, y, width, height, Text.empty(), 0d);
+        super(x, y, width, height, Text.empty(), findPercentValue(values, value));
         tValue = value;
-        this.value = findPercentValue(values, value);
         this.clamp = clamp;
         this.valueApplier = valueApplier;
         this.values = values;
