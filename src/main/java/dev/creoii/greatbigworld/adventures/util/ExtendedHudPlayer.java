@@ -29,7 +29,7 @@ public interface ExtendedHudPlayer {
                 return Text.literal(StringUtils.capitalize(clientPlayer.getHorizontalFacing().getName()));
             }))
             .put(Items.CLOCK, new ItemInfoHud(ExtendedHudPlayer::getClockTexture, inventory -> inventory.containsAny(stack -> stack.isOf(Items.CLOCK)), clientPlayer -> {
-                return Text.literal(AdventuresClient.getGameTime(clientPlayer));
+                return Text.literal(AdventuresClient.getDisplayTime(clientPlayer));
             }))
             // change texture based on world quadrant?
             .put(AdventuresItems.ASTROLABE, new ItemInfoHud(clientPlayer -> new Identifier(Adventures.NAMESPACE, "astrolabe"), inventory -> inventory.containsAny(stack -> stack.isOf(AdventuresItems.ASTROLABE)), clientPlayer -> {

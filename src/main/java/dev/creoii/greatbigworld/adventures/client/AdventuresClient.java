@@ -6,7 +6,6 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.text.Text;
@@ -15,21 +14,19 @@ import net.minecraft.util.Identifier;
 import java.util.*;
 
 public class AdventuresClient implements ClientModInitializer {
-    public static final MinecraftClient CLIENT = MinecraftClient.getInstance();
-
     @Override
     public void onInitializeClient() {
         HudRenderCallback.EVENT.register((drawContext, tickDelta) -> {
-            if (!CLIENT.options.hudHidden) {
-                ClientPlayerEntity clientPlayer = CLIENT.player;
-                if (clientPlayer != null && CLIENT.world != null && clientPlayer instanceof ExtendedHudPlayer extendedHudPlayer) {
+            final MinecraftClient client = MinecraftClient.getInstance();
+            if (!client.options.hudHidden) {
+                ClientPlayerEntity clientPlayer = client.player;
+                if (clientPlayer != null && client.world != null && clientPlayer instanceof ExtendedHudPlayer extendedHudPlayer) {
                     List<Identifier> sprites = new ArrayList<>();
                     List<Text> texts = new ArrayList<>();
-                    PlayerInventory inventory = clientPlayer.getInventory();
                     Map<Item, ItemInfoHud> itemInfoHuds = extendedHudPlayer.gbw$getItemInfoHuds();
 
                     itemInfoHuds.forEach((item, itemInfoHud) -> {
-                        if (itemInfoHud.canRender(inventory)) {
+                        if (itemInfoHud.canRender(clientPlayer.getInventory())) {
                             if (item == Items.RECOVERY_COMPASS && !texts.isEmpty()) {
                                 sprites.set(0, itemInfoHud.getIconId(clientPlayer));
                                 texts.set(0, itemInfoHud.getText(clientPlayer));
@@ -50,14 +47,14 @@ public class AdventuresClient implements ClientModInitializer {
 
                     for (int i = 0; i < texts.size(); ++i) {
                         Text text = texts.get(i);
-                        drawContext.drawTextWithShadow(CLIENT.textRenderer, text, 17, 5 + (i * 12), 0xffffff);
+                        drawContext.drawTextWithShadow(client.textRenderer, text, 17, 5 + (i * 12), 0xffffff);
                     }
                 }
             }
         });
     }
 
-    public static String getGameTime(ClientPlayerEntity clientPlayer) {
+    public static String getDisplayTime(ClientPlayerEntity clientPlayer) {
         long time = (clientPlayer.clientWorld.getTimeOfDay() + 6000L) % 24000L;
         long hours = (time / 1000L) % 24L;
         if (hours == 0L) {
@@ -65,7 +62,6 @@ public class AdventuresClient implements ClientModInitializer {
         } else if (hours > 12L) {
             hours -= 12L;
         }
-
         return String.format("%02d:%02d %s", hours, (time % 1000L) * 60L / 1000L, time < 12000L ? "PM" : "AM");
     }
 }
