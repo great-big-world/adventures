@@ -16,8 +16,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ChunkGenerator.class)
 public class ChunkGeneratorMixin implements ExtendedChunkGenerator {
-    @Unique
-    private int worldSize = -1;
+    @Unique private int worldSize = -1;
 
     @Override
     public void gbw$setWorldSize(int worldSize) {

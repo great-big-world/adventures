@@ -17,8 +17,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(LevelProperties.class)
 public class LevelPropertiesMixin implements ExtendedLevelProperties {
-    @Unique
-    private int worldSize = -1;
+    @Unique private int worldSize = -1;
 
     @Override
     public void gbw$setWorldSize(int worldSize) {

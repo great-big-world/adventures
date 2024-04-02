@@ -28,9 +28,10 @@ public interface ExtendedHudPlayer {
             .put(Items.RECOVERY_COMPASS, new ItemInfoHud(clientPlayer -> getCompassTexture(clientPlayer, "recovery_compass_", clientPlayer.getLastDeathPos().orElse(null)), inventory -> inventory.containsAny(stack -> stack.isOf(Items.RECOVERY_COMPASS)), clientPlayer -> {
                 return Text.literal(StringUtils.capitalize(clientPlayer.getHorizontalFacing().getName()));
             }))
-            .put(Items.CLOCK, new ItemInfoHud(clientPlayer -> new Identifier(Adventures.NAMESPACE, "clock_day"), inventory -> inventory.containsAny(stack -> stack.isOf(Items.CLOCK)), clientPlayer -> {
+            .put(Items.CLOCK, new ItemInfoHud(ExtendedHudPlayer::getClockTexture, inventory -> inventory.containsAny(stack -> stack.isOf(Items.CLOCK)), clientPlayer -> {
                 return Text.literal(AdventuresClient.getGameTime());
             }))
+            // change texture based on world quadrant?
             .put(AdventuresItems.ASTROLABE, new ItemInfoHud(clientPlayer -> new Identifier(Adventures.NAMESPACE, "astrolabe"), inventory -> inventory.containsAny(stack -> stack.isOf(AdventuresItems.ASTROLABE)), clientPlayer -> {
                 return Text.literal(clientPlayer.getBlockX() + ", " + clientPlayer.getBlockY() + ", " + clientPlayer.getBlockZ());
             }))
@@ -59,5 +60,13 @@ public interface ExtendedHudPlayer {
             return CompassItem.createLodestonePos(stack.getOrCreateNbt());
         }
         return CompassItem.createSpawnPos(world);
+    }
+
+    private static Identifier getClockTexture(ClientPlayerEntity clientPlayer) {
+        long time = clientPlayer.clientWorld.getTimeOfDay();
+        if (time >= 13000L && time <= 24000L) {
+            return new Identifier(Adventures.NAMESPACE, "clock_night");
+        }
+        return new Identifier(Adventures.NAMESPACE, "clock_day");
     }
 }
