@@ -57,64 +57,15 @@ public class AdventuresClient implements ClientModInitializer {
         });
     }
 
-    /**
-     * Modify this to be within my conventions
-     * Perhaps modify how it works so that 1 minute isnt 1 second?
-     *
-     * Creds: Serilum
-     */
-    public static String getGameTime() {
-        int time;
-        int gametime = (int) CLIENT.world.getTime();
-
-        while (gametime >= 24000) {
-            gametime-=24000;
+    public static String getGameTime(ClientPlayerEntity clientPlayer) {
+        long time = (clientPlayer.clientWorld.getTimeOfDay() + 6000L) % 24000L;
+        long hours = (time / 1000L) % 24L;
+        if (hours == 0L) {
+            hours = 12L;
+        } else if (hours > 12L) {
+            hours -= 12L;
         }
 
-        if (gametime >= 18000) {
-            time = gametime-18000;
-        }
-        else {
-            time = 6000+gametime;
-        }
-
-        String suffix;
-        if (time >= 13000) {
-            time = time - 12000;
-            suffix = " PM";
-        }
-        else {
-            if (time >= 12000) {
-                suffix = " PM";
-            }
-            else {
-                suffix = " AM";
-                if (time <= 999) {
-                    time += 12000;
-                }
-            }
-        }
-
-        StringBuilder stringtime = new StringBuilder(time / 10 + "");
-        for (int n = stringtime.length(); n < 4; n++) {
-            stringtime.insert(0, "0");
-        }
-
-        String[] strsplit = stringtime.toString().split("");
-
-        int minutes = (int)Math.floor(Double.parseDouble(strsplit[2] + strsplit[3])/100*60);
-        String sm = minutes + "";
-        if (minutes < 10) {
-            sm = "0" + minutes;
-        }
-
-        if (strsplit[0].equals("0")) {
-            stringtime = new StringBuilder(strsplit[1] + ":" + sm.charAt(0) + sm.charAt(1));
-        }
-        else {
-            stringtime = new StringBuilder(strsplit[0] + strsplit[1] + ":" + sm.charAt(0) + sm.charAt(1));
-        }
-
-        return stringtime + suffix;
+        return String.format("%02d:%02d %s", hours, (time % 1000L) * 60L / 1000L, time < 12000L ? "PM" : "AM");
     }
 }

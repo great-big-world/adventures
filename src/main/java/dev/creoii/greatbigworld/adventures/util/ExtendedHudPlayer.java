@@ -29,7 +29,7 @@ public interface ExtendedHudPlayer {
                 return Text.literal(StringUtils.capitalize(clientPlayer.getHorizontalFacing().getName()));
             }))
             .put(Items.CLOCK, new ItemInfoHud(ExtendedHudPlayer::getClockTexture, inventory -> inventory.containsAny(stack -> stack.isOf(Items.CLOCK)), clientPlayer -> {
-                return Text.literal(AdventuresClient.getGameTime());
+                return Text.literal(AdventuresClient.getGameTime(clientPlayer));
             }))
             // change texture based on world quadrant?
             .put(AdventuresItems.ASTROLABE, new ItemInfoHud(clientPlayer -> new Identifier(Adventures.NAMESPACE, "astrolabe"), inventory -> inventory.containsAny(stack -> stack.isOf(AdventuresItems.ASTROLABE)), clientPlayer -> {
@@ -64,7 +64,7 @@ public interface ExtendedHudPlayer {
 
     private static Identifier getClockTexture(ClientPlayerEntity clientPlayer) {
         long time = clientPlayer.clientWorld.getTimeOfDay();
-        if (time >= 13000L && time <= 24000L) {
+        if (time >= 13000L) {
             return new Identifier(Adventures.NAMESPACE, "clock_night");
         }
         return new Identifier(Adventures.NAMESPACE, "clock_day");
