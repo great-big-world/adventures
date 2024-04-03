@@ -1,22 +1,21 @@
 package dev.creoii.greatbigworld.adventures.util;
 
 import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.item.Item;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
 import java.util.function.Function;
-import java.util.function.Predicate;
 
 public class ItemInfoHud {
     private final Function<ClientPlayerEntity, Identifier> iconId;
-    private final Predicate<PlayerInventory> canRender;
+    private final Item renderItem;
     private final Function<ClientPlayerEntity, Text> text;
     private boolean active = false;
 
-    public ItemInfoHud(Function<ClientPlayerEntity, Identifier> iconId, Predicate<PlayerInventory> canRender, Function<ClientPlayerEntity, Text> text) {
+    public ItemInfoHud(Function<ClientPlayerEntity, Identifier> iconId, Item renderItem, Function<ClientPlayerEntity, Text> text) {
         this.iconId = iconId;
-        this.canRender = canRender;
+        this.renderItem = renderItem;
         this.text = text;
     }
 
@@ -24,8 +23,8 @@ public class ItemInfoHud {
         return iconId.apply(clientPlayer);
     }
 
-    public boolean canRender(PlayerInventory inventory) {
-        return isActive() && canRender.test(inventory);
+    public boolean canRender(ClientPlayerEntity clientPlayer) {
+        return isActive() && (clientPlayer.getInventory().containsAny(stack -> stack.isOf(renderItem)) || clientPlayer.currentScreenHandler.getCursorStack().isOf(renderItem));
     }
 
     public Text getText(ClientPlayerEntity clientPlayer) {

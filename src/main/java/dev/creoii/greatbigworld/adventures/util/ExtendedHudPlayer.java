@@ -22,17 +22,17 @@ import java.util.Map;
 @FunctionalInterface
 public interface ExtendedHudPlayer {
     Map<Item, ItemInfoHud> DEFAULT = ImmutableMap.<Item, ItemInfoHud>builder()
-            .put(Items.COMPASS, new ItemInfoHud(clientPlayer -> getCompassTexture(clientPlayer, "compass_", getCompassTarget(clientPlayer.clientWorld, clientPlayer.getStackInHand(clientPlayer.getActiveHand()))), inventory -> inventory.containsAny(stack -> stack.isOf(Items.COMPASS)), clientPlayer -> {
+            .put(Items.COMPASS, new ItemInfoHud(clientPlayer -> getCompassTexture(clientPlayer, "compass_", getCompassTarget(clientPlayer.clientWorld, clientPlayer.getStackInHand(clientPlayer.getActiveHand()))), Items.COMPASS, clientPlayer -> {
                 return Text.literal(StringUtils.capitalize(clientPlayer.getHorizontalFacing().getName()));
             }))
-            .put(Items.RECOVERY_COMPASS, new ItemInfoHud(clientPlayer -> getCompassTexture(clientPlayer, "recovery_compass_", clientPlayer.getLastDeathPos().orElse(null)), inventory -> inventory.containsAny(stack -> stack.isOf(Items.RECOVERY_COMPASS)), clientPlayer -> {
+            .put(Items.RECOVERY_COMPASS, new ItemInfoHud(clientPlayer -> getCompassTexture(clientPlayer, "recovery_compass_", clientPlayer.getLastDeathPos().orElse(null)), Items.RECOVERY_COMPASS, clientPlayer -> {
                 return Text.literal(StringUtils.capitalize(clientPlayer.getHorizontalFacing().getName()));
             }))
-            .put(Items.CLOCK, new ItemInfoHud(ExtendedHudPlayer::getClockTexture, inventory -> inventory.containsAny(stack -> stack.isOf(Items.CLOCK)), clientPlayer -> {
+            .put(Items.CLOCK, new ItemInfoHud(ExtendedHudPlayer::getClockTexture, Items.CLOCK, clientPlayer -> {
                 return Text.literal(AdventuresClient.getDisplayTime(clientPlayer));
             }))
             // change texture based on world quadrant?
-            .put(AdventuresItems.ASTROLABE, new ItemInfoHud(clientPlayer -> new Identifier(Adventures.NAMESPACE, "astrolabe"), inventory -> inventory.containsAny(stack -> stack.isOf(AdventuresItems.ASTROLABE)), clientPlayer -> {
+            .put(AdventuresItems.ASTROLABE, new ItemInfoHud(clientPlayer -> new Identifier(Adventures.NAMESPACE, "astrolabe"), AdventuresItems.ASTROLABE, clientPlayer -> {
                 return Text.literal(clientPlayer.getBlockX() + ", " + clientPlayer.getBlockY() + ", " + clientPlayer.getBlockZ());
             }))
             .build();

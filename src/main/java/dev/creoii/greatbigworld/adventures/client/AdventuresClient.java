@@ -25,7 +25,7 @@ public class AdventuresClient implements ClientModInitializer {
                     List<Text> texts = new ArrayList<>();
                     Map<Item, ItemInfoHud> itemInfoHuds = extendedHudPlayer.gbw$getItemInfoHuds();
                     itemInfoHuds.forEach((item, itemInfoHud) -> {
-                        if (itemInfoHud.canRender(clientPlayer.getInventory())) {
+                        if (itemInfoHud.canRender(clientPlayer)) {
                             if (item == Items.RECOVERY_COMPASS && !texts.isEmpty()) {
                                 sprites.set(0, itemInfoHud.getIconId(clientPlayer));
                                 texts.set(0, itemInfoHud.getText(clientPlayer));
