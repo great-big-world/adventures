@@ -63,6 +63,9 @@ public class AdventuresClient implements ClientModInitializer {
         } else if (hours > 12L) {
             hours -= 12L;
         }
-        return String.format("%02d:%02d %s", hours, minutes, time < 12000L ? "PM" : "AM");
+        String displayTime = String.format("%02d:%02d %s", hours, minutes, time < 12000L ? "PM" : "AM");
+        if (displayTime.startsWith("0"))
+            displayTime = displayTime.substring(1);
+        return displayTime;
     }
 }
