@@ -31,7 +31,7 @@ public enum WorldSize {
         return size;
     }
 
-    public Text getTranslatableName() {
-        return this == INFINITE ? Text.translatable("worldSize.infinite") : Text.translatable("worldSize." + getSize() + "x");
+    public Text getTranslatableName(int size) {
+        return this == INFINITE || size < 0 ? Text.translatable("worldSize.infinite") : Text.translatable("worldSize.tooltip", size, size);
     }
 }

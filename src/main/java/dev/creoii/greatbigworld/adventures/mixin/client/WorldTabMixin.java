@@ -13,7 +13,9 @@ import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.*;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -26,6 +28,8 @@ public class WorldTabMixin {
     @Unique private static final Text START_WEATHER_TEXT = Text.translatable("selectWorld.startWeather");
     @Unique private static final Text START_TIME_TEXT = Text.translatable("selectWorld.startTime");
     @Unique private static final Text WORLD_SIZE_TEXT = Text.translatable("selectWorld.worldSize");
+    @Unique private static final Text WORLD_SIZE_TOOLTIP_TEXT = Text.translatable("selectWorld.worldSize.description");
+    @Unique private static final Text WORLD_SIZE_TOOLTIP_SIZE_IN_BLOCKS_TEXT = Text.translatable("selectWorld.worldSize.tooltip.sizeInBlocks");
 
     @Inject(method = "<init>", at = @At("TAIL"))
     private void gbw$addNewWorldOptions(CreateWorldScreen createWorldScreen, CallbackInfo ci, @Local GridWidget.Adder adder) {
@@ -47,15 +51,14 @@ public class WorldTabMixin {
     @Unique
     @NotNull
     private static OptionSliderWidget<WorldSize> createWorldSizeWidget(CreateWorldScreen createWorldScreen) {
-        OptionSliderWidget<WorldSize> worldSizeWidget = new OptionSliderWidget<>(0, 0, 150, 20, WorldSize.INFINITE, true, value -> {
+        return new OptionSliderWidget<>(0, 0, 150, 20, WorldSize.INFINITE, true, value -> {
             ((ExtendedWorldCreator) createWorldScreen.getWorldCreator()).gbw$setWorldSize(value.getSize() / 2);
         }, WorldSize.values()) {
             @Override
             protected void updateMessage() {
-                setMessage(MutableText.of(WORLD_SIZE_TEXT.getContent()).append(": ").append(tValue.getTranslatableName()));
+                setMessage(MutableText.of(WORLD_SIZE_TEXT.getContent()).append(": ").append(tValue.getTranslatableName(tValue.getSize())));
+                setTooltip(Tooltip.of(MutableText.of(WORLD_SIZE_TOOLTIP_TEXT.getContent()).append("\n").append(MutableText.of(WORLD_SIZE_TOOLTIP_SIZE_IN_BLOCKS_TEXT.getContent()).append(": ").append(tValue.getTranslatableName(tValue.getSize() * 16)).formatted(Formatting.GRAY))));
             }
         };
-        worldSizeWidget.setTooltip(Tooltip.of(Text.translatable("selectWorld.worldSize.description")));
-        return worldSizeWidget;
     }
 }
