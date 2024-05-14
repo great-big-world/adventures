@@ -29,6 +29,7 @@ public class LevelPropertiesMixin implements ExtendedLevelProperties {
         return worldSize;
     }
 
+    @SuppressWarnings("deprecation")
     @Inject(method = "readProperties", at = @At("RETURN"))
     private static <T> void gbw$readExtendedProperties(Dynamic<T> dynamic, LevelInfo info, LevelProperties.SpecialProperty specialProperty, GeneratorOptions generatorOptions, Lifecycle lifecycle, CallbackInfoReturnable<LevelProperties> cir) {
         ((ExtendedLevelProperties) cir.getReturnValue()).gbw$setWorldSize(dynamic.get("worldSize").asInt(-1));

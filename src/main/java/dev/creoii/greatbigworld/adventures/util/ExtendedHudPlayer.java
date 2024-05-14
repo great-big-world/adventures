@@ -5,6 +5,8 @@ import dev.creoii.greatbigworld.adventures.Adventures;
 import dev.creoii.greatbigworld.adventures.client.AdventuresClient;
 import dev.creoii.greatbigworld.adventures.registry.AdventuresItems;
 import net.minecraft.client.network.ClientPlayerEntity;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.LodestoneTrackerComponent;
 import net.minecraft.item.CompassItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -41,10 +43,10 @@ public interface ExtendedHudPlayer {
 
     private static Identifier getCompassTexture(ClientPlayerEntity clientPlayer, String prefix, @Nullable GlobalPos pos) {
         if (pos != null) {
-            BlockPos direction = pos.getPos().subtract(clientPlayer.getBlockPos());
+            BlockPos direction = pos.pos().subtract(clientPlayer.getBlockPos());
 
-            double yawRad = Math.toRadians(clientPlayer.getBodyYaw());
-            double angle = Math.atan2(direction.getZ(), direction.getX()) - yawRad;
+            double yawRadians = Math.toRadians(clientPlayer.getBodyYaw());
+            double angle = Math.atan2(direction.getZ(), direction.getX()) - yawRadians;
 
             int index = (int) Math.round(Math.toDegrees(angle) / 45) % 8;
             if (index < 0) {
@@ -56,8 +58,9 @@ public interface ExtendedHudPlayer {
     }
 
     private static GlobalPos getCompassTarget(World world, ItemStack stack) {
-        if (CompassItem.hasLodestone(stack)) {
-            return CompassItem.createLodestonePos(stack.getOrCreateNbt());
+        LodestoneTrackerComponent component = stack.get(DataComponentTypes.LODESTONE_TRACKER);
+        if (component != null && component.target().isPresent()) {
+            return component.target().get();
         }
         return CompassItem.createSpawnPos(world);
     }

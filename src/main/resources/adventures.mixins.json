@@ -6,7 +6,11 @@
   "mixins": [
     "CompassItemMixin",
     "FlowableFluidMixin",
+    "LecternBlockEntityMixin",
+    "LevelStorageMixin",
+    "LivingEntityMixin",
     "PlayerEntityMixin",
+    "ServerPlayerEntityMixin",
     "world.ChunkGeneratorMixin",
     "world.LevelPropertiesMixin",
     "world.NoiseChunkGeneratorMixin",
@@ -15,7 +19,10 @@
     "world.WorldMixin"
   ],
   "client": [
+    "client.BookScreenContentsMixin",
+    "client.ClientPlayerEntityMixin",
     "client.CreateWorldScreenMixin",
+    "client.MinecraftClientMixin",
     "client.WorldCreatorMixin",
     "client.WorldTabMixin"
   ],

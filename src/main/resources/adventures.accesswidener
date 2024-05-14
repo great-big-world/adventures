@@ -4,3 +4,4 @@ accessible class net/minecraft/client/gui/screen/world/CreateWorldScreen$WorldTa
 accessible field net/minecraft/client/gui/screen/Screen client Lnet/minecraft/client/MinecraftClient;
 accessible field net/minecraft/world/border/WorldBorder$Properties size D
 mutable field net/minecraft/world/border/WorldBorder$Properties size D
+accessible method net/minecraft/item/WrittenBookItem textToJson (Lnet/minecraft/server/command/ServerCommandSource;Lnet/minecraft/entity/player/PlayerEntity;Ljava/lang/String;)Ljava/lang/String;

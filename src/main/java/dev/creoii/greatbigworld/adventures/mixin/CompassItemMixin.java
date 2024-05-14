@@ -10,7 +10,7 @@ import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 
 @Mixin(CompassItem.class)
-public abstract class CompassItemMixin extends Item implements Vanishable {
+public abstract class CompassItemMixin extends Item {
     public CompassItemMixin(Settings settings) {
         super(settings);
     }

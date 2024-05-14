@@ -1,5 +1,7 @@
 {
   "item.great_big_world.astrolabe": "Astrolabe",
+  "item.great_big_world.journal": "Journal",
+  "item.journal.title": "Journal",
 
   "selectWorld.furtherCustomizationOptions": "Further Customization Options",
   "selectWorld.startTime": "Start Time",
