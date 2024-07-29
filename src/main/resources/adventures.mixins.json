@@ -20,6 +20,7 @@
   ],
   "client": [
     "client.BookScreenContentsMixin",
+    "client.BookScreenMixin",
     "client.ClientPlayerEntityMixin",
     "client.CreateWorldScreenMixin",
     "client.MinecraftClientMixin",
