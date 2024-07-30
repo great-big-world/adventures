@@ -32,7 +32,7 @@ public class ChunkGeneratorMixin implements ExtendedChunkGenerator {
     private void gbw$limitFeatures(StructureWorldAccess world, Chunk chunk, StructureAccessor structureAccessor, CallbackInfo ci) {
         int x = chunk.getPos().x;
         int z = chunk.getPos().z;
-        if (worldSize > 0 && (x >= worldSize || x < -worldSize || z >= worldSize || z < -worldSize)) {
+        if (worldSize >= 0 && (x >= worldSize || x < -worldSize || z >= worldSize || z < -worldSize)) {
             ci.cancel();
         }
     }
@@ -41,7 +41,7 @@ public class ChunkGeneratorMixin implements ExtendedChunkGenerator {
     private void gbw$limitStructureStarts(DynamicRegistryManager registryManager, StructurePlacementCalculator placementCalculator, StructureAccessor structureAccessor, Chunk chunk, StructureTemplateManager structureTemplateManager, CallbackInfo ci) {
         int x = chunk.getPos().x;
         int z = chunk.getPos().z;
-        if (worldSize > 0 && (x >= worldSize || x < -worldSize || z >= worldSize || z < -worldSize)) {
+        if (worldSize >= 0 && (x >= worldSize || x < -worldSize || z >= worldSize || z < -worldSize)) {
             ci.cancel();
         }
     }
@@ -50,7 +50,7 @@ public class ChunkGeneratorMixin implements ExtendedChunkGenerator {
     private void gbw$limitStructureReferences(StructureWorldAccess world, StructureAccessor structureAccessor, Chunk chunk, CallbackInfo ci) {
         int x = chunk.getPos().x;
         int z = chunk.getPos().z;
-        if (worldSize > 0 && (x >= worldSize || x < -worldSize || z >= worldSize || z < -worldSize)) {
+        if (worldSize >= 0 && (x >= worldSize || x < -worldSize || z >= worldSize || z < -worldSize)) {
             ci.cancel();
         }
     }
