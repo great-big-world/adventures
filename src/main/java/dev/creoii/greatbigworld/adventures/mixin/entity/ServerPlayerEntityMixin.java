@@ -1,9 +1,8 @@
-package dev.creoii.greatbigworld.adventures.mixin;
+package dev.creoii.greatbigworld.adventures.mixin.entity;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.sugar.Local;
 import dev.creoii.greatbigworld.adventures.registry.AdventuresItems;
-import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
 import org.spongepowered.asm.mixin.Mixin;

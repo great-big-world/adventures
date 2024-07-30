@@ -1,4 +1,4 @@
-package dev.creoii.greatbigworld.adventures.mixin;
+package dev.creoii.greatbigworld.adventures.mixin.entity;
 
 import dev.creoii.greatbigworld.adventures.item.journal.JournalEntry;
 import dev.creoii.greatbigworld.adventures.item.journal.JournalEntryHolder;

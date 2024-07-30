@@ -1,4 +1,4 @@
-package dev.creoii.greatbigworld.adventures.mixin;
+package dev.creoii.greatbigworld.adventures.mixin.world;
 
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.datafixer.Schemas;
