@@ -25,6 +25,7 @@
     "client.CreateWorldScreenMixin",
     "client.MinecraftClientMixin",
     "client.WorldCreatorMixin",
+    "client.WorldListWidgetWorldEntryMixin",
     "client.WorldTabMixin"
   ],
   "injectors": {
