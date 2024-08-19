@@ -7,12 +7,12 @@
     "CompassItemMixin",
     "FlowableFluidMixin",
     "LecternBlockEntityMixin",
-    "world.LevelStorageMixin",
     "entity.LivingEntityMixin",
     "entity.PlayerEntityMixin",
     "entity.ServerPlayerEntityMixin",
     "world.ChunkGeneratorMixin",
     "world.LevelPropertiesMixin",
+    "world.LevelStorageMixin",
     "world.NoiseChunkGeneratorMixin",
     "world.ServerWorldMixin",
     "world.SpringFeatureMixin",
@@ -26,7 +26,6 @@
     "client.LightmapTextureManagerMixin",
     "client.MinecraftClientMixin",
     "client.WorldCreatorMixin",
-    "client.WorldListWidgetWorldEntryMixin",
     "client.WorldTabMixin"
   ],
   "injectors": {
