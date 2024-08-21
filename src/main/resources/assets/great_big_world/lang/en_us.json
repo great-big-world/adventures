@@ -9,6 +9,7 @@
   "selectWorld.worldSize": "World Size",
   "selectWorld.worldSize.description": "Sets the size of the world in chunks.",
   "selectWorld.worldSize.tooltip.sizeInBlocks": "Size in blocks",
+  "selectWorld.startSeason": "Start Season",
   "time.day": "Day",
   "time.midnight": "Midnight",
   "time.morning": "Morning",

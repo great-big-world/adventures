@@ -2,10 +2,7 @@ package dev.creoii.greatbigworld.adventures.mixin.client;
 
 import com.llamalad7.mixinextras.sugar.Local;
 import dev.creoii.greatbigworld.adventures.client.gui.OptionSliderWidget;
-import dev.creoii.greatbigworld.adventures.util.ExtendedWorldCreator;
-import dev.creoii.greatbigworld.adventures.util.WorldStartTime;
-import dev.creoii.greatbigworld.adventures.util.WorldStartWeather;
-import dev.creoii.greatbigworld.adventures.util.WorldSize;
+import dev.creoii.greatbigworld.adventures.util.*;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screen.world.CreateWorldScreen;
@@ -30,6 +27,7 @@ public class WorldTabMixin {
     @Unique private static final Text WORLD_SIZE_TEXT = Text.translatable("selectWorld.worldSize");
     @Unique private static final Text WORLD_SIZE_TOOLTIP_TEXT = Text.translatable("selectWorld.worldSize.description");
     @Unique private static final Text WORLD_SIZE_TOOLTIP_SIZE_IN_BLOCKS_TEXT = Text.translatable("selectWorld.worldSize.tooltip.sizeInBlocks");
+    @Unique private static final Text START_SEASON_TEXT = Text.translatable("selectWorld.startSeason");
 
     @Inject(method = "<init>", at = @At("TAIL"))
     private void gbw$addNewWorldOptions(CreateWorldScreen createWorldScreen, CallbackInfo ci, @Local GridWidget.Adder adder) {
@@ -46,6 +44,14 @@ public class WorldTabMixin {
         });
         OptionSliderWidget<WorldSize> worldSizeWidget = createWorldSizeWidget(createWorldScreen);
         adder.add(worldSizeWidget);
+        adder.add(new OptionSliderWidget<WorldSeason>(0, 0, 150, 20, WorldSeason.SUMMER, true, value -> {
+            //((ExtendedWorldCreator) createWorldScreen.getWorldCreator()).gbw$setStartWeather(value.getTime());
+        }, WorldSeason.values()) {
+            @Override
+            protected void updateMessage() {
+                setMessage(MutableText.of(START_SEASON_TEXT.getContent()).append(": ").append(tValue.name()));
+            }
+        });
     }
 
     @Unique
