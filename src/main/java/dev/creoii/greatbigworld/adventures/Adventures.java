@@ -2,6 +2,7 @@ package dev.creoii.greatbigworld.adventures;
 
 import dev.creoii.creoapi.api.item.CreoItemApi;
 import dev.creoii.greatbigworld.adventures.component.JournalContentComponent;
+import dev.creoii.greatbigworld.adventures.registry.AdventuresGameRules;
 import dev.creoii.greatbigworld.adventures.registry.AdventuresItems;
 import dev.creoii.greatbigworld.adventures.util.ExtendedHudPlayer;
 import net.fabricmc.api.ModInitializer;
@@ -24,6 +25,7 @@ public class Adventures implements ModInitializer {
     @Override
     public void onInitialize() {
         AdventuresItems.register();
+        AdventuresGameRules.register();
         Registry.register(Registries.DATA_COMPONENT_TYPE, new Identifier(CreoItemApi.NAMESPACE, "journal_content"), JOURNAL_CONTENT);
 
         UseItemCallback.EVENT.register((player, world, hand) -> {
