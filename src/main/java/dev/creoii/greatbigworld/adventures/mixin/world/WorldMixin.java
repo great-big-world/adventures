@@ -1,5 +1,6 @@
 package dev.creoii.greatbigworld.adventures.mixin.world;
 
+import dev.creoii.greatbigworld.adventures.util.ExtendedChunkGenerator;
 import dev.creoii.greatbigworld.adventures.util.ExtendedLevelProperties;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
@@ -20,8 +21,7 @@ public abstract class WorldMixin {
         if (getLevelProperties() instanceof ExtendedLevelProperties extendedLevelProperties && extendedLevelProperties.gbw$getWorldSize() > 0) {
             int x = pos.getX() / 16;
             int z = pos.getZ() / 16;
-            int size = extendedLevelProperties.gbw$getWorldSize();
-            if (x >= size || x < -size || z >= size || z < -size) {
+            if (ExtendedChunkGenerator.isWithinWorld(extendedLevelProperties, x, z)) {
                 cir.setReturnValue(false);
             }
         }

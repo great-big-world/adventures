@@ -2,6 +2,7 @@ package dev.creoii.greatbigworld.adventures.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.sugar.Local;
+import dev.creoii.greatbigworld.adventures.util.ExtendedChunkGenerator;
 import dev.creoii.greatbigworld.adventures.util.ExtendedLevelProperties;
 import net.minecraft.fluid.FlowableFluid;
 import net.minecraft.util.math.BlockPos;
@@ -16,8 +17,7 @@ public class FlowableFluidMixin {
         if (world.getLevelProperties() instanceof ExtendedLevelProperties extendedLevelProperties && extendedLevelProperties.gbw$getWorldSize() > 0) {
             int x = blockPos.getX() / 16;
             int z = blockPos.getZ() / 16;
-            int size = extendedLevelProperties.gbw$getWorldSize();
-            return original && (x >= size || x < -size || z >= size || z < -size);
+            return ExtendedChunkGenerator.isWithinWorld(extendedLevelProperties, x, z);
         }
         return original;
     }

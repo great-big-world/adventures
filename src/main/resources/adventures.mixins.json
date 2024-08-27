@@ -16,6 +16,7 @@
     "world.NoiseChunkGeneratorMixin",
     "world.ServerWorldMixin",
     "world.SpringFeatureMixin",
+    "world.ThreadedAnvilChunkStorageMixin",
     "world.WorldMixin"
   ],
   "client": [
@@ -23,6 +24,7 @@
     "client.BookScreenMixin",
     "client.ClientPlayerEntityMixin",
     "client.CreateWorldScreenMixin",
+    "client.DeathScreenMixin",
     "client.LightmapTextureManagerMixin",
     "client.MinecraftClientMixin",
     "client.WorldCreatorMixin",

@@ -10,6 +10,7 @@ import org.spongepowered.asm.mixin.Unique;
 public class WorldCreatorMixin implements ExtendedWorldCreator {
     @Unique private int worldSize = -1;
     @Unique private long startTime = 0L;
+    @Unique private int startSeason = 0;
     @Unique private WorldStartWeather startWeather = WorldStartWeather.CLEAR;
 
     @Override
@@ -20,6 +21,11 @@ public class WorldCreatorMixin implements ExtendedWorldCreator {
     @Override
     public void gbw$setStartTime(long startTime) {
         this.startTime = startTime;
+    }
+
+    @Override
+    public void gbw$setStartSeason(int startSeason) {
+        this.startSeason = startSeason;
     }
 
     @Override
@@ -35,6 +41,11 @@ public class WorldCreatorMixin implements ExtendedWorldCreator {
     @Override
     public long gbw$getStartTime() {
         return startTime;
+    }
+
+    @Override
+    public int gbw$getStartSeason() {
+        return startSeason;
     }
 
     @Override

@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ChunkGenerator.class)
-public class ChunkGeneratorMixin implements ExtendedChunkGenerator {
+public abstract class ChunkGeneratorMixin implements ExtendedChunkGenerator {
     @Unique private int worldSize = -1;
 
     @Override
@@ -30,27 +30,14 @@ public class ChunkGeneratorMixin implements ExtendedChunkGenerator {
 
     @Inject(method = "generateFeatures", at = @At("HEAD"), cancellable = true)
     private void gbw$limitFeatures(StructureWorldAccess world, Chunk chunk, StructureAccessor structureAccessor, CallbackInfo ci) {
-        int x = chunk.getPos().x;
-        int z = chunk.getPos().z;
-        if (worldSize >= 0 && (x >= worldSize || x < -worldSize || z >= worldSize || z < -worldSize)) {
+        if (ExtendedChunkGenerator.isWithinWorld(this, chunk.getPos().x, chunk.getPos().z)) {
             ci.cancel();
         }
     }
 
     @Inject(method = "setStructureStarts", at = @At("HEAD"), cancellable = true)
     private void gbw$limitStructureStarts(DynamicRegistryManager registryManager, StructurePlacementCalculator placementCalculator, StructureAccessor structureAccessor, Chunk chunk, StructureTemplateManager structureTemplateManager, CallbackInfo ci) {
-        int x = chunk.getPos().x;
-        int z = chunk.getPos().z;
-        if (worldSize >= 0 && (x >= worldSize || x < -worldSize || z >= worldSize || z < -worldSize)) {
-            ci.cancel();
-        }
-    }
-
-    @Inject(method = "addStructureReferences", at = @At("HEAD"), cancellable = true)
-    private void gbw$limitStructureReferences(StructureWorldAccess world, StructureAccessor structureAccessor, Chunk chunk, CallbackInfo ci) {
-        int x = chunk.getPos().x;
-        int z = chunk.getPos().z;
-        if (worldSize >= 0 && (x >= worldSize || x < -worldSize || z >= worldSize || z < -worldSize)) {
+        if (ExtendedChunkGenerator.isWithinWorld(this, chunk.getPos().x, chunk.getPos().z)) {
             ci.cancel();
         }
     }

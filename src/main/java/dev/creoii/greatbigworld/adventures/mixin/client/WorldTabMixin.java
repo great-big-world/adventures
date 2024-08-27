@@ -45,7 +45,7 @@ public class WorldTabMixin {
         OptionSliderWidget<WorldSize> worldSizeWidget = createWorldSizeWidget(createWorldScreen);
         adder.add(worldSizeWidget);
         adder.add(new OptionSliderWidget<WorldSeason>(0, 0, 150, 20, WorldSeason.SUMMER, true, value -> {
-            //((ExtendedWorldCreator) createWorldScreen.getWorldCreator()).gbw$setStartWeather(value.getTime());
+            ((ExtendedWorldCreator) createWorldScreen.getWorldCreator()).gbw$setStartSeason(value.ordinal());
         }, WorldSeason.values()) {
             @Override
             protected void updateMessage() {
