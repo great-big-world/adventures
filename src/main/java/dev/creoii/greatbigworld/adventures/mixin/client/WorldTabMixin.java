@@ -19,6 +19,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.util.Arrays;
+
 @Environment(EnvType.CLIENT)
 @Mixin(CreateWorldScreen.WorldTab.class)
 public class WorldTabMixin {
@@ -34,9 +36,9 @@ public class WorldTabMixin {
         adder.add(CyclingButtonWidget.builder(WorldStartWeather::getTranslatableName).values(WorldStartWeather.values()).build(0, 0, 150, 20, START_WEATHER_TEXT, (button, weather) -> {
             ((ExtendedWorldCreator) createWorldScreen.getWorldCreator()).gbw$setStartWeather(weather);
         }));
-        adder.add(new OptionSliderWidget<WorldStartTime>(0, 0, 150, 20, WorldStartTime.MORNING, true, value -> {
+        adder.add(new OptionSliderWidget<>(0, 0, 150, 20, WorldStartTime.MORNING, true, value -> {
             ((ExtendedWorldCreator) createWorldScreen.getWorldCreator()).gbw$setStartTime(value.getTime());
-        }, WorldStartTime.values()) {
+        }, Arrays.asList(WorldStartTime.values())) {
             @Override
             protected void updateMessage() {
                 setMessage(MutableText.of(START_TIME_TEXT.getContent()).append(": ").append(tValue.getTranslatableName()));
@@ -44,9 +46,9 @@ public class WorldTabMixin {
         });
         OptionSliderWidget<WorldSize> worldSizeWidget = createWorldSizeWidget(createWorldScreen);
         adder.add(worldSizeWidget);
-        adder.add(new OptionSliderWidget<WorldSeason>(0, 0, 150, 20, WorldSeason.SUMMER, true, value -> {
+        adder.add(new OptionSliderWidget<>(0, 0, 150, 20, WorldSeason.SUMMER, true, value -> {
             ((ExtendedWorldCreator) createWorldScreen.getWorldCreator()).gbw$setStartSeason(value.ordinal());
-        }, WorldSeason.values()) {
+        }, Arrays.asList(WorldSeason.values())) {
             @Override
             protected void updateMessage() {
                 setMessage(MutableText.of(START_SEASON_TEXT.getContent()).append(": ").append(tValue.name()));
@@ -59,7 +61,7 @@ public class WorldTabMixin {
     private static OptionSliderWidget<WorldSize> createWorldSizeWidget(CreateWorldScreen createWorldScreen) {
         return new OptionSliderWidget<>(0, 0, 150, 20, WorldSize.INFINITE, true, value -> {
             ((ExtendedWorldCreator) createWorldScreen.getWorldCreator()).gbw$setWorldSize(value.getSize() / 2);
-        }, WorldSize.values()) {
+        }, Arrays.asList(WorldSize.values())) {
             @Override
             protected void updateMessage() {
                 setMessage(MutableText.of(WORLD_SIZE_TEXT.getContent()).append(": ").append(tValue.getTranslatableName(tValue.getSize())));

@@ -21,5 +21,10 @@
   "weather.random": "Random",
   "weather.thunder": "Thunder",
   "worldSize.tooltip": "%s x %s",
-  "worldSize.infinite": "Infinite"
+  "worldSize.infinite": "Infinite",
+
+  "dimension_type.minecraft.overworld": "Overworld",
+  "dimension_type.minecraft.the_nether": "Nether",
+  "dimension_type.minecraft.the_end": "End",
+  "dimension_type.minecraft.overworld_caves": "Overworld"
 }

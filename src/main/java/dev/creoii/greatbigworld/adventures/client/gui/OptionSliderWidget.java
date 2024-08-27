@@ -3,17 +3,16 @@ package dev.creoii.greatbigworld.adventures.client.gui;
 import net.minecraft.client.gui.widget.SliderWidget;
 import net.minecraft.text.Text;
 
-import java.util.Arrays;
+import java.util.List;
 import java.util.function.Consumer;
 
 public abstract class OptionSliderWidget<T> extends SliderWidget {
     public T tValue;
     private final boolean clamp;
     private final Consumer<T> valueApplier;
-    private final T[] values;
+    private final List<T> values;
 
-    @SafeVarargs
-    public OptionSliderWidget(int x, int y, int width, int height, T value, boolean clamp, Consumer<T> valueApplier, T... values) {
+    public OptionSliderWidget(int x, int y, int width, int height, T value, boolean clamp, Consumer<T> valueApplier, List<T> values) {
         super(x, y, width, height, Text.empty(), findPercentValue(values, value));
         tValue = value;
         this.clamp = clamp;
@@ -30,11 +29,11 @@ public abstract class OptionSliderWidget<T> extends SliderWidget {
         valueApplier.accept(tValue);
     }
 
-    private static <T> T findClosestValue(T[] array, double index) {
-        return array[Math.round((float) index * (array.length - 1))];
+    private static <T> T findClosestValue(List<T> list, double index) {
+        return list.get(Math.round((float) index * (list.size() - 1)));
     }
 
-    private static <T> float findPercentValue(T[] array, T target) {
-        return (float) Arrays.asList(array).indexOf(target) / (array.length - 1);
+    private static <T> float findPercentValue(List<T> list, T target) {
+        return (float) list.indexOf(target) / (list.size() - 1);
     }
 }

@@ -8,7 +8,6 @@ public enum WorldSize {
     EIGHT(8),
     SIXTEEN(16),
     THIRTY_TWO(32),
-    FORTY_EIGHT(48),
     SIXTY_FOUR(64),
     ONE_TWENTY_EIGHT(128),
     TWO_FIFTY_SIX(256),
@@ -22,6 +21,7 @@ public enum WorldSize {
     INFINITE(-1);
 
     private final int size;
+
 
     WorldSize(int size) {
         this.size = size;
