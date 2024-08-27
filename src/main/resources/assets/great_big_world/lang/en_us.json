@@ -26,5 +26,7 @@
   "dimension_type.minecraft.overworld": "Overworld",
   "dimension_type.minecraft.the_nether": "Nether",
   "dimension_type.minecraft.the_end": "End",
-  "dimension_type.minecraft.overworld_caves": "Overworld"
+  "dimension_type.minecraft.overworld_caves": "Overworld",
+
+  "gamerule.showCoordinatesOnDeath": "Show death coordinates"
 }
