@@ -8,7 +8,6 @@ import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.LodestoneTrackerComponent;
 import net.minecraft.item.CompassItem;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.text.Text;
@@ -23,23 +22,23 @@ import java.util.Map;
 
 @FunctionalInterface
 public interface ExtendedHudPlayer {
-    Map<Item, ItemInfoHud> DEFAULT = ImmutableMap.<Item, ItemInfoHud>builder()
-            .put(Items.COMPASS, new ItemInfoHud(clientPlayer -> getCompassTexture(clientPlayer, "compass_", getCompassTarget(clientPlayer.clientWorld, clientPlayer.getStackInHand(clientPlayer.getActiveHand()))), Items.COMPASS, clientPlayer -> {
+    Map<Type, ItemInfoHud> DEFAULT = ImmutableMap.<Type, ItemInfoHud>builder()
+            .put(Type.COMPASS, new ItemInfoHud(clientPlayer -> getCompassTexture(clientPlayer, "compass_", getCompassTarget(clientPlayer.clientWorld, clientPlayer.getStackInHand(clientPlayer.getActiveHand()))), Items.COMPASS, clientPlayer -> {
                 return Text.literal(StringUtils.capitalize(clientPlayer.getHorizontalFacing().getName()));
             }))
-            .put(Items.RECOVERY_COMPASS, new ItemInfoHud(clientPlayer -> getCompassTexture(clientPlayer, "recovery_compass_", clientPlayer.getLastDeathPos().orElse(null)), Items.RECOVERY_COMPASS, clientPlayer -> {
+            .put(Type.RECOVERY_COMPASS, new ItemInfoHud(clientPlayer -> getCompassTexture(clientPlayer, "recovery_compass_", clientPlayer.getLastDeathPos().orElse(null)), Items.RECOVERY_COMPASS, clientPlayer -> {
                 return Text.literal(StringUtils.capitalize(clientPlayer.getHorizontalFacing().getName()));
             }))
-            .put(Items.CLOCK, new ItemInfoHud(ExtendedHudPlayer::getClockTexture, Items.CLOCK, clientPlayer -> {
+            .put(Type.CLOCK, new ItemInfoHud(ExtendedHudPlayer::getClockTexture, Items.CLOCK, clientPlayer -> {
                 return Text.literal(AdventuresClient.getDisplayTime(clientPlayer));
             }))
             // change texture based on world quadrant?
-            .put(AdventuresItems.ASTROLABE, new ItemInfoHud(clientPlayer -> new Identifier(Adventures.NAMESPACE, "astrolabe"), AdventuresItems.ASTROLABE, clientPlayer -> {
+            .put(Type.ASTROLABE, new ItemInfoHud(clientPlayer -> new Identifier(Adventures.NAMESPACE, "astrolabe"), AdventuresItems.ASTROLABE, clientPlayer -> {
                 return Text.literal(clientPlayer.getBlockX() + ", " + clientPlayer.getBlockY() + ", " + clientPlayer.getBlockZ());
             }))
             .build();
 
-    Map<Item, ItemInfoHud> gbw$getItemInfoHuds();
+    Map<Type, ItemInfoHud> gbw$getItemInfoHuds();
 
     private static Identifier getCompassTexture(ClientPlayerEntity clientPlayer, String prefix, @Nullable GlobalPos pos) {
         if (pos != null) {
@@ -71,5 +70,12 @@ public interface ExtendedHudPlayer {
             return new Identifier(Adventures.NAMESPACE, "clock_night");
         }
         return new Identifier(Adventures.NAMESPACE, "clock_day");
+    }
+
+    enum Type {
+        COMPASS,
+        RECOVERY_COMPASS,
+        CLOCK,
+        ASTROLABE
     }
 }

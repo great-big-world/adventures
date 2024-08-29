@@ -1,21 +1,41 @@
 package dev.creoii.greatbigworld.adventures.client;
 
+import dev.creoii.greatbigworld.adventures.registry.AdventuresItems;
 import dev.creoii.greatbigworld.adventures.util.ExtendedHudPlayer;
 import dev.creoii.greatbigworld.adventures.util.ItemInfoHud;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
+import net.fabricmc.fabric.api.event.player.UseItemCallback;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.TypedActionResult;
 
 import java.util.*;
 
 public class AdventuresClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
+        UseItemCallback.EVENT.register((player, world, hand) -> {
+            if (world.isClient && !player.isSpectator() && player instanceof ExtendedHudPlayer extendedHudPlayer) {
+                ItemStack stack = player.getStackInHand(hand);
+                ExtendedHudPlayer.Type type = ExtendedHudPlayer.Type.COMPASS;
+                if (stack.isOf(Items.RECOVERY_COMPASS)) {
+                    type = ExtendedHudPlayer.Type.RECOVERY_COMPASS;
+                } else if (stack.isOf(Items.CLOCK)) {
+                    type = ExtendedHudPlayer.Type.CLOCK;
+                } else if (stack.isOf(AdventuresItems.ASTROLABE)) {
+                    type = ExtendedHudPlayer.Type.ASTROLABE;
+                }
+                extendedHudPlayer.gbw$getItemInfoHuds().get(type).invert();
+                return TypedActionResult.success(stack);
+            }
+            return TypedActionResult.pass(ItemStack.EMPTY);
+        });
+
         HudRenderCallback.EVENT.register((drawContext, tickDelta) -> {
             final MinecraftClient client = MinecraftClient.getInstance();
             if (!client.options.hudHidden) {
@@ -23,10 +43,10 @@ public class AdventuresClient implements ClientModInitializer {
                 if (clientPlayer != null && client.world != null && clientPlayer instanceof ExtendedHudPlayer extendedHudPlayer) {
                     List<Identifier> sprites = new ArrayList<>();
                     List<Text> texts = new ArrayList<>();
-                    Map<Item, ItemInfoHud> itemInfoHuds = extendedHudPlayer.gbw$getItemInfoHuds();
-                    itemInfoHuds.forEach((item, itemInfoHud) -> {
+                    Map<ExtendedHudPlayer.Type, ItemInfoHud> itemInfoHuds = extendedHudPlayer.gbw$getItemInfoHuds();
+                    itemInfoHuds.forEach((type, itemInfoHud) -> {
                         if (itemInfoHud.canRender(clientPlayer)) {
-                            if (item == Items.RECOVERY_COMPASS && !texts.isEmpty()) {
+                            if (type == ExtendedHudPlayer.Type.RECOVERY_COMPASS && !texts.isEmpty()) {
                                 sprites.set(0, itemInfoHud.getIconId(clientPlayer));
                                 texts.set(0, itemInfoHud.getText(clientPlayer));
                             } else {

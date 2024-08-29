@@ -22,7 +22,6 @@ public enum WorldSize {
 
     private final int size;
 
-
     WorldSize(int size) {
         this.size = size;
     }
