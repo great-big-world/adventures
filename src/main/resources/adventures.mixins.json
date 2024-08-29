@@ -9,6 +9,7 @@
     "LecternBlockEntityMixin",
     "entity.LivingEntityMixin",
     "entity.PlayerEntityMixin",
+    "entity.PlayerInventoryMixin",
     "entity.ServerPlayerEntityMixin",
     "world.ChunkGeneratorMixin",
     "world.LevelPropertiesMixin",

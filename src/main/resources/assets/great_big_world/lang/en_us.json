@@ -28,5 +28,6 @@
   "dimension_type.minecraft.the_end": "End",
   "dimension_type.minecraft.overworld_caves": "Overworld",
 
-  "gamerule.showCoordinatesOnDeath": "Show death coordinates"
+  "gamerule.showCoordinatesOnDeath": "Show death coordinates",
+  "gamerule.itemDespawnTimeOnDeath": "Time before dropped death items despawn"
 }

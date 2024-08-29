@@ -6,8 +6,10 @@ import net.minecraft.world.GameRules;
 
 public final class AdventuresGameRules {
     public static GameRules.Key<GameRules.BooleanRule> SHOW_COORDINATES_ON_DEATH;
+    public static GameRules.Key<GameRules.IntRule> ITEM_DESPAWN_TIME_ON_DEATH;
 
     public static void register() {
-        SHOW_COORDINATES_ON_DEATH = GameRuleRegistry.register("showCoordinatesOnDeath", GameRules.Category.UPDATES, GameRuleFactory.createBooleanRule(true));
+        SHOW_COORDINATES_ON_DEATH = GameRuleRegistry.register("showCoordinatesOnDeath", GameRules.Category.PLAYER, GameRuleFactory.createBooleanRule(true));
+        ITEM_DESPAWN_TIME_ON_DEATH = GameRuleRegistry.register("itemDespawnTimeOnDeath", GameRules.Category.PLAYER, GameRuleFactory.createIntRule(-6000));
     }
 }
