@@ -3,6 +3,7 @@ package dev.creoii.greatbigworld.adventures.util;
 import net.minecraft.text.Text;
 
 public enum WorldSize {
+    ONE(1),
     TWO(2),
     FOUR(4),
     EIGHT(8),

@@ -18,8 +18,11 @@ public abstract class MinecraftDedicatedServerMixin implements ExtendedDedicated
     @Override
     public void gbw$loadServerProperties(ExtendedLevelProperties extendedLevelProperties) {
         if (getProperties() instanceof ExtendedServerProperties extendedServerProperties) {
-            LOGGER.info("Setting world size to " + extendedServerProperties.gbw$getStartSize());
-            extendedLevelProperties.gbw$setWorldSize(extendedServerProperties.gbw$getStartSize());
+            int size = extendedServerProperties.gbw$getStartSize();
+            if (size > 0) {
+                LOGGER.info("Setting world size to " + size);
+                extendedLevelProperties.gbw$setWorldSize(size);
+            }
         }
     }
 }
