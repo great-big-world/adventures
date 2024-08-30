@@ -45,7 +45,7 @@ public class AdventuresClient implements ClientModInitializer {
                     List<Text> texts = new ArrayList<>();
                     Map<ExtendedHudPlayer.Type, ItemInfoHud> itemInfoHuds = extendedHudPlayer.gbw$getItemInfoHuds();
                     itemInfoHuds.forEach((type, itemInfoHud) -> {
-                        if (itemInfoHud.canRender(clientPlayer)) {
+                        if (itemInfoHud.isActive() && itemInfoHud.canRender(clientPlayer)) {
                             if (type == ExtendedHudPlayer.Type.RECOVERY_COMPASS && !texts.isEmpty()) {
                                 sprites.set(0, itemInfoHud.getIconId(clientPlayer));
                                 texts.set(0, itemInfoHud.getText(clientPlayer));
@@ -75,17 +75,20 @@ public class AdventuresClient implements ClientModInitializer {
     }
 
     public static String getDisplayTime(ClientPlayerEntity clientPlayer) {
-        long time = (clientPlayer.clientWorld.getTimeOfDay() + 6000L) % 24000L;
-        long hours = (time / 1000L) % 24L;
-        long minutes = (time % 1000L) * 60L / 1000L;
-        if (hours == 0L) {
-            hours = 12L;
-        } else if (hours > 12L) {
-            hours -= 12L;
+        if (clientPlayer.clientWorld != null) {
+            long time = (clientPlayer.clientWorld.getTimeOfDay() + 6000L) % 24000L;
+            long hours = (time / 1000L) % 24L;
+            long minutes = (time % 1000L) * 60L / 1000L;
+            if (hours == 0L) {
+                hours = 12L;
+            } else if (hours > 12L) {
+                hours -= 12L;
+            }
+            String displayTime = String.format("%02d:%02d %s", hours, minutes, time < 12000L ? "PM" : "AM");
+            if (displayTime.startsWith("0"))
+                displayTime = displayTime.substring(1);
+            return displayTime;
         }
-        String displayTime = String.format("%02d:%02d %s", hours, minutes, time < 12000L ? "PM" : "AM");
-        if (displayTime.startsWith("0"))
-            displayTime = displayTime.substring(1);
-        return displayTime;
+        return "";
     }
 }
