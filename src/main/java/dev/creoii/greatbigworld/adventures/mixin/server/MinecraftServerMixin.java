@@ -17,6 +17,9 @@ public class MinecraftServerMixin {
     private void gbw$applyWorldStartServerProperties(WorldGenerationProgressListener worldGenerationProgressListener, CallbackInfo ci, @Local ServerWorldProperties serverWorldProperties) {
         if (serverWorldProperties instanceof ExtendedLevelProperties extendedLevelProperties && ((MinecraftServer) (Object) this) instanceof ExtendedDedicatedServer dedicatedServer) {
             dedicatedServer.gbw$loadServerProperties(extendedLevelProperties);
+            int worldSize = extendedLevelProperties.gbw$getWorldSize();
+            if (worldSize > 0)
+                serverWorldProperties.getWorldBorder().size = (worldSize * 2d * 16d) - .5d;
         }
     }
 }
