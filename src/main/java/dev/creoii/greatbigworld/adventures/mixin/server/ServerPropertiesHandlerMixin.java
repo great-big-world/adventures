@@ -13,10 +13,7 @@ import java.util.Properties;
 
 @Mixin(ServerPropertiesHandler.class)
 public abstract class ServerPropertiesHandlerMixin extends AbstractPropertiesHandler<ServerPropertiesHandler> implements ExtendedServerProperties {
-    @Unique private String gbw$startSeason;
     @Unique private int gbw$startSize;
-    @Unique private long gbw$startTime;
-    @Unique private String gbw$startWeather;
 
     public ServerPropertiesHandlerMixin(Properties properties) {
         super(properties);
@@ -24,29 +21,11 @@ public abstract class ServerPropertiesHandlerMixin extends AbstractPropertiesHan
 
     @Inject(method = "<init>", at = @At("TAIL"))
     private void gbw$parseWorldStartServerProperties(Properties properties, CallbackInfo ci) {
-        gbw$startSeason = getString("start-season", "summer").toLowerCase();
         gbw$startSize = getInt("start-size", -1);
-        gbw$startTime = parseLong("start-time", 0L);
-        gbw$startWeather = getString("start-weather", "clear").toLowerCase();
-    }
-
-    @Override
-    public String gbw$getStartSeason() {
-        return gbw$startSeason;
     }
 
     @Override
     public int gbw$getStartSize() {
         return gbw$startSize;
-    }
-
-    @Override
-    public long gbw$getStartTime() {
-        return gbw$startTime;
-    }
-
-    @Override
-    public String gbw$getStartWeather() {
-        return gbw$startWeather;
     }
 }
