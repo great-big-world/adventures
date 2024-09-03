@@ -2,14 +2,13 @@ package dev.creoii.greatbigworld.adventures.mixin.client;
 
 import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.serialization.Lifecycle;
-import dev.creoii.greatbigworld.adventures.util.ExtendedLevelProperties;
 import dev.creoii.greatbigworld.adventures.util.ExtendedWorldCreator;
+import dev.creoii.greatbigworld.adventures.util.WorldSizeHolder;
 import net.minecraft.client.gui.screen.world.CreateWorldScreen;
 import net.minecraft.client.gui.screen.world.WorldCreator;
 import net.minecraft.registry.CombinedDynamicRegistries;
 import net.minecraft.registry.ServerDynamicRegistryType;
 import net.minecraft.util.math.random.LocalRandom;
-import net.minecraft.util.math.random.Random;
 import net.minecraft.world.SaveProperties;
 import net.minecraft.world.level.LevelProperties;
 import org.spongepowered.asm.mixin.Final;
@@ -30,9 +29,9 @@ public class CreateWorldScreenMixin {
         if (saveProperties instanceof LevelProperties levelProperties && worldCreator instanceof ExtendedWorldCreator extendedWorldCreator) {
             extendedWorldCreator.gbw$getStartWeather().apply(levelProperties, new LocalRandom(levelProperties.getGeneratorOptions().getSeed()));
             levelProperties.setTimeOfDay(extendedWorldCreator.gbw$getStartTime());
-            if (levelProperties instanceof ExtendedLevelProperties extendedLevelProperties) {
+            if (levelProperties instanceof WorldSizeHolder worldSizeHolder) {
                 int worldSize = extendedWorldCreator.gbw$getWorldSize();
-                extendedLevelProperties.gbw$setWorldSize(worldSize);
+                worldSizeHolder.gbw$setWorldSize(worldSize);
                 if (worldSize > 0)
                     levelProperties.getWorldBorder().size = (worldSize * 2d * 16d) - .5d;
             }

@@ -1,6 +1,6 @@
 package dev.creoii.greatbigworld.adventures.util;
 
-public interface ExtendedWorldCreator extends ExtendedChunkGenerator {
+public interface ExtendedWorldCreator extends WorldSizeHolder {
     void gbw$setStartTime(long startTime);
 
     void gbw$setStartSeason(int season);

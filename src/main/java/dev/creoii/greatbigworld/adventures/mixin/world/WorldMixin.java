@@ -1,7 +1,6 @@
 package dev.creoii.greatbigworld.adventures.mixin.world;
 
-import dev.creoii.greatbigworld.adventures.util.ExtendedChunkGenerator;
-import dev.creoii.greatbigworld.adventures.util.ExtendedLevelProperties;
+import dev.creoii.greatbigworld.adventures.util.WorldSizeHolder;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -18,10 +17,10 @@ public abstract class WorldMixin {
 
     @Inject(method = "setBlockState(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/BlockState;II)Z", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;getWorldChunk(Lnet/minecraft/util/math/BlockPos;)Lnet/minecraft/world/chunk/WorldChunk;"), cancellable = true)
     private void gbw$restrictSetBlockStateForWorldSize(BlockPos pos, BlockState state, int flags, int maxUpdateDepth, CallbackInfoReturnable<Boolean> cir) {
-        if (getLevelProperties() instanceof ExtendedLevelProperties extendedLevelProperties && extendedLevelProperties.gbw$getWorldSize() > 0) {
+        if (getLevelProperties() instanceof WorldSizeHolder worldSizeHolder && worldSizeHolder.gbw$getWorldSize() > 0) {
             int x = pos.getX() / 16;
             int z = pos.getZ() / 16;
-            if (ExtendedChunkGenerator.isWithinWorld(extendedLevelProperties, x, z)) {
+            if (WorldSizeHolder.isWithinWorld(worldSizeHolder, x, z)) {
                 cir.setReturnValue(false);
             }
         }

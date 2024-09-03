@@ -1,8 +1,7 @@
 package dev.creoii.greatbigworld.adventures.mixin.world;
 
 import com.llamalad7.mixinextras.sugar.Local;
-import dev.creoii.greatbigworld.adventures.util.ExtendedChunkGenerator;
-import dev.creoii.greatbigworld.adventures.util.ExtendedLevelProperties;
+import dev.creoii.greatbigworld.adventures.util.WorldSizeHolder;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.WorldGenerationProgressListener;
@@ -26,8 +25,8 @@ import java.util.concurrent.Executor;
 public class ServerWorldMixin {
     @Inject(method = "<init>", at = @At("TAIL"))
     private void gbw$setChunkGeneratorWorldSize(MinecraftServer server, Executor workerExecutor, LevelStorage.Session session, ServerWorldProperties properties, RegistryKey<World> worldKey, DimensionOptions dimensionOptions, WorldGenerationProgressListener worldGenerationProgressListener, boolean debugWorld, long seed, List<SpecialSpawner> spawners, boolean shouldTickTime, RandomSequencesState randomSequencesState, CallbackInfo ci, @Local ChunkGenerator chunkGenerator) {
-        if (chunkGenerator instanceof ExtendedChunkGenerator extendedChunkGenerator && properties instanceof ExtendedLevelProperties extendedLevelProperties) {
-            extendedChunkGenerator.gbw$setWorldSize(extendedLevelProperties.gbw$getWorldSize());
+        if (chunkGenerator instanceof WorldSizeHolder worldSizeHolder && properties instanceof WorldSizeHolder worldSizeHolder1) {
+            worldSizeHolder.gbw$setWorldSize(worldSizeHolder1.gbw$getWorldSize());
         }
     }
 }

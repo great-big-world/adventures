@@ -1,6 +1,6 @@
 package dev.creoii.greatbigworld.adventures.mixin.world;
 
-import dev.creoii.greatbigworld.adventures.util.ExtendedChunkGenerator;
+import dev.creoii.greatbigworld.adventures.util.WorldSizeHolder;
 import net.minecraft.server.world.ThreadedAnvilChunkStorage;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
@@ -16,8 +16,8 @@ public abstract class ThreadedAnvilChunkStorageMixin {
 
     @Inject(method = "shouldTick", at = @At("HEAD"), cancellable = true)
     private void gbw$stopTickChunksOutOfWorld(ChunkPos pos, CallbackInfoReturnable<Boolean> cir) {
-        if (getChunkGenerator() instanceof ExtendedChunkGenerator extendedChunkGenerator) {
-            if (ExtendedChunkGenerator.isWithinWorld(extendedChunkGenerator, pos.x, pos.z)) {
+        if (getChunkGenerator() instanceof WorldSizeHolder worldSizeHolder) {
+            if (WorldSizeHolder.isWithinWorld(worldSizeHolder, pos.x, pos.z)) {
                 cir.setReturnValue(false);
             }
         }
