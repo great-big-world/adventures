@@ -1,22 +1,30 @@
 package dev.creoii.greatbigworld.adventures.client;
 
+import dev.creoii.greatbigworld.adventures.Adventures;
 import dev.creoii.greatbigworld.adventures.registry.AdventuresItems;
 import dev.creoii.greatbigworld.adventures.util.ExtendedHudPlayer;
 import dev.creoii.greatbigworld.adventures.util.ItemInfoHud;
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.fabricmc.fabric.api.event.player.UseItemCallback;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.registry.RegistryKey;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.TypedActionResult;
+import net.minecraft.world.dimension.DimensionType;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
 public class AdventuresClient implements ClientModInitializer {
+    @Nullable
+    private static RegistryKey<DimensionType> destinationDimension = null;
+
     @Override
     public void onInitializeClient() {
         UseItemCallback.EVENT.register((player, world, hand) -> {
@@ -72,6 +80,17 @@ public class AdventuresClient implements ClientModInitializer {
                 }
             }
         });
+
+        ClientPlayNetworking.registerGlobalReceiver(Adventures.TeleportDestination.PACKET_ID, (payload, context) -> {
+            RegistryKey<DimensionType> registryKey = payload.destinationDimension();
+            context.client().execute(() -> {
+                destinationDimension = registryKey;
+            });
+        });
+    }
+
+    public static @Nullable RegistryKey<DimensionType> getDestinationDimension() {
+        return destinationDimension;
     }
 
     public static String getDisplayTime(ClientPlayerEntity clientPlayer) {

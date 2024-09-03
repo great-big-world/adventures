@@ -1,5 +1,6 @@
 package dev.creoii.greatbigworld.adventures.mixin.client;
 
+import dev.creoii.greatbigworld.adventures.client.AdventuresClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.DownloadingTerrainScreen;
 import net.minecraft.client.gui.screen.Screen;
@@ -19,9 +20,8 @@ public abstract class DownloadingTerrainScreenMixin extends Screen {
 
     @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawCenteredTextWithShadow(Lnet/minecraft/client/font/TextRenderer;Lnet/minecraft/text/Text;III)V"), cancellable = true)
     private void gbw$changeLoadingTerrainText(DrawContext context, int mouseX, int mouseY, float delta, CallbackInfo ci) {
-        if (client != null && client.world != null) {
-            RegistryKey<DimensionType> dimensionKey = client.world.getDimensionEntry().getKey().get();
-            context.drawCenteredTextWithShadow(textRenderer, Text.translatable("multiplayer.downloadingTerrain", Text.translatable(dimensionKey.getRegistry().getPath() + "." + dimensionKey.getValue().getNamespace() + "." + dimensionKey.getValue().getPath())), width / 2, height / 2 - 50, 16777215);
+        if (client != null && client.world != null && AdventuresClient.getDestinationDimension() != null) {
+            context.drawCenteredTextWithShadow(textRenderer, Text.translatable("multiplayer.downloadingTerrain", Text.translatable(AdventuresClient.getDestinationDimension().getRegistry().getPath() + "." + AdventuresClient.getDestinationDimension().getValue().getNamespace() + "." + AdventuresClient.getDestinationDimension().getValue().getPath())), width / 2, height / 2 - 50, 16777215);
         }
         ci.cancel();
     }

@@ -4,8 +4,10 @@
   "package": "dev.creoii.greatbigworld.adventures.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
+    "EndPortalBlockMixin",
     "FlowableFluidMixin",
     "LecternBlockEntityMixin",
+    "entity.EntityMixin",
     "entity.LivingEntityMixin",
     "entity.PlayerInventoryMixin",
     "entity.ServerPlayerEntityMixin",
