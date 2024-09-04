@@ -8,7 +8,6 @@
     "FlowableFluidMixin",
     "LecternBlockEntityMixin",
     "entity.EntityMixin",
-    "entity.HungerManagerMixin",
     "entity.LivingEntityMixin",
     "entity.PlayerEntityMixin",
     "entity.PlayerInventoryMixin",
