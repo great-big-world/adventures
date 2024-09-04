@@ -2,6 +2,7 @@ package dev.creoii.greatbigworld.adventures.client;
 
 import dev.creoii.greatbigworld.adventures.Adventures;
 import dev.creoii.greatbigworld.adventures.registry.AdventuresItems;
+import dev.creoii.greatbigworld.adventures.util.AdventuresTags;
 import dev.creoii.greatbigworld.adventures.util.ExtendedHudPlayer;
 import dev.creoii.greatbigworld.adventures.util.ItemInfoHud;
 import net.fabricmc.api.ClientModInitializer;
@@ -30,16 +31,18 @@ public class AdventuresClient implements ClientModInitializer {
         UseItemCallback.EVENT.register((player, world, hand) -> {
             if (world.isClient && !player.isSpectator() && player instanceof ExtendedHudPlayer extendedHudPlayer) {
                 ItemStack stack = player.getStackInHand(hand);
-                ExtendedHudPlayer.Type type = ExtendedHudPlayer.Type.COMPASS;
-                if (stack.isOf(Items.RECOVERY_COMPASS)) {
-                    type = ExtendedHudPlayer.Type.RECOVERY_COMPASS;
-                } else if (stack.isOf(Items.CLOCK)) {
-                    type = ExtendedHudPlayer.Type.CLOCK;
-                } else if (stack.isOf(AdventuresItems.ASTROLABE)) {
-                    type = ExtendedHudPlayer.Type.ASTROLABE;
+                if (stack.isIn(AdventuresTags.INFO_HUD_ITEMS)) {
+                    ExtendedHudPlayer.Type type = ExtendedHudPlayer.Type.COMPASS;
+                    if (stack.isOf(Items.RECOVERY_COMPASS)) {
+                        type = ExtendedHudPlayer.Type.RECOVERY_COMPASS;
+                    } else if (stack.isOf(Items.CLOCK)) {
+                        type = ExtendedHudPlayer.Type.CLOCK;
+                    } else if (stack.isOf(AdventuresItems.ASTROLABE)) {
+                        type = ExtendedHudPlayer.Type.ASTROLABE;
+                    }
+                    extendedHudPlayer.gbw$getItemInfoHuds().get(type).invert();
+                    return TypedActionResult.success(stack);
                 }
-                extendedHudPlayer.gbw$getItemInfoHuds().get(type).invert();
-                return TypedActionResult.success(stack);
             }
             return TypedActionResult.pass(ItemStack.EMPTY);
         });

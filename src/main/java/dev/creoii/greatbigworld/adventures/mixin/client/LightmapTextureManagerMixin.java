@@ -32,7 +32,6 @@ public class LightmapTextureManagerMixin {
     @Unique
     private float getTimeInfluence() {
         long timeOfDay = client.world.getTimeOfDay() % 24000L;
-
         if (timeOfDay >= 12000L && timeOfDay < 15000L) {
             return (float) (timeOfDay - 12000L) / 3000f;
         } else if (timeOfDay >= 15000L && timeOfDay < 23000L) {
