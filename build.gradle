@@ -1,3 +1,7 @@
 loom {
     accessWidenerPath = file("src/main/resources/adventures.accesswidener")
 }
+
+dependencies {
+    //implementation project(":flora-and-fauna")
+}
