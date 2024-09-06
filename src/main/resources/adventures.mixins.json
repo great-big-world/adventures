@@ -28,6 +28,7 @@
     "client.CreateWorldScreenMixin",
     "client.DeathScreenMixin",
     "client.DownloadingTerrainScreenMixin",
+    "client.GameRendererMixin",
     "client.LightmapTextureManagerMixin",
     "client.MinecraftClientMixin",
     "client.WorldCreatorMixin",

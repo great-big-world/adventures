@@ -18,13 +18,14 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(LightmapTextureManager.class)
 public class LightmapTextureManagerMixin {
     @Shadow @Final private MinecraftClient client;
-    @Unique private final float[] MOON_PHASE_BRIGHTNESS = {0f, -.0375f, -.075f, -.1125f, -.15f, -.1125f, -.075f, -.0375f};
+    @Unique private final float[] MOON_PHASE_BRIGHTNESS = {0f, -.0375f, -.075f, -.1125f, -.1625f, -.1125f, -.075f, -.0375f};
 
     @WrapOperation(method = "update", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/LightmapTextureManager;getDarkness(Lnet/minecraft/entity/LivingEntity;FF)F"))
     private float gbw$modifyDarknessForMoonPhase(LightmapTextureManager instance, LivingEntity entity, float factor, float delta, Operation<Float> original) {
-        float darkness = original.call(instance, entity, factor, delta);
-        if (client.world != null && entity instanceof ClientPlayerEntity clientPlayer) {
-            return MathHelper.lerp(UndergroundHelper.sampleLightAt(client.world, clientPlayer.getBlockPos(), LightType.SKY), darkness, darkness - MOON_PHASE_BRIGHTNESS[client.world.getMoonPhase()] * getTimeInfluence());
+        float undergroundness = UndergroundHelper.sampleLightAt(client.world, entity.getBlockPos(), LightType.SKY);
+        float darkness = original.call(instance, entity, factor, delta) - ((1f - undergroundness) * .5f);
+        if (client.world != null && entity instanceof ClientPlayerEntity) {
+            return MathHelper.lerp(undergroundness, darkness, darkness - MOON_PHASE_BRIGHTNESS[client.world.getMoonPhase()] * getTimeInfluence());
         }
         return darkness;
     }
