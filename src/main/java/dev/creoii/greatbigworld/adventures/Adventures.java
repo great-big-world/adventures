@@ -2,6 +2,7 @@ package dev.creoii.greatbigworld.adventures;
 
 import dev.creoii.creoapi.api.item.CreoItemApi;
 import dev.creoii.greatbigworld.adventures.component.JournalContentComponent;
+import dev.creoii.greatbigworld.adventures.registry.AdventuresBlocks;
 import dev.creoii.greatbigworld.adventures.registry.AdventuresGameRules;
 import dev.creoii.greatbigworld.adventures.registry.AdventuresItems;
 import net.fabricmc.api.ModInitializer;
@@ -26,6 +27,7 @@ public class Adventures implements ModInitializer {
 
     @Override
     public void onInitialize() {
+        AdventuresBlocks.register();
         AdventuresItems.register();
         AdventuresGameRules.register();
         Registry.register(Registries.DATA_COMPONENT_TYPE, new Identifier(CreoItemApi.NAMESPACE, "journal_content"), JOURNAL_CONTENT);

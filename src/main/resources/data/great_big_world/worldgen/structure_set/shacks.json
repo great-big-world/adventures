@@ -1,0 +1,22 @@
+{
+  "structures": [
+    {
+      "structure": "great_big_world:underground_shack",
+      "weight": 1
+    },
+    {
+      "structure": "great_big_world:mountain_shack",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "type": "minecraft:random_spread",
+    "salt": 91825927583,
+    "spacing": 14,
+    "separation": 8,
+    "exclusion_zone": {
+      "chunk_count": 2,
+      "other_set": "minecraft:villages"
+    }
+  }
+}

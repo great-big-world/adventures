@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:jigsaw",
+  "biomes": "#great_big_world:has_structure/underground_shack",
+  "step": "underground_decoration",
+  "terrain_adaptation": "beard_thin",
+  "start_pool": "great_big_world:shack/underground_start",
+  "start_height": {
+    "type": "minecraft:uniform",
+    "max_inclusive": {
+      "absolute": 63
+    },
+    "min_inclusive": {
+      "above_bottom": 24
+    }
+  },
+  "spawn_overrides": {},
+  "max_distance_from_center": 16,
+  "use_expansion_hack": false,
+  "size": 1
+}
