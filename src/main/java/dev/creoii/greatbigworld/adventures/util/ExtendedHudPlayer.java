@@ -12,10 +12,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.GlobalPos;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.*;
 import net.minecraft.world.World;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Nullable;
@@ -25,10 +22,10 @@ import java.util.Map;
 @FunctionalInterface
 public interface ExtendedHudPlayer {
     Map<Type, ItemInfoHud> DEFAULT = ImmutableMap.<Type, ItemInfoHud>builder()
-            .put(Type.COMPASS, new ItemInfoHud(clientPlayer -> getCompassTexture(clientPlayer, "compass_", getCompassTarget(clientPlayer.clientWorld, clientPlayer.getStackInHand(clientPlayer.getActiveHand()))), Items.COMPASS, clientPlayer -> {
+            .put(Type.COMPASS, new ItemInfoHud(clientPlayer -> getCompassTexture(clientPlayer, getCompassTarget(clientPlayer.clientWorld, clientPlayer.getStackInHand(clientPlayer.getActiveHand()))), Items.COMPASS, clientPlayer -> {
                 return Text.literal(StringUtils.capitalize(clientPlayer.getHorizontalFacing().getName()));
             }))
-            .put(Type.RECOVERY_COMPASS, new ItemInfoHud(clientPlayer -> getCompassTexture(clientPlayer, "recovery_compass_", clientPlayer.getLastDeathPos().orElse(null)), Items.RECOVERY_COMPASS, clientPlayer -> {
+            .put(Type.RECOVERY_COMPASS, new ItemInfoHud(clientPlayer -> getRecoveryCompassTexture(clientPlayer, clientPlayer.getLastDeathPos().orElse(null)), Items.RECOVERY_COMPASS, clientPlayer -> {
                 return Text.literal(StringUtils.capitalize(clientPlayer.getHorizontalFacing().getName()));
             }))
             .put(Type.CLOCK, new ItemInfoHud(ExtendedHudPlayer::getClockTexture, Items.CLOCK, clientPlayer -> {
@@ -42,14 +39,30 @@ public interface ExtendedHudPlayer {
 
     Map<Type, ItemInfoHud> gbw$getItemInfoHuds();
 
-    private static Identifier getCompassTexture(ClientPlayerEntity clientPlayer, String prefix, @Nullable GlobalPos pos) {
+    private static Identifier getCompassTexture(ClientPlayerEntity clientPlayer, @Nullable GlobalPos pos) {
         if (pos != null) {
             float yaw = clientPlayer.getYaw() % 360;
             if (yaw < 0)
                 yaw += 360;
-            return new Identifier(Adventures.NAMESPACE, prefix + (Math.round(yaw / 45) % 8));
+            return new Identifier(Adventures.NAMESPACE, "compass_" + (Math.round(yaw / 45) % 8));
         }
-        return new Identifier(Adventures.NAMESPACE, prefix + "0");
+        return new Identifier(Adventures.NAMESPACE, "compass_0");
+    }
+
+    private static Identifier getRecoveryCompassTexture(ClientPlayerEntity clientPlayer, @Nullable GlobalPos pos) {
+        if (pos != null) {
+            BlockPos direction = pos.pos().subtract(clientPlayer.getBlockPos());
+
+            double yawRadians = Math.toRadians(clientPlayer.getBodyYaw());
+            double angle = Math.atan2(direction.getZ(), direction.getX()) - yawRadians;
+
+            int index = (int) Math.round(Math.toDegrees(angle) / 45) % 8;
+            if (index < 0) {
+                index += 8;
+            }
+            return new Identifier(Adventures.NAMESPACE, "recovery_compass_" + index);
+        }
+        return new Identifier(Adventures.NAMESPACE, "recovery_compass_0");
     }
 
     private static GlobalPos getCompassTarget(World world, ItemStack stack) {
