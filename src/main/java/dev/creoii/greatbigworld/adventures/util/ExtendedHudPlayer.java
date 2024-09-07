@@ -13,7 +13,9 @@ import net.minecraft.item.Items;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.GlobalPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Nullable;
@@ -42,16 +44,10 @@ public interface ExtendedHudPlayer {
 
     private static Identifier getCompassTexture(ClientPlayerEntity clientPlayer, String prefix, @Nullable GlobalPos pos) {
         if (pos != null) {
-            BlockPos direction = pos.pos().subtract(clientPlayer.getBlockPos());
-
-            double yawRadians = Math.toRadians(clientPlayer.getBodyYaw());
-            double angle = Math.atan2(direction.getZ(), direction.getX()) - yawRadians;
-
-            int index = (int) Math.round(Math.toDegrees(angle) / 45) % 8;
-            if (index < 0) {
-                index += 8;
-            }
-            return new Identifier(Adventures.NAMESPACE, prefix + index);
+            float yaw = clientPlayer.getYaw() % 360;
+            if (yaw < 0)
+                yaw += 360;
+            return new Identifier(Adventures.NAMESPACE, prefix + (Math.round(yaw / 45) % 8));
         }
         return new Identifier(Adventures.NAMESPACE, prefix + "0");
     }
