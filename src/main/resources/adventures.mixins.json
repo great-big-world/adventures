@@ -14,7 +14,6 @@
     "entity.ServerPlayerEntityMixin",
     "world.ChunkGeneratorMixin",
     "world.LevelPropertiesMixin",
-    "world.LevelStorageMixin",
     "world.NoiseChunkGeneratorMixin",
     "world.ServerWorldMixin",
     "world.SpringFeatureMixin",
@@ -30,7 +29,6 @@
     "client.DownloadingTerrainScreenMixin",
     "client.GameRendererMixin",
     "client.LightmapTextureManagerMixin",
-    "client.MinecraftClientMixin",
     "client.WorldCreatorMixin",
     "client.WorldTabMixin"
   ],
