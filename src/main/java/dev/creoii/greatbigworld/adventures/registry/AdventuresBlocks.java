@@ -12,7 +12,7 @@ import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
 
 public final class AdventuresBlocks {
-    public static final Block BEDFRAME = new BedframeBlock(AbstractBlock.Settings.copy(Blocks.WHITE_BED).mapColor(MapColor.OAK_TAN));
+    public static final Block BEDFRAME = new BedframeBlock(AbstractBlock.Settings.copy(Blocks.WHITE_BED).strength(.8f, .4f).mapColor(MapColor.OAK_TAN));
 
     public static void register() {
         Registry.register(Registries.BLOCK, new Identifier(Adventures.NAMESPACE, "bedframe"), BEDFRAME);
