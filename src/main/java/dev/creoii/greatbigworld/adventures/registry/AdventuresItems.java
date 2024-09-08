@@ -4,6 +4,7 @@ import dev.creoii.creoapi.api.item.CreoItemSettings;
 import dev.creoii.greatbigworld.adventures.Adventures;
 import dev.creoii.greatbigworld.adventures.item.AstrolabeItem;
 import dev.creoii.greatbigworld.adventures.item.JournalItem;
+import net.fabricmc.fabric.api.registry.FuelRegistry;
 import net.minecraft.item.BedItem;
 import net.minecraft.item.Item;
 import net.minecraft.registry.Registries;
@@ -21,5 +22,7 @@ public final class AdventuresItems {
         Registry.register(Registries.ITEM, new Identifier(Adventures.NAMESPACE, "journal"), JOURNAL);
 
         Registry.register(Registries.ITEM, new Identifier(Adventures.NAMESPACE, "bedframe"), BEDFRAME);
+
+        FuelRegistry.INSTANCE.add(BEDFRAME, 900);
     }
 }
