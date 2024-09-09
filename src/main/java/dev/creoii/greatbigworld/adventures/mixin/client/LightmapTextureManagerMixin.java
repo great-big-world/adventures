@@ -26,12 +26,13 @@ public class LightmapTextureManagerMixin {
             return original.call(instance, entity, factor, delta);
 
         // how far underground we are [0-1]f
-        float undergroundness = UndergroundHelper.sampleLightAt(client.world, entity.getBlockPos(), LightType.SKY);
-        // base darkness
+        float undergroundness = UndergroundHelper.sampleLightAtIgnoreNonOpaque(client.world, entity.getBlockPos(), LightType.SKY);
+        if (client.world == null || client.world.isDay() && undergroundness <= 0f) {
+            return original.call(instance, entity, factor, delta);
+        }
+
         float darkness = original.call(instance, entity, factor, delta) - ((1f - undergroundness) * .5f);
-        if (client.world != null) {
-            return MathHelper.lerp(undergroundness, darkness, darkness - MOON_PHASE_BRIGHTNESS[client.world.getMoonPhase()] * getTimeInfluence());
-        } return darkness;
+        return MathHelper.lerp(undergroundness, darkness, darkness - MOON_PHASE_BRIGHTNESS[client.world.getMoonPhase()] * getTimeInfluence());
     }
 
     @Unique
