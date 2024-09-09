@@ -26,7 +26,7 @@ public class LightmapTextureManagerMixin {
             return original.call(instance, entity, factor, delta);
 
         // how far underground we are [0-1]f
-        float undergroundness = UndergroundHelper.sampleLightAtIgnoreLeaves(client.world, entity.getBlockPos(), LightType.SKY);
+        float undergroundness = UndergroundHelper.sampleLightAt(client.world, entity.getBlockPos(), LightType.SKY);
         // base darkness
         float darkness = original.call(instance, entity, factor, delta) - ((1f - undergroundness) * .5f);
         if (client.world != null) {
