@@ -9,6 +9,9 @@ import net.minecraft.world.World;
 import java.util.*;
 
 public final class UndergroundHelper {
+    private static final BlockPos.Mutable MUTABLE = new BlockPos.Mutable();
+    private static final Set<Integer> YS = new HashSet<>();
+
     /**
      * @return A float from 0-1 determining how much skylight is around the center position.
      */
@@ -31,8 +34,6 @@ public final class UndergroundHelper {
         int light = 0;
 
         int add;
-        BlockPos.Mutable top = new BlockPos.Mutable();
-        List<Integer> ys = new ArrayList<>();
         for (BlockPos pos : BlockPos.iterate(center.add(-1, -1, -1), center.add(1, 2, 1))) {
             if (!world.getBlockState(pos).isOpaqueFullCube(world, pos)) {
                 add = world.getLightLevel(lightType, pos);
@@ -43,8 +44,8 @@ public final class UndergroundHelper {
                     continue;
                 }
 
-                top.set(world.getTopPosition(Heightmap.Type.MOTION_BLOCKING, pos));
-                if (!world.getBlockState(top).isOpaqueFullCube(world, top) && isNonOpaqueBetween(world, pos, top, ys)) {
+                MUTABLE.set(world.getTopPosition(Heightmap.Type.MOTION_BLOCKING, pos));
+                if (!world.getBlockState(MUTABLE).isOpaqueFullCube(world, MUTABLE) && isNonOpaqueBetween(world, pos)) {
                     light += 15;
                 } else light += add;
 
@@ -52,27 +53,26 @@ public final class UndergroundHelper {
                 ++total;
             }
         }
-
+        
         // average of all light values / 15f to normalize
         return total > 0 ? ((float) light / total) / 15f : 0f;
     }
 
-    public static boolean isNonOpaqueBetween(World world, BlockPos bottom, BlockPos.Mutable top, List<Integer> ys) {
-        if (top.getY() - bottom.getY() <= 1)
+    public static boolean isNonOpaqueBetween(World world, BlockPos bottom) {
+        if (MUTABLE.getY() - bottom.getY() <= 1)
             return world.getBlockState(bottom).isOpaqueFullCube(world, bottom);
 
-        ys.clear();
-        for (int y = top.getY(); y >= bottom.getY(); y -= y < world.getSeaLevel() ? 2 : 1) {
-            ys.add(y);
+        YS.clear();
+        for (int y = MUTABLE.getY(); y >= bottom.getY(); y -= y < world.getSeaLevel() ? 2 : 1) {
+            YS.add(y);
         }
 
-        Collections.shuffle(ys);
-        for (int y : ys) {
-            top.setY(y);
-            BlockState state = world.getBlockState(top);
+        for (int y : YS) {
+            MUTABLE.setY(y);
+            BlockState state = world.getBlockState(MUTABLE);
             if (state.isAir())
                 continue;
-            if (state.isOpaqueFullCube(world, top))
+            if (state.isOpaqueFullCube(world, MUTABLE))
                 return false;
         }
         return true;
