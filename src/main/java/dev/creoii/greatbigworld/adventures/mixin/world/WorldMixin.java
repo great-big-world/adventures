@@ -20,7 +20,7 @@ public abstract class WorldMixin {
         if (getLevelProperties() instanceof WorldSizeHolder worldSizeHolder && worldSizeHolder.gbw$getWorldSize() > 0) {
             int x = pos.getX() / 16;
             int z = pos.getZ() / 16;
-            if (WorldSizeHolder.isWithinWorld(worldSizeHolder, x, z)) {
+            if (WorldSizeHolder.isOutsideWorld(worldSizeHolder, x, z)) {
                 cir.setReturnValue(false);
             }
         }

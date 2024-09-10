@@ -30,14 +30,14 @@ public abstract class ChunkGeneratorMixin implements WorldSizeHolder {
 
     @Inject(method = "generateFeatures", at = @At("HEAD"), cancellable = true)
     private void gbw$limitFeatures(StructureWorldAccess world, Chunk chunk, StructureAccessor structureAccessor, CallbackInfo ci) {
-        if (WorldSizeHolder.isWithinWorld(this, chunk.getPos().x, chunk.getPos().z)) {
+        if (WorldSizeHolder.isOutsideWorld(this, chunk.getPos().x, chunk.getPos().z)) {
             ci.cancel();
         }
     }
 
     @Inject(method = "setStructureStarts", at = @At("HEAD"), cancellable = true)
     private void gbw$limitStructureStarts(DynamicRegistryManager registryManager, StructurePlacementCalculator placementCalculator, StructureAccessor structureAccessor, Chunk chunk, StructureTemplateManager structureTemplateManager, CallbackInfo ci) {
-        if (WorldSizeHolder.isWithinWorld(this, chunk.getPos().x, chunk.getPos().z)) {
+        if (WorldSizeHolder.isOutsideWorld(this, chunk.getPos().x, chunk.getPos().z)) {
             ci.cancel();
         }
     }
