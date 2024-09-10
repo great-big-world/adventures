@@ -53,7 +53,7 @@ public final class UndergroundHelper {
                 ++total;
             }
         }
-        
+
         // average of all light values / 15f to normalize
         return total > 0 ? ((float) light / total) / 15f : 0f;
     }
