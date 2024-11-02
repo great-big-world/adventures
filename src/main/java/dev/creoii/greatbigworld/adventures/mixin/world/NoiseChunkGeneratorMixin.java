@@ -1,7 +1,7 @@
 package dev.creoii.greatbigworld.adventures.mixin.world;
 
 import com.llamalad7.mixinextras.sugar.Local;
-import dev.creoii.creoapi.impl.worldgen.util.WorldAwareNoiseConfig;
+import dev.creoii.greatbigworld.adventures.util.WorldAwareNoiseConfig;
 import dev.creoii.greatbigworld.adventures.util.WorldSizeHolder;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.world.ChunkRegion;
@@ -57,9 +57,9 @@ public abstract class NoiseChunkGeneratorMixin extends ChunkGenerator {
     private void gbw$limitBiomePopulation(Blender blender, NoiseConfig noiseConfig, StructureAccessor structureAccessor, Chunk chunk, CallbackInfo ci, @Local ChunkNoiseSampler chunkNoiseSampler, @Local BiomeSupplier biomeSupplier) {
         if (this instanceof WorldSizeHolder worldSizeHolder) {
             if (WorldSizeHolder.isOutsideWorld(worldSizeHolder, chunk.getPos().x, chunk.getPos().z)) {
-                if (noiseConfig != null && ((WorldAwareNoiseConfig) noiseConfig).creo$getWorld() != null) {
+                if (noiseConfig != null && ((WorldAwareNoiseConfig) noiseConfig).gbw$getWorld() != null) {
                     chunk.populateBiomes((x1, y, z1, noise) -> {
-                        return ((WorldAwareNoiseConfig) noiseConfig).creo$getWorld().getRegistryManager().get(RegistryKeys.BIOME).entryOf(BiomeKeys.THE_VOID);
+                        return ((WorldAwareNoiseConfig) noiseConfig).gbw$getWorld().getRegistryManager().get(RegistryKeys.BIOME).entryOf(BiomeKeys.THE_VOID);
                     }, noiseConfig.getMultiNoiseSampler());
                     ci.cancel();
                 }

@@ -1,5 +1,6 @@
 package dev.creoii.greatbigworld.adventures.registry;
 
+import dev.creoii.greatbigworld.GreatBigWorld;
 import dev.creoii.greatbigworld.adventures.Adventures;
 import dev.creoii.greatbigworld.adventures.block.BedframeBlock;
 import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
@@ -15,7 +16,7 @@ public final class AdventuresBlocks {
     public static final Block BEDFRAME = new BedframeBlock(AbstractBlock.Settings.copy(Blocks.WHITE_BED).strength(.8f, .4f).mapColor(MapColor.OAK_TAN));
 
     public static void register() {
-        Registry.register(Registries.BLOCK, new Identifier(Adventures.NAMESPACE, "bedframe"), BEDFRAME);
+        Registry.register(Registries.BLOCK, new Identifier(GreatBigWorld.NAMESPACE, "bedframe"), BEDFRAME);
 
         FlammableBlockRegistry.getDefaultInstance().add(BEDFRAME, 5, 5);
     }

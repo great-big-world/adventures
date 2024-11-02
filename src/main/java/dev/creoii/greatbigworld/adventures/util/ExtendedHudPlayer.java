@@ -1,6 +1,7 @@
 package dev.creoii.greatbigworld.adventures.util;
 
 import com.google.common.collect.ImmutableMap;
+import dev.creoii.greatbigworld.GreatBigWorld;
 import dev.creoii.greatbigworld.adventures.Adventures;
 import dev.creoii.greatbigworld.adventures.client.AdventuresClient;
 import dev.creoii.greatbigworld.adventures.registry.AdventuresItems;
@@ -32,7 +33,7 @@ public interface ExtendedHudPlayer {
                 return Text.literal(AdventuresClient.getDisplayTime(clientPlayer));
             }))
             // change texture based on world quadrant?
-            .put(Type.ASTROLABE, new ItemInfoHud(clientPlayer -> new Identifier(Adventures.NAMESPACE, "astrolabe"), AdventuresItems.ASTROLABE, clientPlayer -> {
+            .put(Type.ASTROLABE, new ItemInfoHud(clientPlayer -> new Identifier(GreatBigWorld.NAMESPACE, "astrolabe"), AdventuresItems.ASTROLABE, clientPlayer -> {
                 return Text.literal(clientPlayer.getBlockX() + ", " + clientPlayer.getBlockY() + ", " + clientPlayer.getBlockZ());
             }))
             .build();
@@ -44,9 +45,9 @@ public interface ExtendedHudPlayer {
             float yaw = clientPlayer.getYaw() % 360;
             if (yaw < 0)
                 yaw += 360;
-            return new Identifier(Adventures.NAMESPACE, "compass_" + (Math.round(yaw / 45) % 8));
+            return new Identifier(GreatBigWorld.NAMESPACE, "compass_" + (Math.round(yaw / 45) % 8));
         }
-        return new Identifier(Adventures.NAMESPACE, "compass_0");
+        return new Identifier(GreatBigWorld.NAMESPACE, "compass_0");
     }
 
     private static Identifier getRecoveryCompassTexture(ClientPlayerEntity clientPlayer, @Nullable GlobalPos pos) {
@@ -60,9 +61,9 @@ public interface ExtendedHudPlayer {
             if (index < 0) {
                 index += 8;
             }
-            return new Identifier(Adventures.NAMESPACE, "recovery_compass_" + index);
+            return new Identifier(GreatBigWorld.NAMESPACE, "recovery_compass_" + index);
         }
-        return new Identifier(Adventures.NAMESPACE, "recovery_compass_0");
+        return new Identifier(GreatBigWorld.NAMESPACE, "recovery_compass_0");
     }
 
     private static GlobalPos getCompassTarget(World world, ItemStack stack) {
@@ -76,9 +77,9 @@ public interface ExtendedHudPlayer {
     private static Identifier getClockTexture(ClientPlayerEntity clientPlayer) {
         long time = clientPlayer.clientWorld.getTimeOfDay();
         if (time >= 13000L) {
-            return new Identifier(Adventures.NAMESPACE, "clock_night");
+            return new Identifier(GreatBigWorld.NAMESPACE, "clock_night");
         }
-        return new Identifier(Adventures.NAMESPACE, "clock_day");
+        return new Identifier(GreatBigWorld.NAMESPACE, "clock_day");
     }
 
     enum Type {

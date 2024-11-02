@@ -2,6 +2,15 @@ loom {
     accessWidenerPath = file("src/main/resources/adventures.accesswidener")
 }
 
+configurations {
+    common {
+        canBeResolved = true
+        canBeConsumed = false
+    }
+    compileClasspath.extendsFrom common
+    runtimeClasspath.extendsFrom common
+}
+
 dependencies {
-    //implementation project(":flora-and-fauna")
+    common(project(path: ':core', configuration: 'namedElements')) { transitive false }
 }

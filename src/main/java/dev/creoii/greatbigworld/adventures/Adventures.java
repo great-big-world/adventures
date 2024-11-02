@@ -1,6 +1,6 @@
 package dev.creoii.greatbigworld.adventures;
 
-import dev.creoii.creoapi.api.item.CreoItemApi;
+import dev.creoii.greatbigworld.GreatBigWorld;
 import dev.creoii.greatbigworld.adventures.component.JournalContentComponent;
 import dev.creoii.greatbigworld.adventures.registry.AdventuresBlocks;
 import dev.creoii.greatbigworld.adventures.registry.AdventuresGameRules;
@@ -22,7 +22,6 @@ import net.minecraft.world.dimension.DimensionType;
 import java.util.ArrayList;
 
 public class Adventures implements ModInitializer {
-    public static final String NAMESPACE = "great_big_world";
     public static final DataComponentType<JournalContentComponent> JOURNAL_CONTENT = DataComponentType.<JournalContentComponent>builder().codec(JournalContentComponent.CODEC).packetCodec(JournalContentComponent.PACKET_CODEC).cache().build();
 
     @Override
@@ -30,7 +29,7 @@ public class Adventures implements ModInitializer {
         AdventuresBlocks.register();
         AdventuresItems.register();
         AdventuresGameRules.register();
-        Registry.register(Registries.DATA_COMPONENT_TYPE, new Identifier(CreoItemApi.NAMESPACE, "journal_content"), JOURNAL_CONTENT);
+        Registry.register(Registries.DATA_COMPONENT_TYPE, new Identifier(GreatBigWorld.NAMESPACE, "journal_content"), JOURNAL_CONTENT);
 
         PayloadTypeRegistry.playS2C().register(TeleportDestination.PACKET_ID, TeleportDestination.PACKET_CODEC);
 
@@ -42,7 +41,7 @@ public class Adventures implements ModInitializer {
     }
 
     public record TeleportDestination(RegistryKey<DimensionType> destinationDimension) implements CustomPayload {
-        public static final CustomPayload.Id<TeleportDestination> PACKET_ID = new CustomPayload.Id<>(new Identifier(Adventures.NAMESPACE, "teleport_destination"));
+        public static final CustomPayload.Id<TeleportDestination> PACKET_ID = new CustomPayload.Id<>(new Identifier(GreatBigWorld.NAMESPACE, "teleport_destination"));
         public static final PacketCodec<RegistryByteBuf, TeleportDestination> PACKET_CODEC = PacketCodec.of(TeleportDestination::write, TeleportDestination::new);
 
         public TeleportDestination(RegistryByteBuf buf) {

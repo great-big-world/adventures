@@ -1,6 +1,6 @@
 package dev.creoii.greatbigworld.adventures.mixin.client;
 
-import dev.creoii.greatbigworld.adventures.Adventures;
+import dev.creoii.greatbigworld.GreatBigWorld;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.BookScreen;
@@ -17,7 +17,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(BookScreen.class)
 public abstract class BookScreenMixin extends Screen {
     @Shadow private BookScreen.Contents contents;
-    @Unique private static final Identifier PIG_ENTRY_TEXTURE = new Identifier(Adventures.NAMESPACE, "textures/gui/journal/entity/pig.png");
+    @Unique private static final Identifier PIG_ENTRY_TEXTURE = new Identifier(GreatBigWorld.NAMESPACE, "textures/gui/journal/entity/pig.png");
 
     protected BookScreenMixin(Text title) {
         super(title);

@@ -15,6 +15,7 @@
     "world.ChunkGeneratorMixin",
     "world.LevelPropertiesMixin",
     "world.NoiseChunkGeneratorMixin",
+    "world.NoiseConfigMixin",
     "world.ServerWorldMixin",
     "world.SpringFeatureMixin",
     "world.ThreadedAnvilChunkStorageMixin",
