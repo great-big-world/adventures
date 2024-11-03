@@ -8,5 +8,5 @@ import net.minecraft.registry.tag.TagKey;
 import net.minecraft.util.Identifier;
 
 public final class AdventuresTags {
-    public static final TagKey<Item> INFO_HUD_ITEMS = TagKey.of(RegistryKeys.ITEM, new Identifier(GreatBigWorld.NAMESPACE, "info_hud_items"));
+    public static final TagKey<Item> INFO_HUD_ITEMS = TagKey.of(RegistryKeys.ITEM, Identifier.of(GreatBigWorld.NAMESPACE, "info_hud_items"));
 }

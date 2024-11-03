@@ -17,7 +17,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(BookScreen.class)
 public abstract class BookScreenMixin extends Screen {
     @Shadow private BookScreen.Contents contents;
-    @Unique private static final Identifier PIG_ENTRY_TEXTURE = new Identifier(GreatBigWorld.NAMESPACE, "textures/gui/journal/entity/pig.png");
+    @Unique private static final Identifier PIG_ENTRY_TEXTURE = Identifier.of(GreatBigWorld.NAMESPACE, "textures/gui/journal/entity/pig.png");
 
     protected BookScreenMixin(Text title) {
         super(title);

@@ -8,7 +8,7 @@ import dev.creoii.greatbigworld.adventures.registry.AdventuresItems;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.item.v1.DefaultItemComponentEvents;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
-import net.minecraft.component.DataComponentType;
+import net.minecraft.component.ComponentType;
 import net.minecraft.network.RegistryByteBuf;
 import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.network.packet.CustomPayload;
@@ -22,14 +22,14 @@ import net.minecraft.world.dimension.DimensionType;
 import java.util.ArrayList;
 
 public class Adventures implements ModInitializer {
-    public static final DataComponentType<JournalContentComponent> JOURNAL_CONTENT = DataComponentType.<JournalContentComponent>builder().codec(JournalContentComponent.CODEC).packetCodec(JournalContentComponent.PACKET_CODEC).cache().build();
+    public static final ComponentType<JournalContentComponent> JOURNAL_CONTENT = ComponentType.<JournalContentComponent>builder().codec(JournalContentComponent.CODEC).packetCodec(JournalContentComponent.PACKET_CODEC).cache().build();
 
     @Override
     public void onInitialize() {
         AdventuresBlocks.register();
         AdventuresItems.register();
         AdventuresGameRules.register();
-        Registry.register(Registries.DATA_COMPONENT_TYPE, new Identifier(GreatBigWorld.NAMESPACE, "journal_content"), JOURNAL_CONTENT);
+        Registry.register(Registries.DATA_COMPONENT_TYPE, Identifier.of(GreatBigWorld.NAMESPACE, "journal_content"), JOURNAL_CONTENT);
 
         PayloadTypeRegistry.playS2C().register(TeleportDestination.PACKET_ID, TeleportDestination.PACKET_CODEC);
 
@@ -41,7 +41,7 @@ public class Adventures implements ModInitializer {
     }
 
     public record TeleportDestination(RegistryKey<DimensionType> destinationDimension) implements CustomPayload {
-        public static final CustomPayload.Id<TeleportDestination> PACKET_ID = new CustomPayload.Id<>(new Identifier(GreatBigWorld.NAMESPACE, "teleport_destination"));
+        public static final CustomPayload.Id<TeleportDestination> PACKET_ID = new CustomPayload.Id<>(Identifier.of(GreatBigWorld.NAMESPACE, "teleport_destination"));
         public static final PacketCodec<RegistryByteBuf, TeleportDestination> PACKET_CODEC = PacketCodec.of(TeleportDestination::write, TeleportDestination::new);
 
         public TeleportDestination(RegistryByteBuf buf) {

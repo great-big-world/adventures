@@ -16,7 +16,7 @@ public final class AdventuresBlocks {
     public static final Block BEDFRAME = new BedframeBlock(AbstractBlock.Settings.copy(Blocks.WHITE_BED).strength(.8f, .4f).mapColor(MapColor.OAK_TAN));
 
     public static void register() {
-        Registry.register(Registries.BLOCK, new Identifier(GreatBigWorld.NAMESPACE, "bedframe"), BEDFRAME);
+        Registry.register(Registries.BLOCK, Identifier.of(GreatBigWorld.NAMESPACE, "bedframe"), BEDFRAME);
 
         FlammableBlockRegistry.getDefaultInstance().add(BEDFRAME, 5, 5);
     }

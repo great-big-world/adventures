@@ -4,8 +4,8 @@ import com.mojang.datafixers.DataFixer;
 import dev.creoii.greatbigworld.adventures.util.WorldAwareNoiseConfig;
 import dev.creoii.greatbigworld.adventures.util.WorldSizeHolder;
 import net.minecraft.server.WorldGenerationProgressListener;
+import net.minecraft.server.world.ServerChunkLoadingManager;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.server.world.ThreadedAnvilChunkStorage;
 import net.minecraft.structure.StructureTemplateManager;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.thread.ThreadExecutor;
@@ -26,7 +26,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.concurrent.Executor;
 import java.util.function.Supplier;
 
-@Mixin(ThreadedAnvilChunkStorage.class)
+@Mixin(ServerChunkLoadingManager.class)
 public abstract class ThreadedAnvilChunkStorageMixin {
     @Shadow protected abstract ChunkGenerator getChunkGenerator();
     @Shadow @Final private NoiseConfig noiseConfig;

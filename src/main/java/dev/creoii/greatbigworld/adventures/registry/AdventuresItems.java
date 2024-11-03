@@ -18,10 +18,10 @@ public final class AdventuresItems {
     public static final Item BEDFRAME = new BedItem(AdventuresBlocks.BEDFRAME, new Item.Settings());
 
     public static void register() {
-        Registry.register(Registries.ITEM, new Identifier(GreatBigWorld.NAMESPACE, "astrolabe"), ASTROLABE);
-        Registry.register(Registries.ITEM, new Identifier(GreatBigWorld.NAMESPACE, "journal"), JOURNAL);
+        Registry.register(Registries.ITEM, Identifier.of(GreatBigWorld.NAMESPACE, "astrolabe"), ASTROLABE);
+        Registry.register(Registries.ITEM, Identifier.of(GreatBigWorld.NAMESPACE, "journal"), JOURNAL);
 
-        Registry.register(Registries.ITEM, new Identifier(GreatBigWorld.NAMESPACE, "bedframe"), BEDFRAME);
+        Registry.register(Registries.ITEM, Identifier.of(GreatBigWorld.NAMESPACE, "bedframe"), BEDFRAME);
 
         FuelRegistry.INSTANCE.add(BEDFRAME, 900);
     }
