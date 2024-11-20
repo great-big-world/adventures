@@ -2,6 +2,7 @@ package dev.creoii.greatbigworld.adventures.mixin.client;
 
 import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.serialization.Lifecycle;
+import dev.creoii.greatbigworld.adventures.util.ExtendedLevelProperties;
 import dev.creoii.greatbigworld.adventures.util.ExtendedWorldCreator;
 import dev.creoii.greatbigworld.adventures.util.WorldSizeHolder;
 import net.minecraft.client.gui.screen.world.CreateWorldScreen;
@@ -29,11 +30,14 @@ public class CreateWorldScreenMixin {
         if (saveProperties instanceof LevelProperties levelProperties && worldCreator instanceof ExtendedWorldCreator extendedWorldCreator) {
             extendedWorldCreator.gbw$getStartWeather().apply(levelProperties, new LocalRandom(levelProperties.getGeneratorOptions().getSeed()));
             levelProperties.setTimeOfDay(extendedWorldCreator.gbw$getStartTime());
-            if (levelProperties instanceof WorldSizeHolder worldSizeHolder) {
+
+            if (levelProperties instanceof ExtendedLevelProperties extendedLevelProperties) {
                 int worldSize = extendedWorldCreator.gbw$getWorldSize();
-                worldSizeHolder.gbw$setWorldSize(worldSize);
+                extendedLevelProperties.gbw$setWorldSize(worldSize);
                 if (worldSize > 0)
                     levelProperties.getWorldBorder().size = (worldSize * 2d * 16d) - .5d;
+
+                extendedLevelProperties.gbw$setStartSeason(extendedWorldCreator.gbw$getStartSeason());
             }
         }
     }

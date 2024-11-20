@@ -3,6 +3,7 @@ package dev.creoii.greatbigworld.adventures.mixin.client;
 import com.llamalad7.mixinextras.sugar.Local;
 import dev.creoii.greatbigworld.adventures.client.gui.OptionSliderWidget;
 import dev.creoii.greatbigworld.adventures.util.*;
+import dev.creoii.greatbigworld.floraandfauna.season.Season;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screen.world.CreateWorldScreen;
@@ -45,9 +46,9 @@ public class WorldTabMixin {
         });
         OptionSliderWidget<WorldSize> worldSizeWidget = createWorldSizeWidget(createWorldScreen);
         adder.add(worldSizeWidget);
-        adder.add(new OptionSliderWidget<>(0, 0, 150, 20, WorldSeason.SUMMER, true, value -> {
+        adder.add(new OptionSliderWidget<>(0, 0, 150, 20, Season.SUMMER, true, value -> {
             ((ExtendedWorldCreator) createWorldScreen.getWorldCreator()).gbw$setStartSeason(value.ordinal());
-        }, Arrays.asList(WorldSeason.values())) {
+        }, Arrays.asList(Season.values())) {
             @Override
             protected void updateMessage() {
                 setMessage(MutableText.of(START_SEASON_TEXT.getContent()).append(": ").append(tValue.name()));

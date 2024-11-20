@@ -12,6 +12,9 @@
     "entity.PlayerEntityMixin",
     "entity.PlayerInventoryMixin",
     "entity.ServerPlayerEntityMixin",
+    "server.MinecraftDedicatedServerMixin",
+    "server.MinecraftServerMixin",
+    "server.ServerPropertiesHandlerMixin",
     "world.ChunkGeneratorMixin",
     "world.LevelPropertiesMixin",
     "world.NoiseChunkGeneratorMixin",
@@ -32,11 +35,6 @@
     "client.LightmapTextureManagerMixin",
     "client.WorldCreatorMixin",
     "client.WorldTabMixin"
-  ],
-  "server": [
-    "server.MinecraftDedicatedServerMixin",
-    "server.MinecraftServerMixin",
-    "server.ServerPropertiesHandlerMixin"
   ],
   "injectors": {
     "defaultRequire": 1
