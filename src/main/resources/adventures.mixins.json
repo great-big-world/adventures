@@ -21,6 +21,7 @@
     "world.NoiseConfigMixin",
     "world.ServerWorldMixin",
     "world.SpringFeatureMixin",
+    "world.StructurePlacementCalculatorMixin",
     "world.ThreadedAnvilChunkStorageMixin",
     "world.WorldMixin"
   ],
