@@ -2,6 +2,7 @@ package dev.creoii.greatbigworld.adventures.mixin.client;
 
 import dev.creoii.greatbigworld.adventures.util.ExtendedWorldCreator;
 import dev.creoii.greatbigworld.adventures.util.WorldStartWeather;
+import dev.creoii.greatbigworld.floraandfauna.season.Season;
 import net.minecraft.client.gui.screen.world.WorldCreator;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -10,7 +11,7 @@ import org.spongepowered.asm.mixin.Unique;
 public class WorldCreatorMixin implements ExtendedWorldCreator {
     @Unique private int worldSize = -1;
     @Unique private long startTime = 0L;
-    @Unique private int startSeason = 0;
+    @Unique private int startSeason = Season.SUMMER.ordinal();
     @Unique private WorldStartWeather startWeather = WorldStartWeather.CLEAR;
 
     @Override
