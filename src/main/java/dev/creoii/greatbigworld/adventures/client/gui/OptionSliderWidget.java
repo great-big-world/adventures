@@ -36,4 +36,29 @@ public abstract class OptionSliderWidget<T> extends SliderWidget {
     private static <T> float findPercentValue(List<T> list, T target) {
         return (float) list.indexOf(target) / (list.size() - 1);
     }
+
+    @Override
+    public boolean mouseScrolled(double mouseX, double mouseY, double horizontalAmount, double verticalAmount) {
+        double interval = 1d / values.size();
+        if (verticalAmount > 0d) {
+            // down
+
+            if (value > 0d) {
+                value = Math.clamp(value - interval, 0d, 1d);
+                applyValue();
+                updateMessage();
+                return true;
+            }
+        } else if (verticalAmount < 0d) {
+            // up
+
+            if (value < 1d) {
+                value = Math.clamp(value + interval, 0d, 1d);
+                applyValue();
+                updateMessage();
+                return true;
+            }
+        }
+        return false;
+    }
 }
