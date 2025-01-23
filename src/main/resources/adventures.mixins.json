@@ -22,7 +22,7 @@
     "world.ServerWorldMixin",
     "world.SpringFeatureMixin",
     "world.StructurePlacementCalculatorMixin",
-    "world.ThreadedAnvilChunkStorageMixin",
+    "world.ServerChunkLoadingManagerMixin",
     "world.WorldMixin"
   ],
   "client": [

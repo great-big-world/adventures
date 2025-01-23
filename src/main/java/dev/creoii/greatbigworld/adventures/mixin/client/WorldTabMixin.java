@@ -25,11 +25,7 @@ import java.util.Arrays;
 @Mixin(CreateWorldScreen.WorldTab.class)
 public class WorldTabMixin {
     @Unique private static final Text START_WEATHER_TEXT = Text.translatable("selectWorld.startWeather");
-    @Unique private static final Text START_TIME_TEXT = Text.translatable("selectWorld.startTime");
-    @Unique private static final Text WORLD_SIZE_TEXT = Text.translatable("selectWorld.worldSize");
     @Unique private static final Text WORLD_SIZE_TOOLTIP_TEXT = Text.translatable("selectWorld.worldSize.description");
-    @Unique private static final Text WORLD_SIZE_TOOLTIP_SIZE_IN_BLOCKS_TEXT = Text.translatable("selectWorld.worldSize.tooltip.sizeInBlocks");
-    @Unique private static final Text START_SEASON_TEXT = Text.translatable("selectWorld.startSeason");
 
     @Inject(method = "<init>", at = @At("TAIL"))
     private void gbw$addNewWorldOptions(CreateWorldScreen createWorldScreen, CallbackInfo ci, @Local GridWidget.Adder adder) {
@@ -41,7 +37,7 @@ public class WorldTabMixin {
         }, Arrays.asList(WorldStartTime.values())) {
             @Override
             protected void updateMessage() {
-                setMessage(MutableText.of(START_TIME_TEXT.getContent()).append(": ").append(tValue.getTranslatableName()));
+                setMessage(Text.translatable("selectWorld.startTime", tValue.getTranslatableName()));
             }
         });
         OptionSliderWidget<WorldSize> worldSizeWidget = createWorldSizeWidget(createWorldScreen);
@@ -51,7 +47,7 @@ public class WorldTabMixin {
         }, Arrays.asList(Season.values())) {
             @Override
             protected void updateMessage() {
-                setMessage(MutableText.of(START_SEASON_TEXT.getContent()).append(": ").append(tValue.name()));
+                setMessage(Text.translatable("selectWorld.startSeason", Text.translatable(tValue.getTranslationKey())));
             }
         });
     }
@@ -64,8 +60,8 @@ public class WorldTabMixin {
         }, Arrays.asList(WorldSize.values())) {
             @Override
             protected void updateMessage() {
-                setMessage(MutableText.of(WORLD_SIZE_TEXT.getContent()).append(": ").append(tValue.getTranslatableName(tValue.getSize())));
-                setTooltip(Tooltip.of(MutableText.of(WORLD_SIZE_TOOLTIP_TEXT.getContent()).append("\n").append(MutableText.of(WORLD_SIZE_TOOLTIP_SIZE_IN_BLOCKS_TEXT.getContent()).append(": ").append(tValue.getTranslatableName(tValue.getSize() * 16)).formatted(Formatting.GRAY))));
+                setMessage(Text.translatable("selectWorld.worldSize", tValue.getTranslatableName(tValue.getSize())));
+                setTooltip(Tooltip.of(MutableText.of(WORLD_SIZE_TOOLTIP_TEXT.getContent()).append("\n").append(Text.translatable("selectWorld.worldSize.tooltip.sizeInBlocks", tValue.getTranslatableName(tValue.getSize() * 16)).formatted(Formatting.GRAY))));
             }
         };
     }

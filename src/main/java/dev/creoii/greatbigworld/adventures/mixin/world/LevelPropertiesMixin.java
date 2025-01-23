@@ -3,6 +3,7 @@ package dev.creoii.greatbigworld.adventures.mixin.world;
 import com.mojang.serialization.Dynamic;
 import com.mojang.serialization.Lifecycle;
 import dev.creoii.greatbigworld.adventures.util.ExtendedLevelProperties;
+import dev.creoii.greatbigworld.adventures.util.WorldSize;
 import dev.creoii.greatbigworld.floraandfauna.season.Season;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.registry.DynamicRegistryManager;
@@ -18,7 +19,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(LevelProperties.class)
 public class LevelPropertiesMixin implements ExtendedLevelProperties {
-    @Unique private int worldSize = -1;
+    @Unique private int worldSize = WorldSize.INFINITE.getSize();
     @Unique private int startSeason = Season.SUMMER.ordinal();
 
     @Override
@@ -44,7 +45,7 @@ public class LevelPropertiesMixin implements ExtendedLevelProperties {
     @SuppressWarnings("deprecation")
     @Inject(method = "readProperties", at = @At("RETURN"))
     private static <T> void gbw$readExtendedProperties(Dynamic<T> dynamic, LevelInfo info, LevelProperties.SpecialProperty specialProperty, GeneratorOptions generatorOptions, Lifecycle lifecycle, CallbackInfoReturnable<LevelProperties> cir) {
-        ((ExtendedLevelProperties) cir.getReturnValue()).gbw$setWorldSize(dynamic.get("worldSize").asInt(-1));
+        ((ExtendedLevelProperties) cir.getReturnValue()).gbw$setWorldSize(dynamic.get("worldSize").asInt(WorldSize.INFINITE.getSize()));
         ((ExtendedLevelProperties) cir.getReturnValue()).gbw$setStartSeason(dynamic.get("startSeason").asInt(Season.SUMMER.ordinal()));
     }
 

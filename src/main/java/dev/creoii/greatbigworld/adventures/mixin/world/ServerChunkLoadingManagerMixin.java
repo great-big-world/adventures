@@ -27,7 +27,7 @@ import java.util.concurrent.Executor;
 import java.util.function.Supplier;
 
 @Mixin(ServerChunkLoadingManager.class)
-public abstract class ThreadedAnvilChunkStorageMixin {
+public abstract class ServerChunkLoadingManagerMixin {
     @Shadow protected abstract ChunkGenerator getChunkGenerator();
     @Shadow @Final private NoiseConfig noiseConfig;
 
