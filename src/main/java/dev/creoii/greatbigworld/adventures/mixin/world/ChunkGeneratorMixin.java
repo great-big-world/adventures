@@ -1,5 +1,6 @@
 package dev.creoii.greatbigworld.adventures.mixin.world;
 
+import dev.creoii.greatbigworld.adventures.util.WorldSize;
 import dev.creoii.greatbigworld.adventures.util.WorldSizeHolder;
 import net.minecraft.world.StructureWorldAccess;
 import net.minecraft.world.chunk.Chunk;
@@ -13,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ChunkGenerator.class)
 public abstract class ChunkGeneratorMixin implements WorldSizeHolder {
-    @Unique private int worldSize = -1;
+    @Unique private int worldSize = WorldSize.INFINITE.getSize();
 
     @Override
     public void gbw$setWorldSize(int worldSize) {

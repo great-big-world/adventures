@@ -9,6 +9,7 @@ public interface WorldSizeHolder {
 
     static boolean isOutsideWorld(WorldSizeHolder worldSizeHolder, int chunkX, int chunkZ) {
         if (worldSizeHolder.gbw$getWorldSize() == 0) {
+            //System.out.println("chunkpos outside world size 0");
             return chunkX > 0 || chunkZ > 0;
         } else return worldSizeHolder.gbw$getWorldSize() > 0 && (chunkX >= worldSizeHolder.gbw$getWorldSize() || chunkX < -worldSizeHolder.gbw$getWorldSize() || chunkZ >= worldSizeHolder.gbw$getWorldSize() || chunkZ < -worldSizeHolder.gbw$getWorldSize());
     }
@@ -16,6 +17,7 @@ public interface WorldSizeHolder {
     static boolean isWithinWorld(WorldSizeHolder worldSizeHolder, BlockPos pos) {
         int sizeInBlocks = worldSizeHolder.gbw$getWorldSize() << 4; // multiply by 4
         if (sizeInBlocks == 0) {
+            //System.out.println("blockpos within world size 0");
             return pos.getX() > 16 || pos.getZ() > 16;
         } else return sizeInBlocks > 0 && (pos.getX() < sizeInBlocks || pos.getX() >= -sizeInBlocks || pos.getZ() < sizeInBlocks || pos.getZ() >= -sizeInBlocks);
     }

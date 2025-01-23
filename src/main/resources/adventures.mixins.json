@@ -22,8 +22,7 @@
     "world.ServerWorldMixin",
     "world.SpringFeatureMixin",
     "world.StructurePlacementCalculatorMixin",
-    "world.ServerChunkLoadingManagerMixin",
-    "world.WorldMixin"
+    "world.ServerChunkLoadingManagerMixin"
   ],
   "client": [
     "client.BookScreenContentsMixin",
