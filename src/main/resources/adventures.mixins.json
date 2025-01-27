@@ -19,10 +19,10 @@
     "world.LevelPropertiesMixin",
     "world.NoiseChunkGeneratorMixin",
     "world.NoiseConfigMixin",
+    "world.ServerChunkLoadingManagerMixin",
     "world.ServerWorldMixin",
     "world.SpringFeatureMixin",
-    "world.StructurePlacementCalculatorMixin",
-    "world.ServerChunkLoadingManagerMixin"
+    "world.StructurePlacementCalculatorMixin"
   ],
   "client": [
     "client.BookScreenContentsMixin",
