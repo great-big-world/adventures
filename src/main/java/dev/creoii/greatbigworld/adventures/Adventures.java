@@ -8,6 +8,7 @@ import dev.creoii.greatbigworld.adventures.registry.AdventuresItems;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.item.v1.DefaultItemComponentEvents;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
+import net.fabricmc.fabric.api.registry.FuelRegistryEvents;
 import net.minecraft.component.ComponentType;
 import net.minecraft.network.RegistryByteBuf;
 import net.minecraft.network.codec.PacketCodec;
@@ -37,6 +38,10 @@ public class Adventures implements ModInitializer {
             context.modify(AdventuresItems.JOURNAL, builder -> {
                 builder.add(JOURNAL_CONTENT, new JournalContentComponent(new ArrayList<>()));
             });
+        });
+
+        FuelRegistryEvents.BUILD.register((builder, context) -> {
+            builder.add(AdventuresItems.BEDFRAME, 900);
         });
     }
 
