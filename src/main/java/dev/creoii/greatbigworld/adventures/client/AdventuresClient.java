@@ -5,18 +5,20 @@ import dev.creoii.greatbigworld.adventures.registry.AdventuresItems;
 import dev.creoii.greatbigworld.adventures.util.AdventuresTags;
 import dev.creoii.greatbigworld.adventures.util.ExtendedHudPlayer;
 import dev.creoii.greatbigworld.adventures.util.ItemInfoHud;
+import dev.creoii.greatbigworld.adventures.util.ShowDeathCoordinates;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.fabricmc.fabric.api.event.player.UseItemCallback;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
+import net.minecraft.client.render.RenderLayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.text.Text;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.dimension.DimensionType;
 import org.jetbrains.annotations.Nullable;
 
@@ -41,10 +43,10 @@ public class AdventuresClient implements ClientModInitializer {
                         type = ExtendedHudPlayer.Type.ASTROLABE;
                     }
                     extendedHudPlayer.gbw$getItemInfoHuds().get(type).invert();
-                    return TypedActionResult.success(stack);
+                    return ActionResult.SUCCESS;
                 }
             }
-            return TypedActionResult.pass(ItemStack.EMPTY);
+            return ActionResult.PASS;
         });
 
         HudRenderCallback.EVENT.register((drawContext, tickDelta) -> {
@@ -71,7 +73,7 @@ public class AdventuresClient implements ClientModInitializer {
                         drawContext.getMatrices().scale(1.5f, 1.5f, 1.5f);
                         for (int i = 0; i < sprites.size(); ++i) {
                             Identifier sprite = sprites.get(i);
-                            drawContext.drawTexture(sprite.withPrefixedPath("textures/gui/hud/icon/").withSuffixedPath(".png"), 2, 2 + (i * 8), 0f, 0f, 7, 7, 7, 7);
+                            drawContext.drawTexture(RenderLayer::getGuiTextured, sprite.withPrefixedPath("textures/gui/hud/icon/").withSuffixedPath(".png"), 2, 2 + (i * 8), 0f, 0f, 7, 7, 7, 7);
                         }
                         drawContext.getMatrices().pop();
 
@@ -84,10 +86,20 @@ public class AdventuresClient implements ClientModInitializer {
             }
         });
 
-        ClientPlayNetworking.registerGlobalReceiver(Adventures.TeleportDestination.PACKET_ID, (payload, context) -> {
+        ClientPlayNetworking.registerGlobalReceiver(Adventures.TeleportDestinationS2C.PACKET_ID, (payload, context) -> {
             RegistryKey<DimensionType> registryKey = payload.destinationDimension();
             context.client().execute(() -> {
                 destinationDimension = registryKey;
+            });
+        });
+
+        ClientPlayNetworking.registerGlobalReceiver(ShowDeathCoordinates.SyncS2C.PACKET_ID, (payload, context) -> {
+            boolean value = payload.value();
+            context.client().execute(() -> {
+                if (context.client().world instanceof ShowDeathCoordinates showDeathCoordinates) {
+                    System.out.println("Recieve: " + value);
+                    showDeathCoordinates.gbw$setShowDeathCoordinates(value);
+                }
             });
         });
     }

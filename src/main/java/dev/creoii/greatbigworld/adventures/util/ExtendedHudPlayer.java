@@ -7,7 +7,6 @@ import dev.creoii.greatbigworld.adventures.registry.AdventuresItems;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.LodestoneTrackerComponent;
-import net.minecraft.item.CompassItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.text.Text;
@@ -49,31 +48,30 @@ public interface ExtendedHudPlayer {
 */
             Vec3d playerPos = clientPlayer.getPos();
 
-            // Get the target position from GlobalPos
             BlockPos targetBlockPos = pos.pos();
-            Vec3d targetPos = new Vec3d(targetBlockPos.getX() + 0.5, targetBlockPos.getY() + 0.5, targetBlockPos.getZ() + 0.5);
+            Vec3d targetPos = new Vec3d(targetBlockPos.getX() + .5d, targetBlockPos.getY() + .5d, targetBlockPos.getZ() + .5d);
 
-            // Calculate the direction vector from the player to the target
             Vec3d direction = targetPos.subtract(playerPos);
 
-            // Calculate the yaw angle between the player's position and the target
-            float targetYaw = (float) (MathHelper.atan2(direction.getZ(), direction.getX()) * (180.0 / Math.PI)) - 90.0f;
-
-            // Normalize yaw to be between 0 and 360 degrees
-            float playerYaw = clientPlayer.getYaw() % 360f;
-            if (playerYaw < 0f) playerYaw += 360f;
-
-            // Calculate relative yaw to determine the compass texture
-            float relativeYaw = targetYaw - playerYaw;
-            if (relativeYaw < 0f) relativeYaw += 360f;
-
-            // Determine the compass segment (0-7) based on the relative yaw
-            int segment = (int) Math.round(relativeYaw / 45f);
-            segment = (segment % 8 + 8) % 8; // Normalize to 0–7
+            int segment = getSegment(clientPlayer, direction);
 
             return Identifier.of(GreatBigWorld.NAMESPACE, prefix + "compass_" + segment);
         }
         return Identifier.of(GreatBigWorld.NAMESPACE, prefix + "compass_0");
+    }
+
+    private static int getSegment(ClientPlayerEntity clientPlayer, Vec3d direction) {
+        float targetYaw = (float) (MathHelper.atan2(direction.getZ(), direction.getX()) * (180f / Math.PI)) - 90f;
+
+        float playerYaw = clientPlayer.getYaw() % 360f;
+        if (playerYaw < 0f) playerYaw += 360f;
+
+        float relativeYaw = targetYaw - playerYaw;
+        if (relativeYaw < 0f) relativeYaw += 360f;
+
+        int segment = Math.round(relativeYaw / 45f);
+        segment = (segment % 8 + 8) % 8;
+        return segment;
     }
 
     private static GlobalPos getCompassTarget(World world, ItemStack stack) {
@@ -81,7 +79,7 @@ public interface ExtendedHudPlayer {
         if (component != null && component.target().isPresent()) {
             return component.target().get();
         }
-        return CompassItem.createSpawnPos(world);
+        return GlobalPos.create(world.getRegistryKey(), world.getSpawnPos());
     }
 
     private static Identifier getClockTexture(ClientPlayerEntity clientPlayer) {

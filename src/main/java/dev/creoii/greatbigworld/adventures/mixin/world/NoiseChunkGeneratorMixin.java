@@ -10,7 +10,6 @@ import net.minecraft.world.biome.source.BiomeAccess;
 import net.minecraft.world.biome.source.BiomeSource;
 import net.minecraft.world.biome.source.BiomeSupplier;
 import net.minecraft.world.chunk.Chunk;
-import net.minecraft.world.gen.GenerationStep;
 import net.minecraft.world.gen.StructureAccessor;
 import net.minecraft.world.gen.chunk.*;
 import net.minecraft.world.gen.noise.NoiseConfig;
@@ -27,7 +26,7 @@ public abstract class NoiseChunkGeneratorMixin extends ChunkGenerator {
     }
 
     @Inject(method = "carve", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/gen/chunk/ChunkNoiseSampler;getAquiferSampler()Lnet/minecraft/world/gen/chunk/AquiferSampler;"), cancellable = true)
-    private void gbw$limitCarvers(ChunkRegion chunkRegion, long seed, NoiseConfig noiseConfig, BiomeAccess biomeAccess, StructureAccessor structureAccessor, Chunk chunk, GenerationStep.Carver carverStep, CallbackInfo ci) {
+    private void gbw$limitCarvers(ChunkRegion chunkRegion, long seed, NoiseConfig noiseConfig, BiomeAccess biomeAccess, StructureAccessor structureAccessor, Chunk chunk, CallbackInfo ci) {
         if (this instanceof WorldSizeHolder worldSizeHolder) {
             if (WorldSizeHolder.isOutsideWorld(worldSizeHolder, chunk.getPos().x, chunk.getPos().z)) {
                 ci.cancel();
@@ -59,7 +58,7 @@ public abstract class NoiseChunkGeneratorMixin extends ChunkGenerator {
             if (WorldSizeHolder.isOutsideWorld(worldSizeHolder, chunk.getPos().x, chunk.getPos().z)) {
                 if (noiseConfig != null && ((WorldAwareNoiseConfig) noiseConfig).gbw$getWorld() != null) {
                     chunk.populateBiomes((x1, y, z1, noise) -> {
-                        return ((WorldAwareNoiseConfig) noiseConfig).gbw$getWorld().getRegistryManager().get(RegistryKeys.BIOME).entryOf(BiomeKeys.THE_VOID);
+                        return ((WorldAwareNoiseConfig) noiseConfig).gbw$getWorld().getRegistryManager().getOrThrow(RegistryKeys.BIOME).getOrThrow(BiomeKeys.THE_VOID);
                     }, noiseConfig.getMultiNoiseSampler());
                     ci.cancel();
                 }

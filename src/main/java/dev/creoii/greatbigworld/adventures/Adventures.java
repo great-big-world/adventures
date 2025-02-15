@@ -3,6 +3,7 @@ package dev.creoii.greatbigworld.adventures;
 import dev.creoii.greatbigworld.GreatBigWorld;
 import dev.creoii.greatbigworld.adventures.registry.AdventuresGameRules;
 import dev.creoii.greatbigworld.adventures.registry.AdventuresItems;
+import dev.creoii.greatbigworld.adventures.util.ShowDeathCoordinates;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.minecraft.network.RegistryByteBuf;
@@ -19,14 +20,15 @@ public class Adventures implements ModInitializer {
         AdventuresItems.register();
         AdventuresGameRules.register();
 
-        PayloadTypeRegistry.playS2C().register(TeleportDestination.PACKET_ID, TeleportDestination.PACKET_CODEC);
+        PayloadTypeRegistry.playS2C().register(TeleportDestinationS2C.PACKET_ID, TeleportDestinationS2C.PACKET_CODEC);
+        PayloadTypeRegistry.playS2C().register(ShowDeathCoordinates.SyncS2C.PACKET_ID, ShowDeathCoordinates.SyncS2C.PACKET_CODEC);
     }
 
-    public record TeleportDestination(RegistryKey<DimensionType> destinationDimension) implements CustomPayload {
-        public static final CustomPayload.Id<TeleportDestination> PACKET_ID = new CustomPayload.Id<>(Identifier.of(GreatBigWorld.NAMESPACE, "teleport_destination"));
-        public static final PacketCodec<RegistryByteBuf, TeleportDestination> PACKET_CODEC = PacketCodec.of(TeleportDestination::write, TeleportDestination::new);
+    public record TeleportDestinationS2C(RegistryKey<DimensionType> destinationDimension) implements CustomPayload {
+        public static final CustomPayload.Id<TeleportDestinationS2C> PACKET_ID = new CustomPayload.Id<>(Identifier.of(GreatBigWorld.NAMESPACE, "teleport_destination"));
+        public static final PacketCodec<RegistryByteBuf, TeleportDestinationS2C> PACKET_CODEC = PacketCodec.of(TeleportDestinationS2C::write, TeleportDestinationS2C::new);
 
-        public TeleportDestination(RegistryByteBuf buf) {
+        public TeleportDestinationS2C(RegistryByteBuf buf) {
             this(buf.readRegistryKey(RegistryKeys.DIMENSION_TYPE));
         }
 

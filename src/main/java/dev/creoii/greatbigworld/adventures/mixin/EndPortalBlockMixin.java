@@ -19,7 +19,7 @@ public class EndPortalBlockMixin {
     @Inject(method = "onEntityCollision", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/Entity;tryUsePortal(Lnet/minecraft/block/Portal;Lnet/minecraft/util/math/BlockPos;)V"))
     private void gbw$syncNetherDestination(BlockState state, World world, BlockPos pos, Entity entity, CallbackInfo ci) {
         if (entity instanceof ServerPlayerEntity serverPlayer && world.getDimensionEntry().getKey().isPresent()) {
-            ServerPlayNetworking.send(serverPlayer, new Adventures.TeleportDestination(world.getRegistryKey() == World.END ? DimensionTypes.OVERWORLD : DimensionTypes.THE_END));
+            ServerPlayNetworking.send(serverPlayer, new Adventures.TeleportDestinationS2C(world.getRegistryKey() == World.END ? DimensionTypes.OVERWORLD : DimensionTypes.THE_END));
         }
     }
 }

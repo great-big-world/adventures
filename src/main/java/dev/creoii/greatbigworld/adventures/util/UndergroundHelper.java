@@ -35,7 +35,7 @@ public final class UndergroundHelper {
 
         int add;
         for (BlockPos pos : BlockPos.iterate(center.add(-1, -1, -1), center.add(1, 2, 1))) {
-            if (!world.getBlockState(pos).isOpaqueFullCube(world, pos)) {
+            if (!world.getBlockState(pos).isOpaqueFullCube()) {
                 add = world.getLightLevel(lightType, pos);
 
                 if (add == 15) {
@@ -45,7 +45,7 @@ public final class UndergroundHelper {
                 }
 
                 MUTABLE.set(world.getTopPosition(Heightmap.Type.MOTION_BLOCKING, pos));
-                if (!world.getBlockState(MUTABLE).isOpaqueFullCube(world, MUTABLE) && isNonOpaqueBetween(world, pos)) {
+                if (!world.getBlockState(MUTABLE).isOpaqueFullCube() && isNonOpaqueBetween(world, pos)) {
                     light += 15;
                 } else light += add;
 
@@ -60,7 +60,7 @@ public final class UndergroundHelper {
 
     public static boolean isNonOpaqueBetween(World world, BlockPos bottom) {
         if (MUTABLE.getY() - bottom.getY() <= 1)
-            return world.getBlockState(bottom).isOpaqueFullCube(world, bottom);
+            return world.getBlockState(bottom).isOpaqueFullCube();
 
         YS.clear();
         for (int y = MUTABLE.getY(); y >= bottom.getY(); y -= y < world.getSeaLevel() ? 2 : 1) {
@@ -72,7 +72,7 @@ public final class UndergroundHelper {
             BlockState state = world.getBlockState(MUTABLE);
             if (state.isAir())
                 continue;
-            if (state.isOpaqueFullCube(world, MUTABLE))
+            if (state.isOpaqueFullCube())
                 return false;
         }
         return true;
