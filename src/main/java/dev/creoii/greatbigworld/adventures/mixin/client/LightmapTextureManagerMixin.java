@@ -22,7 +22,7 @@ public class LightmapTextureManagerMixin {
     @WrapOperation(method = "update", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/LightmapTextureManager;getDarkness(Lnet/minecraft/entity/LivingEntity;FF)F"))
     private float gbw$modifyDarknessForMoonPhase(LightmapTextureManager instance, LivingEntity entity, float factor, float delta, Operation<Float> original) {
         float darkness = original.call(instance, entity, factor, delta);
-        if (client.world != null) {
+        if (client.world != null && client.player != null && !client.player.isSpectator()) {
             int moonPhase = client.world.getMoonPhase();
             if (moonPhase == 3 || moonPhase == 5) {
                 return -.105f * getTimeInfluence();
