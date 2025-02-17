@@ -1,7 +1,6 @@
 package dev.creoii.greatbigworld.adventures.util;
 
 import dev.creoii.greatbigworld.GreatBigWorld;
-import dev.creoii.greatbigworld.adventures.Adventures;
 import net.minecraft.item.Item;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.TagKey;

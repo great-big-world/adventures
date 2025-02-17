@@ -50,10 +50,9 @@ public class AdventuresClient implements ClientModInitializer {
         });
 
         HudRenderCallback.EVENT.register((drawContext, tickDelta) -> {
-            final MinecraftClient client = MinecraftClient.getInstance();
-            if (!client.options.hudHidden) {
-                ClientPlayerEntity clientPlayer = client.player;
-                if (clientPlayer != null && client.world != null && clientPlayer instanceof ExtendedHudPlayer extendedHudPlayer) {
+            if (!drawContext.client.options.hudHidden) {
+                ClientPlayerEntity clientPlayer = drawContext.client.player;
+                if (clientPlayer != null && drawContext.client.world != null && clientPlayer instanceof ExtendedHudPlayer extendedHudPlayer) {
                     List<Identifier> sprites = new ArrayList<>();
                     List<Text> texts = new ArrayList<>();
                     Map<ExtendedHudPlayer.Type, ItemInfoHud> itemInfoHuds = extendedHudPlayer.gbw$getItemInfoHuds();
@@ -79,7 +78,7 @@ public class AdventuresClient implements ClientModInitializer {
 
                         for (int i = 0; i < texts.size(); ++i) {
                             Text text = texts.get(i);
-                            drawContext.drawTextWithShadow(client.textRenderer, text, 17, 5 + (i * 12), 0xffffff);
+                            drawContext.drawTextWithShadow(drawContext.client.textRenderer, text, 17, 5 + (i * 12), 0xffffff);
                         }
                     }
                 }
@@ -97,7 +96,6 @@ public class AdventuresClient implements ClientModInitializer {
             boolean value = payload.value();
             context.client().execute(() -> {
                 if (context.client().world instanceof ShowDeathCoordinates showDeathCoordinates) {
-                    System.out.println("Recieve: " + value);
                     showDeathCoordinates.gbw$setShowDeathCoordinates(value);
                 }
             });
