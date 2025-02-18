@@ -27,7 +27,6 @@
   "dimension_type.minecraft.overworld_caves": "Overworld",
 
   "gamerule.showCoordinatesOnDeath": "Show death coordinates",
-  "gamerule.itemDespawnTimeOnDeath": "Time before dropped death items despawn",
 
   "death.showCoordinates": "at %s"
 }
