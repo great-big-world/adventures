@@ -6,6 +6,7 @@
   "mixins": [
     "EndPortalBlockMixin",
     "entity.EntityMixin",
+    "entity.LivingEntityMixin",
     "entity.PlayerEntityMixin",
     "server.MinecraftDedicatedServerMixin",
     "server.MinecraftServerMixin",
