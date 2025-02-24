@@ -20,8 +20,8 @@ public class PlayerEntityMixin {
     private void gbw$changeStartHungerForDifficulty(World world, BlockPos pos, float yaw, GameProfile gameProfile, CallbackInfo ci) {
         int startHunger = switch (world.getDifficulty()) {
             case PEACEFUL, EASY -> 20;
-            case NORMAL -> 14;
-            case HARD -> 7;
+            case NORMAL -> 16;
+            case HARD -> 12;
         };
         hungerManager = new DifficultyHungerManager(startHunger);
     }
