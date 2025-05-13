@@ -4,12 +4,12 @@ import com.mojang.datafixers.DataFixer;
 import dev.creoii.greatbigworld.adventures.util.WorldAwareNoiseConfig;
 import dev.creoii.greatbigworld.adventures.util.WorldSizeHolder;
 import net.minecraft.server.WorldGenerationProgressListener;
+import net.minecraft.server.world.ChunkTicketManager;
 import net.minecraft.server.world.ServerChunkLoadingManager;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.structure.StructureTemplateManager;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.thread.ThreadExecutor;
-import net.minecraft.world.PersistentStateManager;
 import net.minecraft.world.chunk.ChunkProvider;
 import net.minecraft.world.chunk.ChunkStatusChangeListener;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
@@ -32,7 +32,7 @@ public abstract class ServerChunkLoadingManagerMixin {
     @Shadow @Final private NoiseConfig noiseConfig;
 
     @Inject(method = "<init>", at = @At("TAIL"))
-    private void gbw$makeNoiseConfigAware(ServerWorld world, LevelStorage.Session session, DataFixer dataFixer, StructureTemplateManager structureTemplateManager, Executor executor, ThreadExecutor<Runnable> mainThreadExecutor, ChunkProvider chunkProvider, ChunkGenerator chunkGenerator, WorldGenerationProgressListener worldGenerationProgressListener, ChunkStatusChangeListener chunkStatusChangeListener, Supplier<PersistentStateManager> persistentStateManagerFactory, int viewDistance, boolean dsync, CallbackInfo ci) {
+    private void gbw$makeNoiseConfigAware(ServerWorld world, LevelStorage.Session session, DataFixer dataFixer, StructureTemplateManager structureTemplateManager, Executor executor, ThreadExecutor mainThreadExecutor, ChunkProvider chunkProvider, ChunkGenerator chunkGenerator, WorldGenerationProgressListener worldGenerationProgressListener, ChunkStatusChangeListener chunkStatusChangeListener, Supplier persistentStateManagerFactory, ChunkTicketManager ticketManager, int viewDistance, boolean dsync, CallbackInfo ci) {
         ((WorldAwareNoiseConfig) noiseConfig).gbw$setWorld(world);
     }
 
