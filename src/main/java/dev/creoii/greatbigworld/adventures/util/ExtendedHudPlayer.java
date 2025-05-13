@@ -22,10 +22,10 @@ import java.util.Map;
 public interface ExtendedHudPlayer {
     Map<Type, ItemInfoHud> DEFAULT = ImmutableMap.<Type, ItemInfoHud>builder()
             .put(Type.COMPASS, new ItemInfoHud(clientPlayer -> getCompassTexture(clientPlayer, getCompassTarget(clientPlayer.clientWorld, clientPlayer.getStackInHand(clientPlayer.getActiveHand())), ""), Items.COMPASS, clientPlayer -> {
-                return Text.literal(StringUtils.capitalize(clientPlayer.getHorizontalFacing().getName()));
+                return Text.literal(StringUtils.capitalize(clientPlayer.getHorizontalFacing().getId()));
             }))
             .put(Type.RECOVERY_COMPASS, new ItemInfoHud(clientPlayer -> getCompassTexture(clientPlayer, clientPlayer.getLastDeathPos().orElse(null), "recovery_"), Items.RECOVERY_COMPASS, clientPlayer -> {
-                return Text.literal(StringUtils.capitalize(clientPlayer.getHorizontalFacing().getName()));
+                return Text.literal(StringUtils.capitalize(clientPlayer.getHorizontalFacing().getId()));
             }))
             .put(Type.CLOCK, new ItemInfoHud(ExtendedHudPlayer::getClockTexture, Items.CLOCK, clientPlayer -> {
                 return Text.literal(AdventuresClient.getDisplayTime(clientPlayer));

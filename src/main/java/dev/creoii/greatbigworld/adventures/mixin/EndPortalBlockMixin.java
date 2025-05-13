@@ -5,6 +5,7 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.EndPortalBlock;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityCollisionHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -17,7 +18,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(EndPortalBlock.class)
 public class EndPortalBlockMixin {
     @Inject(method = "onEntityCollision", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/Entity;tryUsePortal(Lnet/minecraft/block/Portal;Lnet/minecraft/util/math/BlockPos;)V"))
-    private void gbw$syncNetherDestination(BlockState state, World world, BlockPos pos, Entity entity, CallbackInfo ci) {
+    private void gbw$syncNetherDestination(BlockState state, World world, BlockPos pos, Entity entity, EntityCollisionHandler handler, CallbackInfo ci) {
         if (entity instanceof ServerPlayerEntity serverPlayer && world.getDimensionEntry().getKey().isPresent()) {
             ServerPlayNetworking.send(serverPlayer, new Adventures.TeleportDestinationS2C(world.getRegistryKey() == World.END ? DimensionTypes.OVERWORLD : DimensionTypes.THE_END));
         }
