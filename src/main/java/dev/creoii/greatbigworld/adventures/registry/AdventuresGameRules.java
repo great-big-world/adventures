@@ -6,8 +6,10 @@ import net.minecraft.world.GameRules;
 
 public final class AdventuresGameRules {
     public static GameRules.Key<GameRules.BooleanRule> SHOW_COORDINATES_ON_DEATH;
+    public static GameRules.Key<GameRules.BooleanRule> SLEEP_DURING_DAY;
 
     public static void register() {
         SHOW_COORDINATES_ON_DEATH = GameRuleRegistry.register("showCoordinatesOnDeath", GameRules.Category.PLAYER, GameRuleFactory.createBooleanRule(true));
+        SLEEP_DURING_DAY = GameRuleRegistry.register("sleepDuringDay", GameRules.Category.PLAYER, GameRuleFactory.createBooleanRule(false));
     }
 }

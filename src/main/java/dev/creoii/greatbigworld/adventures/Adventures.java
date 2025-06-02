@@ -5,12 +5,15 @@ import dev.creoii.greatbigworld.adventures.registry.AdventuresGameRules;
 import dev.creoii.greatbigworld.adventures.registry.AdventuresItems;
 import dev.creoii.greatbigworld.adventures.util.ShowDeathCoordinates;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.entity.event.v1.EntitySleepEvents;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.minecraft.network.RegistryByteBuf;
 import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.network.packet.CustomPayload;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
+import net.minecraft.server.world.ServerWorld;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.dimension.DimensionType;
 
@@ -22,6 +25,12 @@ public class Adventures implements ModInitializer {
 
         PayloadTypeRegistry.playS2C().register(TeleportDestinationS2C.PACKET_ID, TeleportDestinationS2C.PACKET_CODEC);
         PayloadTypeRegistry.playS2C().register(ShowDeathCoordinates.SyncS2C.PACKET_ID, ShowDeathCoordinates.SyncS2C.PACKET_CODEC);
+
+        EntitySleepEvents.ALLOW_SLEEP_TIME.register((playerEntity, blockPos, b) -> {
+            if (!playerEntity.getWorld().isClient && ((ServerWorld) playerEntity.getWorld()).getGameRules().getBoolean(AdventuresGameRules.SLEEP_DURING_DAY)) {
+                return ActionResult.SUCCESS;
+            } else return ActionResult.PASS;
+        });
     }
 
     public record TeleportDestinationS2C(RegistryKey<DimensionType> destinationDimension) implements CustomPayload {

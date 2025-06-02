@@ -1,5 +1,6 @@
 package dev.creoii.greatbigworld.adventures.mixin.world;
 
+import dev.creoii.greatbigworld.adventures.registry.AdventuresGameRules;
 import dev.creoii.greatbigworld.adventures.util.WorldSizeHolder;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.server.MinecraftServer;
@@ -14,6 +15,7 @@ import net.minecraft.world.spawner.SpecialSpawner;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.List;
@@ -26,5 +28,13 @@ public class ServerWorldMixin {
         if (dimensionOptions.chunkGenerator() instanceof WorldSizeHolder worldSizeHolder && properties instanceof WorldSizeHolder worldSizeHolder1) {
             worldSizeHolder.gbw$setWorldSize(worldSizeHolder1.gbw$getWorldSize());
         }
+    }
+
+    @Redirect(method = "tick(Ljava/util/function/BooleanSupplier;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/world/ServerWorld;setTimeOfDay(J)V"))
+    private void gbw$sleepToNight(ServerWorld serverWorld, long timeOfDay){
+        if (serverWorld.isDay()){
+            long l = serverWorld.getLevelProperties().getTimeOfDay();
+            serverWorld.setTimeOfDay(l + 13000L - l % 24000L);
+        } else serverWorld.setTimeOfDay(timeOfDay);
     }
 }
