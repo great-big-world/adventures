@@ -22,7 +22,6 @@ public class GameRuleCommandMixin {
         ServerWorld world = context.getSource().getWorld();
         if (world instanceof ShowDeathCoordinates showDeathCoordinates && key == AdventuresGameRules.SHOW_COORDINATES_ON_DEATH) {
             boolean value = world.getGameRules().getBoolean(AdventuresGameRules.SHOW_COORDINATES_ON_DEATH);
-            System.out.println("set showDeathCoords: " + value);
             showDeathCoordinates.gbw$setShowDeathCoordinates(value);
             PlayerLookup.all(context.getSource().getServer()).forEach(serverPlayer -> {
                 ServerPlayNetworking.send(serverPlayer, new ShowDeathCoordinates.SyncS2C(value));
