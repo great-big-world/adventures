@@ -1,6 +1,7 @@
 package dev.creoii.greatbigworld.adventures.mixin.server;
 
 import com.llamalad7.mixinextras.sugar.Local;
+import dev.creoii.greatbigworld.GreatBigWorld;
 import dev.creoii.greatbigworld.adventures.util.ExtendedDedicatedServer;
 import dev.creoii.greatbigworld.adventures.util.ExtendedLevelProperties;
 import dev.creoii.greatbigworld.floraandfauna.season.Season;
@@ -39,8 +40,11 @@ public abstract class MinecraftServerMixin {
     private void gbw$applyWorldStartSeasonProperty(WorldGenerationProgressListener worldGenerationProgressListener, CallbackInfo ci, @Local ServerWorldProperties serverWorldProperties) {
         MinecraftServer server = (MinecraftServer) (Object) this;
         if (serverWorldProperties instanceof ExtendedLevelProperties extendedLevelProperties) {
-            SeasonManager seasonManager = SeasonManager.getInstance(server);
-            seasonManager.setCurrentSeason(getWorld(World.OVERWORLD), Season.values()[extendedLevelProperties.gbw$getStartSeason()], true);
+            ServerWorld serverWorld = getWorld(GreatBigWorld.ALTERWORLD_KEY);
+            if (serverWorld != null) {
+                SeasonManager seasonManager = SeasonManager.getInstance(server);
+                seasonManager.setCurrentSeason(serverWorld, Season.values()[extendedLevelProperties.gbw$getStartSeason()], true);
+            }
         }
     }
 }
