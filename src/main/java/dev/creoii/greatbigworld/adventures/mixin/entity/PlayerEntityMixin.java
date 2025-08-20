@@ -4,7 +4,6 @@ import com.mojang.authlib.GameProfile;
 import dev.creoii.greatbigworld.adventures.util.DifficultyHungerManager;
 import net.minecraft.entity.player.HungerManager;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -17,7 +16,7 @@ public class PlayerEntityMixin {
     @Shadow protected HungerManager hungerManager;
 
     @Inject(method = "<init>", at = @At("TAIL"))
-    private void gbw$changeStartHungerForDifficulty(World world, BlockPos pos, float yaw, GameProfile gameProfile, CallbackInfo ci) {
+    private void gbw$changeStartHungerForDifficulty(World world, GameProfile profile, CallbackInfo ci) {
         int startHunger = switch (world.getDifficulty()) {
             case PEACEFUL, EASY -> 20;
             case NORMAL -> 16;
