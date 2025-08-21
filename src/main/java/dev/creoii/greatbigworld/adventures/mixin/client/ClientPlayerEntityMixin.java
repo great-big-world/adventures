@@ -10,6 +10,7 @@ import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.stat.StatHandler;
+import net.minecraft.util.PlayerInput;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -28,7 +29,7 @@ public abstract class ClientPlayerEntityMixin extends LivingEntity implements Ex
     }
 
     @Inject(method = "<init>", at = @At("TAIL"))
-    private void gbw$initItemInfoHuds(MinecraftClient client, ClientWorld world, ClientPlayNetworkHandler networkHandler, StatHandler stats, ClientRecipeBook recipeBook, boolean lastSneaking, boolean lastSprinting, CallbackInfo ci) {
+    private void gbw$initItemInfoHuds(MinecraftClient client, ClientWorld world, ClientPlayNetworkHandler networkHandler, StatHandler stats, ClientRecipeBook recipeBook, PlayerInput lastPlayerInput, boolean lastSprinting, CallbackInfo ci) {
         itemInfoHuds = ExtendedHudPlayer.DEFAULT;
     }
 
