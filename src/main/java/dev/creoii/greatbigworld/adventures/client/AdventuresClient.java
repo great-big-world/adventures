@@ -70,7 +70,7 @@ public class AdventuresClient implements ClientModInitializer {
                     });
                     if (!sprites.isEmpty()) {
                         context.getMatrices().pushMatrix();
-                        context.getMatrices().scaleAround(1.5f, 1.5f, 1.5f);
+                        context.getMatrices().scale(1.5f, 1.5f);
                         for (int i = 0; i < sprites.size(); ++i) {
                             Identifier sprite = sprites.get(i);
                             context.drawTexture(RenderPipelines.GUI_TEXTURED, sprite.withPrefixedPath("textures/gui/hud/icon/").withSuffixedPath(".png"), 2, 2 + (i * 8), 0f, 0f, 7, 7, 7, 7);
