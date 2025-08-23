@@ -22,6 +22,7 @@
   "worldSize.infinite": "Infinite",
 
   "dimension_type.minecraft.overworld": "Overworld",
+  "dimension_type.great_big_world.the_alterworld": "Alterworld",
   "dimension_type.minecraft.the_nether": "Nether",
   "dimension_type.minecraft.the_end": "End",
   "dimension_type.minecraft.overworld_caves": "Overworld",
