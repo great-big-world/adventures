@@ -3,6 +3,7 @@ package dev.creoii.greatbigworld.adventures.mixin.world;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.brigadier.context.CommandContext;
 import dev.creoii.greatbigworld.adventures.registry.AdventuresGameRules;
+import dev.creoii.greatbigworld.adventures.util.AllowDebugHud;
 import dev.creoii.greatbigworld.adventures.util.ShowDeathCoordinates;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -25,6 +26,12 @@ public class GameRuleCommandMixin {
             showDeathCoordinates.gbw$setShowDeathCoordinates(value);
             PlayerLookup.all(context.getSource().getServer()).forEach(serverPlayer -> {
                 ServerPlayNetworking.send(serverPlayer, new ShowDeathCoordinates.SyncS2C(value));
+            });
+        } else if (world instanceof AllowDebugHud allowDebugHud && key == AdventuresGameRules.ALLOW_DEBUG_HUD) {
+            boolean value = world.getGameRules().getBoolean(AdventuresGameRules.ALLOW_DEBUG_HUD);
+            allowDebugHud.gbw$setAllowDebugHud(value);
+            PlayerLookup.all(context.getSource().getServer()).forEach(serverPlayer -> {
+                ServerPlayNetworking.send(serverPlayer, new AllowDebugHud.SyncS2C(value));
             });
         }
     }

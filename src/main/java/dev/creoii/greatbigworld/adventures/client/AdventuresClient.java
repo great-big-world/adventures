@@ -3,10 +3,7 @@ package dev.creoii.greatbigworld.adventures.client;
 import dev.creoii.greatbigworld.GreatBigWorld;
 import dev.creoii.greatbigworld.adventures.Adventures;
 import dev.creoii.greatbigworld.adventures.registry.AdventuresItems;
-import dev.creoii.greatbigworld.adventures.util.AdventuresTags;
-import dev.creoii.greatbigworld.adventures.util.ExtendedHudPlayer;
-import dev.creoii.greatbigworld.adventures.util.ItemInfoHud;
-import dev.creoii.greatbigworld.adventures.util.ShowDeathCoordinates;
+import dev.creoii.greatbigworld.adventures.util.*;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
@@ -98,6 +95,15 @@ public class AdventuresClient implements ClientModInitializer {
             context.client().execute(() -> {
                 if (context.client().world instanceof ShowDeathCoordinates showDeathCoordinates) {
                     showDeathCoordinates.gbw$setShowDeathCoordinates(value);
+                }
+            });
+        });
+
+        ClientPlayNetworking.registerGlobalReceiver(AllowDebugHud.SyncS2C.PACKET_ID, (payload, context) -> {
+            boolean value = payload.value();
+            context.client().execute(() -> {
+                if (context.client().world instanceof AllowDebugHud allowDebugHud) {
+                    allowDebugHud.gbw$setAllowDebugHud(value);
                 }
             });
         });

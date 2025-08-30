@@ -27,6 +27,7 @@
     "client.ClientPlayerEntityMixin",
     "client.CreateWorldScreenMixin",
     "client.DeathScreenMixin",
+    "client.DebugHudMixin",
     "client.DownloadingTerrainScreenMixin",
     "client.GameRendererMixin",
     "client.LightmapTextureManagerMixin",
