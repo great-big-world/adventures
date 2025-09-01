@@ -5,6 +5,7 @@ import dev.creoii.greatbigworld.adventures.Adventures;
 import dev.creoii.greatbigworld.adventures.registry.AdventuresItems;
 import dev.creoii.greatbigworld.adventures.util.*;
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements;
@@ -45,6 +46,11 @@ public class AdventuresClient implements ClientModInitializer {
                 }
             }
             return ActionResult.PASS;
+        });
+
+        ClientPlayConnectionEvents.JOIN.register((clientPlayNetworkHandler, packetSender, minecraftClient) -> {
+            ClientPlayNetworking.send(new ShowDeathCoordinates.RequestC2S());
+            ClientPlayNetworking.send(new AllowDebugHud.RequestC2S());
         });
 
         HudElementRegistry.attachElementBefore(VanillaHudElements.STATUS_EFFECTS, Identifier.of(GreatBigWorld.NAMESPACE, "item_info_huds"), (context, tickCounter) -> {

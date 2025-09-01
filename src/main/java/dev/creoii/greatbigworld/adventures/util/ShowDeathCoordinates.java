@@ -28,4 +28,20 @@ public interface ShowDeathCoordinates {
             return PACKET_ID;
         }
     }
+
+    record RequestC2S() implements CustomPayload {
+        public static final Id<RequestC2S> PACKET_ID = new Id<>(Identifier.of(GreatBigWorld.NAMESPACE, "request_show_death_coordinates"));
+        public static final PacketCodec<RegistryByteBuf, RequestC2S> PACKET_CODEC = PacketCodec.of(RequestC2S::write, RequestC2S::new);
+
+        public RequestC2S(RegistryByteBuf buf) {
+            this();
+        }
+
+        public void write(RegistryByteBuf buf) {}
+
+        @Override
+        public Id<? extends CustomPayload> getId() {
+            return PACKET_ID;
+        }
+    }
 }

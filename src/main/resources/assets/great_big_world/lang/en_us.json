@@ -28,6 +28,8 @@
   "dimension_type.minecraft.overworld_caves": "Overworld",
 
   "gamerule.showCoordinatesOnDeath": "Show death coordinates",
+  "gamerule.sleepDuringDay": "Sleep during daytime",
+  "gamerule.allowDebugHud": "Allow debug HUD",
 
   "death.showCoordinates": "at %s"
 }

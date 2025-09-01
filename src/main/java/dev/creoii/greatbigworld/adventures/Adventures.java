@@ -8,6 +8,7 @@ import dev.creoii.greatbigworld.adventures.util.ShowDeathCoordinates;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.entity.event.v1.EntitySleepEvents;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.network.RegistryByteBuf;
 import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.network.packet.CustomPayload;
@@ -27,11 +28,21 @@ public class Adventures implements ModInitializer {
         PayloadTypeRegistry.playS2C().register(TeleportDestinationS2C.PACKET_ID, TeleportDestinationS2C.PACKET_CODEC);
         PayloadTypeRegistry.playS2C().register(ShowDeathCoordinates.SyncS2C.PACKET_ID, ShowDeathCoordinates.SyncS2C.PACKET_CODEC);
         PayloadTypeRegistry.playS2C().register(AllowDebugHud.SyncS2C.PACKET_ID, AllowDebugHud.SyncS2C.PACKET_CODEC);
+        PayloadTypeRegistry.playC2S().register(ShowDeathCoordinates.RequestC2S.PACKET_ID, ShowDeathCoordinates.RequestC2S.PACKET_CODEC);
+        PayloadTypeRegistry.playC2S().register(AllowDebugHud.RequestC2S.PACKET_ID, AllowDebugHud.RequestC2S.PACKET_CODEC);
 
         EntitySleepEvents.ALLOW_SLEEP_TIME.register((playerEntity, blockPos, b) -> {
             if (!playerEntity.getWorld().isClient && ((ServerWorld) playerEntity.getWorld()).getGameRules().getBoolean(AdventuresGameRules.SLEEP_DURING_DAY)) {
                 return ActionResult.SUCCESS;
             } else return ActionResult.PASS;
+        });
+
+        ServerPlayNetworking.registerGlobalReceiver(ShowDeathCoordinates.RequestC2S.PACKET_ID, (requestC2S, context) -> {
+            ServerPlayNetworking.send(context.player(), new ShowDeathCoordinates.SyncS2C(context.player().getWorld().getGameRules().getBoolean(AdventuresGameRules.SHOW_COORDINATES_ON_DEATH)));
+        });
+
+        ServerPlayNetworking.registerGlobalReceiver(AllowDebugHud.RequestC2S.PACKET_ID, (requestC2S, context) -> {
+            ServerPlayNetworking.send(context.player(), new AllowDebugHud.SyncS2C(context.player().getWorld().getGameRules().getBoolean(AdventuresGameRules.ALLOW_DEBUG_HUD)));
         });
     }
 
