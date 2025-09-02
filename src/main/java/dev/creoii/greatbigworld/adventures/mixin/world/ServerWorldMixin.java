@@ -1,6 +1,5 @@
 package dev.creoii.greatbigworld.adventures.mixin.world;
 
-import dev.creoii.greatbigworld.adventures.registry.AdventuresGameRules;
 import dev.creoii.greatbigworld.adventures.util.WorldSizeHolder;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.server.MinecraftServer;
