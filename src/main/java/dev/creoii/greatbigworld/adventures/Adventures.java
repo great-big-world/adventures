@@ -1,6 +1,7 @@
 package dev.creoii.greatbigworld.adventures;
 
 import dev.creoii.greatbigworld.GreatBigWorld;
+import dev.creoii.greatbigworld.adventures.registry.AdventuresFeatures;
 import dev.creoii.greatbigworld.adventures.registry.AdventuresGameRules;
 import dev.creoii.greatbigworld.adventures.registry.AdventuresItems;
 import dev.creoii.greatbigworld.adventures.util.AllowDebugHud;
@@ -23,6 +24,7 @@ public class Adventures implements ModInitializer {
     @Override
     public void onInitialize() {
         AdventuresItems.register();
+        AdventuresFeatures.register();
         AdventuresGameRules.register();
 
         PayloadTypeRegistry.playS2C().register(TeleportDestinationS2C.PACKET_ID, TeleportDestinationS2C.PACKET_CODEC);

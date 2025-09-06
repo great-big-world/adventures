@@ -1,6 +1,5 @@
 package dev.creoii.greatbigworld.adventures.mixin.client;
 
-import com.llamalad7.mixinextras.sugar.Local;
 import dev.creoii.greatbigworld.adventures.util.ExtendedLevelProperties;
 import dev.creoii.greatbigworld.adventures.util.ExtendedWorldCreator;
 import net.minecraft.client.MinecraftClient;
@@ -42,7 +41,6 @@ public class CreateWorldScreenMixin {
                     levelProperties.getWorldBorder().size = (worldSize * 2d * 16d) - .5d;
                 else if (worldSize == 0)
                     levelProperties.getWorldBorder().size = 15.5d;
-
 
                 extendedLevelProperties.gbw$setStartSeason(extendedWorldCreator.gbw$getStartSeason());
             }

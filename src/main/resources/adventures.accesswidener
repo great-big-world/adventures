@@ -1,5 +1,8 @@
 accessWidener v2 named
 accessible class net/minecraft/client/gui/screen/world/CreateWorldScreen$WorldTab
+accessible class net/minecraft/client/gui/screen/world/WorldScreenOptionGrid
+
+accessible method net/minecraft/world/gen/GeneratorOptions <init> (JZZLjava/util/Optional;)V
 
 accessible field net/minecraft/client/gui/screen/Screen client Lnet/minecraft/client/MinecraftClient;
 accessible field net/minecraft/world/border/WorldBorder$Properties size D

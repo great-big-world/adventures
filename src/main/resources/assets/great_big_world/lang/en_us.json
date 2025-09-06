@@ -31,5 +31,7 @@
   "gamerule.sleepDuringDay": "Sleep during daytime",
   "gamerule.allowDebugHud": "Allow debug HUD",
 
-  "death.showCoordinates": "at %s"
+  "death.showCoordinates": "at %s",
+
+  "great_big_world.selectWorld.bonusHouse": "Bonus House"
 }

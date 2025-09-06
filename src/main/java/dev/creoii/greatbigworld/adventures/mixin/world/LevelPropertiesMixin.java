@@ -21,6 +21,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class LevelPropertiesMixin implements ExtendedLevelProperties {
     @Unique private int worldSize = WorldSize.INFINITE.getSize();
     @Unique private int startSeason = Season.SUMMER.ordinal();
+    @Unique private boolean bonusHouse = false;
 
     @Override
     public void gbw$setWorldSize(int worldSize) {
@@ -33,6 +34,11 @@ public class LevelPropertiesMixin implements ExtendedLevelProperties {
     }
 
     @Override
+    public void gbw$setBonusHouseEnabled(boolean bonusHouseEnabled) {
+        bonusHouse = bonusHouseEnabled;
+    }
+
+    @Override
     public int gbw$getWorldSize() {
         return worldSize;
     }
@@ -40,6 +46,11 @@ public class LevelPropertiesMixin implements ExtendedLevelProperties {
     @Override
     public int gbw$getStartSeason() {
         return startSeason;
+    }
+
+    @Override
+    public boolean gbw$isBonusHouseEnabled() {
+        return bonusHouse;
     }
 
     @SuppressWarnings("deprecation")

@@ -1,0 +1,6 @@
+{
+  "type": "great_big_world:bonus_house",
+  "config": {
+    "chest": true
+  }
+}
