@@ -51,6 +51,7 @@ public class BonusHouseFeature extends Feature<BonusHouseFeatureConfig> {
             }
         }
 
+        BlockPos torchPos = new BlockPos(pos.getX() + context.getRandom().nextBetween(-2, 2), pos.getY() + 1, pos.getZ() + context.getRandom().nextBetween(-2, 2));
         if (context.getConfig().hasChest()) {
             BlockPos chestPos = new BlockPos(pos.getX() + context.getRandom().nextBetween(-2, 2), pos.getY() + 1, pos.getZ() + context.getRandom().nextBetween(-2, 2));
             Direction facing = Direction.NORTH;
@@ -62,9 +63,12 @@ public class BonusHouseFeature extends Feature<BonusHouseFeatureConfig> {
             }
             context.getWorld().setBlockState(chestPos, Blocks.CHEST.getDefaultState().with(ChestBlock.FACING, facing), 2);
             LootableInventory.setLootTable(context.getWorld(), context.getRandom(), chestPos, LootTables.SPAWN_BONUS_CHEST);
+
+            while (chestPos.equals(torchPos)) {
+                torchPos = new BlockPos(pos.getX() + context.getRandom().nextBetween(-2, 2), pos.getY() + 1, pos.getZ() + context.getRandom().nextBetween(-2, 2));
+            }
         }
 
-        BlockPos torchPos = new BlockPos(pos.getX() + context.getRandom().nextBetween(-2, 2), pos.getY() + 1, pos.getZ() + context.getRandom().nextBetween(-2, 2));
         context.getWorld().setBlockState(torchPos, Blocks.TORCH.getDefaultState(), 2);
 
         return true;
