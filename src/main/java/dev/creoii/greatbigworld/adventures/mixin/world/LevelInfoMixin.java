@@ -1,5 +1,6 @@
 package dev.creoii.greatbigworld.adventures.mixin.world;
 
+import dev.creoii.greatbigworld.adventures.util.BonusHouseHolder;
 import dev.creoii.greatbigworld.adventures.util.ExtendedWorldCreator;
 import dev.creoii.greatbigworld.adventures.util.WorldStartWeather;
 import net.minecraft.resource.DataConfiguration;
@@ -13,11 +14,12 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(LevelInfo.class)
-public class LevelInfoMixin implements ExtendedWorldCreator {
+public class LevelInfoMixin implements ExtendedWorldCreator, BonusHouseHolder {
     @Unique private long gbw$startTime;
     @Unique private int gbw$startSeason;
     @Unique private WorldStartWeather gbw$startWeather;
     @Unique private int gbw$worldSize;
+    @Unique private boolean bonusHouseEnabled = false;
 
     @Override
     public void gbw$setStartTime(long startTime) {
@@ -59,6 +61,16 @@ public class LevelInfoMixin implements ExtendedWorldCreator {
         return gbw$worldSize;
     }
 
+    @Override
+    public void gbw$setBonusHouseEnabled(boolean bonusHouseEnabled) {
+        this.bonusHouseEnabled = bonusHouseEnabled;
+    }
+
+    @Override
+    public boolean gbw$isBonusHouseEnabled() {
+        return bonusHouseEnabled;
+    }
+
     @Inject(method = "withDifficulty", at = @At("RETURN"))
     private void gbw$fixWithDifficulty(Difficulty difficulty, CallbackInfoReturnable<LevelInfo> cir) {
         ExtendedWorldCreator extendedWorldCreator = (ExtendedWorldCreator) (Object) cir.getReturnValue();
@@ -66,6 +78,9 @@ public class LevelInfoMixin implements ExtendedWorldCreator {
         extendedWorldCreator.gbw$setStartTime(gbw$startTime);
         extendedWorldCreator.gbw$setStartWeather(gbw$startWeather);
         extendedWorldCreator.gbw$setStartSeason(gbw$startSeason);
+
+        BonusHouseHolder bonusHouseHolder = (BonusHouseHolder) (Object) cir.getReturnValue();
+        bonusHouseHolder.gbw$setBonusHouseEnabled(bonusHouseEnabled);
     }
 
     @Inject(method = "withGameMode", at = @At("RETURN"))
@@ -75,6 +90,9 @@ public class LevelInfoMixin implements ExtendedWorldCreator {
         extendedWorldCreator.gbw$setStartTime(gbw$startTime);
         extendedWorldCreator.gbw$setStartWeather(gbw$startWeather);
         extendedWorldCreator.gbw$setStartSeason(gbw$startSeason);
+
+        BonusHouseHolder bonusHouseHolder = (BonusHouseHolder) (Object) cir.getReturnValue();
+        bonusHouseHolder.gbw$setBonusHouseEnabled(bonusHouseEnabled);
     }
 
     @Inject(method = "withCopiedGameRules", at = @At("RETURN"))
@@ -84,6 +102,9 @@ public class LevelInfoMixin implements ExtendedWorldCreator {
         extendedWorldCreator.gbw$setStartTime(gbw$startTime);
         extendedWorldCreator.gbw$setStartWeather(gbw$startWeather);
         extendedWorldCreator.gbw$setStartSeason(gbw$startSeason);
+
+        BonusHouseHolder bonusHouseHolder = (BonusHouseHolder) (Object) cir.getReturnValue();
+        bonusHouseHolder.gbw$setBonusHouseEnabled(bonusHouseEnabled);
     }
 
     @Inject(method = "withDataConfiguration", at = @At("RETURN"))
@@ -93,5 +114,8 @@ public class LevelInfoMixin implements ExtendedWorldCreator {
         extendedWorldCreator.gbw$setStartTime(gbw$startTime);
         extendedWorldCreator.gbw$setStartWeather(gbw$startWeather);
         extendedWorldCreator.gbw$setStartSeason(gbw$startSeason);
+
+        BonusHouseHolder bonusHouseHolder = (BonusHouseHolder) (Object) cir.getReturnValue();
+        bonusHouseHolder.gbw$setBonusHouseEnabled(bonusHouseEnabled);
     }
 }

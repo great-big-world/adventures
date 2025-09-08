@@ -67,6 +67,6 @@ public class BonusHouseFeature extends Feature<BonusHouseFeatureConfig> {
         BlockPos torchPos = new BlockPos(pos.getX() + context.getRandom().nextBetween(-2, 2), pos.getY() + 1, pos.getZ() + context.getRandom().nextBetween(-2, 2));
         context.getWorld().setBlockState(torchPos, Blocks.TORCH.getDefaultState(), 2);
 
-        return false;
+        return true;
     }
 }

@@ -58,11 +58,13 @@ public class LevelPropertiesMixin implements ExtendedLevelProperties {
     private static <T> void gbw$readExtendedProperties(Dynamic<T> dynamic, LevelInfo info, LevelProperties.SpecialProperty specialProperty, GeneratorOptions generatorOptions, Lifecycle lifecycle, CallbackInfoReturnable<LevelProperties> cir) {
         ((ExtendedLevelProperties) cir.getReturnValue()).gbw$setWorldSize(dynamic.get("worldSize").asInt(WorldSize.INFINITE.getSize()));
         ((ExtendedLevelProperties) cir.getReturnValue()).gbw$setStartSeason(dynamic.get("startSeason").asInt(Season.SUMMER.ordinal()));
+        ((ExtendedLevelProperties) cir.getReturnValue()).gbw$setBonusHouseEnabled(dynamic.get("bonusHouse").asBoolean(false));
     }
 
     @Inject(method = "updateProperties", at = @At("TAIL"))
     private void gbw$updateExtendedProperties(DynamicRegistryManager registryManager, NbtCompound levelNbt, NbtCompound playerNbt, CallbackInfo ci) {
         levelNbt.putInt("worldSize", worldSize);
         levelNbt.putInt("startSeason", startSeason);
+        levelNbt.putBoolean("bonusHouse", bonusHouse);
     }
 }
