@@ -33,5 +33,7 @@
 
   "death.showCoordinates": "at %s",
 
-  "great_big_world.selectWorld.bonusHouse": "Bonus House"
+  "great_big_world.selectWorld.bonusHouse": "Bonus House",
+
+  "generator.great_big_world.skyblock": "Skyblock"
 }

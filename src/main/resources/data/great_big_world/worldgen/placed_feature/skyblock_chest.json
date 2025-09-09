@@ -1,0 +1,11 @@
+{
+  "feature": "great_big_world:skyblock_chest",
+  "placement": [
+    {
+      "type": "minecraft:fixed_placement",
+      "positions": [
+        [0, 64, 3]
+      ]
+    }
+  ]
+}

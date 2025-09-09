@@ -1,6 +1,7 @@
 package dev.creoii.greatbigworld.adventures;
 
 import dev.creoii.greatbigworld.GreatBigWorld;
+import dev.creoii.greatbigworld.adventures.registry.AdventuresChunkGenerators;
 import dev.creoii.greatbigworld.adventures.registry.AdventuresFeatures;
 import dev.creoii.greatbigworld.adventures.registry.AdventuresGameRules;
 import dev.creoii.greatbigworld.adventures.registry.AdventuresItems;
@@ -26,6 +27,7 @@ public class Adventures implements ModInitializer {
         AdventuresItems.register();
         AdventuresFeatures.register();
         AdventuresGameRules.register();
+        AdventuresChunkGenerators.register();
 
         PayloadTypeRegistry.playS2C().register(TeleportDestinationS2C.PACKET_ID, TeleportDestinationS2C.PACKET_CODEC);
         PayloadTypeRegistry.playS2C().register(ShowDeathCoordinates.SyncS2C.PACKET_ID, ShowDeathCoordinates.SyncS2C.PACKET_CODEC);
