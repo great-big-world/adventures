@@ -1,9 +1,12 @@
 package dev.creoii.greatbigworld.adventures.world.feature;
 
 import com.mojang.serialization.Codec;
+import dev.creoii.greatbigworld.GreatBigWorld;
 import net.minecraft.block.Blocks;
 import net.minecraft.inventory.LootableInventory;
-import net.minecraft.loot.LootTables;
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.RegistryKeys;
+import net.minecraft.util.Identifier;
 import net.minecraft.world.gen.feature.DefaultFeatureConfig;
 import net.minecraft.world.gen.feature.Feature;
 import net.minecraft.world.gen.feature.util.FeatureContext;
@@ -16,7 +19,7 @@ public class SkyblockChestFeature extends Feature<DefaultFeatureConfig> {
     @Override
     public boolean generate(FeatureContext<DefaultFeatureConfig> context) {
         context.getWorld().setBlockState(context.getOrigin(), Blocks.CHEST.getDefaultState(), 2);
-        LootableInventory.setLootTable(context.getWorld(), context.getRandom(), context.getOrigin(), LootTables.SPAWN_BONUS_CHEST);
+        LootableInventory.setLootTable(context.getWorld(), context.getRandom(), context.getOrigin(), RegistryKey.of(RegistryKeys.LOOT_TABLE, Identifier.of(GreatBigWorld.NAMESPACE, "chests/skyblock")));
         return true;
     }
 }
