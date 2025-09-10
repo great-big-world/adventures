@@ -4,7 +4,7 @@
     {
       "type": "minecraft:fixed_placement",
       "positions": [
-        [3, 64, 0]
+        [4, 64, -1]
       ]
     }
   ]
