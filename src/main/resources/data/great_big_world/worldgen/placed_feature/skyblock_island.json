@@ -1,0 +1,11 @@
+{
+  "feature": "great_big_world:skyblock_island",
+  "placement": [
+    {
+      "type": "minecraft:fixed_placement",
+      "positions": [
+        [0, 64, 3]
+      ]
+    }
+  ]
+}

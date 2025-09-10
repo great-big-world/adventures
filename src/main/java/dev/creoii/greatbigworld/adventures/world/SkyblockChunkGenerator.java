@@ -5,7 +5,6 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.creoii.greatbigworld.GreatBigWorld;
 import net.minecraft.SharedConstants;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.RegistryOps;
@@ -37,7 +36,7 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 public class SkyblockChunkGenerator extends ChunkGenerator {
-    public static final MapCodec<SkyblockChunkGenerator> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(RegistryOps.getEntryCodec(BiomeKeys.THE_VOID)).apply(instance, instance.stable(SkyblockChunkGenerator::new)));
+    public static final MapCodec<SkyblockChunkGenerator> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(RegistryOps.getEntryCodec(BiomeKeys.PLAINS)).apply(instance, instance.stable(SkyblockChunkGenerator::new)));
 
     public SkyblockChunkGenerator(RegistryEntry.Reference<Biome> biomeEntry) {
         super(new FixedBiomeSource(biomeEntry));
@@ -55,43 +54,19 @@ public class SkyblockChunkGenerator extends ChunkGenerator {
             return;
 
         ChunkRandom chunkRandom = new ChunkRandom(new Xoroshiro128PlusPlusRandom(RandomSeed.getSeed()));
-        ChunkSectionPos chunkSectionPos = ChunkSectionPos.from(chunkPos, world.getBottomSectionCoord());
-        BlockPos blockPos = chunkSectionPos.getMinPos();
+        BlockPos blockPos = ChunkSectionPos.from(chunkPos, world.getBottomSectionCoord()).getMinPos();
 
         world.getRegistryManager().getOptional(RegistryKeys.PLACED_FEATURE).ifPresent(features -> {
-            PlacedFeature feature = features.get(RegistryKey.of(RegistryKeys.PLACED_FEATURE, Identifier.of(GreatBigWorld.NAMESPACE, "skyblock_oak")));
-            if (feature != null)
-                feature.generate(world, this, chunkRandom, blockPos);
+            PlacedFeature tree = features.get(RegistryKey.of(RegistryKeys.PLACED_FEATURE, Identifier.of(GreatBigWorld.NAMESPACE, "skyblock_oak")));
+            if (tree != null)
+                tree.generate(world, this, chunkRandom, blockPos);
+            PlacedFeature chest = features.get(RegistryKey.of(RegistryKeys.PLACED_FEATURE, Identifier.of(GreatBigWorld.NAMESPACE, "skyblock_chest")));
+            if (chest != null)
+                chest.generate(world, this, chunkRandom, blockPos);
+            PlacedFeature island = features.get(RegistryKey.of(RegistryKeys.PLACED_FEATURE, Identifier.of(GreatBigWorld.NAMESPACE, "skyblock_island")));
+            if (island != null)
+                island.generate(world, this, chunkRandom, blockPos);
         });
-
-        world.getRegistryManager().getOptional(RegistryKeys.PLACED_FEATURE).ifPresent(features -> {
-            PlacedFeature feature = features.get(RegistryKey.of(RegistryKeys.PLACED_FEATURE, Identifier.of(GreatBigWorld.NAMESPACE, "skyblock_chest")));
-            if (feature != null)
-                feature.generate(world, this, chunkRandom, blockPos);
-        });
-
-        BlockPos.Mutable posA = new BlockPos(0, 62, 0).mutableCopy();
-        BlockPos.Mutable posB = new BlockPos(3, 62, 0).mutableCopy();
-        BlockPos.Mutable posC = new BlockPos(0, 62, 3).mutableCopy();
-
-        BlockPos.Mutable[] sections = new BlockPos.Mutable[]{posA, posB, posC};
-
-        for (BlockPos.Mutable mutable : sections) {
-            int baseX = mutable.getX();
-            int baseY = mutable.getY();
-            int baseZ = mutable.getZ();
-
-            for (int z = -1; z <= 1; ++z) {
-                for (int y = -1; y <= 1; ++y) {
-                    for (int x = -1; x <= 1; ++x) {
-                        BlockPos pos = new BlockPos(baseX + x, baseY + y, baseZ + z);
-                        BlockState state = y == 1 ? Blocks.GRASS_BLOCK.getDefaultState() : Blocks.DIRT.getDefaultState();
-
-                        world.setBlockState(pos, state, 2);
-                    }
-                }
-            }
-        }
     }
 
     @Override
