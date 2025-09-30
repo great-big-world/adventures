@@ -29,7 +29,7 @@ public class LightmapTextureManagerMixin {
             }
 
             float abovegroundDarkness = darkness - (MOON_PHASE_BRIGHTNESS[moonPhase] * getTimeInfluence());
-            float undergroundDarkness = darkness - (MOON_PHASE_BRIGHTNESS[3] * getTimeInfluence());
+            float undergroundDarkness = darkness + .105f;
 
             return MathHelper.lerp(UndergroundHelper.sampleLightAt(client.world, entity.getBlockPos(), LightType.SKY), undergroundDarkness, abovegroundDarkness);
         }
