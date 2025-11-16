@@ -37,9 +37,9 @@ public class CreateWorldScreenMixin {
             if (levelProperties instanceof ExtendedLevelProperties extendedLevelProperties) {
                 int worldSize = extendedWorldCreator.gbw$getWorldSize();
                 extendedLevelProperties.gbw$setWorldSize(worldSize);
-                if (worldSize > 0)
+                if (worldSize > 0 && levelProperties.getWorldBorder().isPresent())
                     levelProperties.getWorldBorder().get().size = (worldSize * 2d * 16d) - .5d;
-                else if (worldSize == 0)
+                else if (worldSize == 0 && levelProperties.getWorldBorder().isPresent())
                     levelProperties.getWorldBorder().get().size = 15.5d;
 
                 extendedLevelProperties.gbw$setStartSeason(extendedWorldCreator.gbw$getStartSeason());
