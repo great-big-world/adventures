@@ -43,7 +43,6 @@ public abstract class MinecraftServerMixin {
 
     @Shadow @Nullable public abstract ServerWorld getWorld(RegistryKey<World> key);
 
-    @SuppressWarnings("deprecation")
     @Inject(method = "createWorlds", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/SaveProperties;isDebugWorld()Z"))
     private void gbw$applyWorldStartServerProperties(CallbackInfo ci, @Local ServerWorldProperties serverWorldProperties) {
         MinecraftServer server = (MinecraftServer) (Object) this;
@@ -52,8 +51,11 @@ public abstract class MinecraftServerMixin {
                 dedicatedServer.gbw$loadServerProperties(extendedLevelProperties);
 
             int worldSize = extendedLevelProperties.gbw$getWorldSize();
-            if (worldSize > 0)
-                serverWorldProperties.getWorldBorder().get().size = (worldSize * 2d * 16d) - .5d;
+            if (worldSize > 0) {
+                for (World world : server.getWorlds()) {
+                    world.getWorldBorder().setSize((worldSize * 2d * 16d) - .5d);
+                }
+            }
         }
     }
 
