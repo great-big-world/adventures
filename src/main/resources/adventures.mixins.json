@@ -30,7 +30,6 @@
     "client.CreateWorldScreenWorldTabMixin",
     "client.DeathScreenMixin",
     "client.DebugHudMixin",
-    "client.DownloadingTerrainScreenMixin",
     "client.GameRendererMixin",
     "client.GeneratorOptionsHolderMixin",
     "client.LightmapTextureManagerMixin",

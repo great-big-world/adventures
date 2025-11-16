@@ -21,7 +21,7 @@ import java.util.Map;
 @FunctionalInterface
 public interface ExtendedHudPlayer {
     Map<Type, ItemInfoHud> DEFAULT = ImmutableMap.<Type, ItemInfoHud>builder()
-            .put(Type.COMPASS, new ItemInfoHud(clientPlayer -> getCompassTexture(clientPlayer, getCompassTarget(clientPlayer.clientWorld, clientPlayer.getStackInHand(clientPlayer.getActiveHand())), ""), Items.COMPASS, clientPlayer -> {
+            .put(Type.COMPASS, new ItemInfoHud(clientPlayer -> getCompassTexture(clientPlayer, getCompassTarget(clientPlayer.getEntityWorld(), clientPlayer.getStackInHand(clientPlayer.getActiveHand())), ""), Items.COMPASS, clientPlayer -> {
                 return Text.literal(StringUtils.capitalize(clientPlayer.getHorizontalFacing().getId()));
             }))
             .put(Type.RECOVERY_COMPASS, new ItemInfoHud(clientPlayer -> getCompassTexture(clientPlayer, clientPlayer.getLastDeathPos().orElse(null), "recovery_"), Items.RECOVERY_COMPASS, clientPlayer -> {
@@ -46,7 +46,7 @@ public interface ExtendedHudPlayer {
                 yaw += 360f;
             return Identifier.of(GreatBigWorld.NAMESPACE, prefix + "compass_" + (int) (Math.round(yaw / 45f) % 8f));
 */
-            Vec3d playerPos = clientPlayer.getPos();
+            Vec3d playerPos = clientPlayer.getEntityPos();
 
             BlockPos targetBlockPos = pos.pos();
             Vec3d targetPos = new Vec3d(targetBlockPos.getX() + .5d, targetBlockPos.getY() + .5d, targetBlockPos.getZ() + .5d);
@@ -79,11 +79,11 @@ public interface ExtendedHudPlayer {
         if (component != null && component.target().isPresent()) {
             return component.target().get();
         }
-        return GlobalPos.create(world.getRegistryKey(), world.getSpawnPos());
+        return GlobalPos.create(world.getRegistryKey(), world.getSpawnPoint().getPos());
     }
 
     private static Identifier getClockTexture(ClientPlayerEntity clientPlayer) {
-        long time = clientPlayer.clientWorld.getTimeOfDay();
+        long time = clientPlayer.getEntityWorld().getTimeOfDay();
         if (time >= 13000L) {
             return Identifier.of(GreatBigWorld.NAMESPACE, "clock_night");
         }

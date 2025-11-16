@@ -60,9 +60,11 @@ public class SkyblockChunkGenerator extends ChunkGenerator {
             PlacedFeature tree = features.get(RegistryKey.of(RegistryKeys.PLACED_FEATURE, Identifier.of(GreatBigWorld.NAMESPACE, "skyblock_oak")));
             if (tree != null)
                 tree.generate(world, this, chunkRandom, blockPos);
+
             PlacedFeature chest = features.get(RegistryKey.of(RegistryKeys.PLACED_FEATURE, Identifier.of(GreatBigWorld.NAMESPACE, "skyblock_chest")));
             if (chest != null)
                 chest.generate(world, this, chunkRandom, blockPos);
+
             PlacedFeature island = features.get(RegistryKey.of(RegistryKeys.PLACED_FEATURE, Identifier.of(GreatBigWorld.NAMESPACE, "skyblock_island")));
             if (island != null)
                 island.generate(world, this, chunkRandom, blockPos);

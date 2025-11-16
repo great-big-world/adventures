@@ -12,16 +12,18 @@ import dev.creoii.greatbigworld.floraandfauna.season.SeasonManager;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.WorldGenerationProgressListener;
 import net.minecraft.server.network.SpawnLocating;
 import net.minecraft.server.world.ServerChunkManager;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
+import net.minecraft.util.math.GlobalPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.Heightmap;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldProperties;
+import net.minecraft.world.chunk.ChunkLoadProgress;
 import net.minecraft.world.gen.GeneratorOptions;
 import net.minecraft.world.gen.feature.ConfiguredFeature;
 import net.minecraft.world.gen.feature.MiscConfiguredFeatures;
@@ -41,8 +43,9 @@ public abstract class MinecraftServerMixin {
 
     @Shadow @Nullable public abstract ServerWorld getWorld(RegistryKey<World> key);
 
+    @SuppressWarnings("deprecation")
     @Inject(method = "createWorlds", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/SaveProperties;isDebugWorld()Z"))
-    private void gbw$applyWorldStartServerProperties(WorldGenerationProgressListener worldGenerationProgressListener, CallbackInfo ci, @Local ServerWorldProperties serverWorldProperties) {
+    private void gbw$applyWorldStartServerProperties(CallbackInfo ci, @Local ServerWorldProperties serverWorldProperties) {
         MinecraftServer server = (MinecraftServer) (Object) this;
         if (serverWorldProperties instanceof ExtendedLevelProperties extendedLevelProperties) {
             if (server instanceof ExtendedDedicatedServer dedicatedServer)
@@ -50,12 +53,12 @@ public abstract class MinecraftServerMixin {
 
             int worldSize = extendedLevelProperties.gbw$getWorldSize();
             if (worldSize > 0)
-                serverWorldProperties.getWorldBorder().size = (worldSize * 2d * 16d) - .5d;
+                serverWorldProperties.getWorldBorder().get().size = (worldSize * 2d * 16d) - .5d;
         }
     }
 
     @Inject(method = "createWorlds", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/MinecraftServer;initScoreboard(Lnet/minecraft/world/PersistentStateManager;)V"))
-    private void gbw$applyWorldStartSeasonProperty(WorldGenerationProgressListener worldGenerationProgressListener, CallbackInfo ci, @Local ServerWorldProperties serverWorldProperties) {
+    private void gbw$applyWorldStartSeasonProperty(CallbackInfo ci, @Local ServerWorldProperties serverWorldProperties) {
         MinecraftServer server = (MinecraftServer) (Object) this;
         if (serverWorldProperties instanceof ExtendedLevelProperties extendedLevelProperties) {
             ServerWorld serverWorld = getWorld(GreatBigWorld.ALTERWORLD_KEY);
@@ -66,27 +69,29 @@ public abstract class MinecraftServerMixin {
         }
     }
 
-    @WrapOperation(method = "createWorlds", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/MinecraftServer;setupSpawn(Lnet/minecraft/server/world/ServerWorld;Lnet/minecraft/world/level/ServerWorldProperties;ZZ)V"))
-    private void gbw$redirectSetupSpawn(ServerWorld world, ServerWorldProperties worldProperties, boolean bonusChest, boolean debugWorld, Operation<Void> original, @Local GeneratorOptions generatorOptions) {
+    @WrapOperation(method = "createWorlds", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/MinecraftServer;setupSpawn(Lnet/minecraft/server/world/ServerWorld;Lnet/minecraft/world/level/ServerWorldProperties;ZZLnet/minecraft/world/chunk/ChunkLoadProgress;)V"))
+    private void gbw$redirectSetupSpawn(ServerWorld world, ServerWorldProperties worldProperties, boolean bonusChest, boolean debugWorld, ChunkLoadProgress chunkLoadProgress, Operation<Void> original, @Local GeneratorOptions generatorOptions) {
         if (generatorOptions instanceof BonusHouseHolder bonusHouseHolder) {
-            setupSpawn(world, worldProperties, bonusChest, bonusHouseHolder.gbw$isBonusHouseEnabled(), debugWorld);
-        } else original.call(world, worldProperties, bonusChest, debugWorld);
+            setupSpawn(world, worldProperties, bonusChest, bonusHouseHolder.gbw$isBonusHouseEnabled(), debugWorld, chunkLoadProgress);
+        } else original.call(world, worldProperties, bonusChest, debugWorld, chunkLoadProgress);
     }
 
     @Unique
-    private static void setupSpawn(ServerWorld world, ServerWorldProperties worldProperties, boolean bonusChest, boolean bonusHouse, boolean debugWorld) {
+    private static void setupSpawn(ServerWorld world, ServerWorldProperties worldProperties, boolean bonusChest, boolean bonusHouse, boolean debugWorld, ChunkLoadProgress loadProgress) {
         if (debugWorld) {
-            worldProperties.setSpawnPos(BlockPos.ORIGIN.up(80), 0f);
+            worldProperties.setSpawnPoint(new WorldProperties.SpawnPoint(GlobalPos.create(World.OVERWORLD, BlockPos.ORIGIN.up(80)), 0f, 0f));
         } else {
             ServerChunkManager serverChunkManager = world.getChunkManager();
             ChunkPos chunkPos = new ChunkPos(serverChunkManager.getNoiseConfig().getMultiNoiseSampler().findBestSpawnPosition());
+            loadProgress.init(ChunkLoadProgress.Stage.PREPARE_GLOBAL_SPAWN, 0);
+            loadProgress.initSpawnPos(world.getRegistryKey(), chunkPos);
             int i = serverChunkManager.getChunkGenerator().getSpawnHeight(world);
             if (i < world.getBottomY()) {
                 BlockPos blockPos = chunkPos.getStartPos();
                 i = world.getTopY(Heightmap.Type.WORLD_SURFACE, blockPos.getX() + 8, blockPos.getZ() + 8);
             }
 
-            worldProperties.setSpawnPos(chunkPos.getStartPos().add(8, i, 8), 0f);
+            worldProperties.setSpawnPoint(WorldProperties.SpawnPoint.create(world.getRegistryKey(), chunkPos.getStartPos().add(8, i, 8), 0.0F, 0.0F));
             int j = 0;
             int k = 0;
             int l = 0;
@@ -96,7 +101,7 @@ public abstract class MinecraftServerMixin {
                 if (j >= -5 && j <= 5 && k >= -5 && k <= 5) {
                     BlockPos blockPos2 = SpawnLocating.findServerSpawnPoint(world, new ChunkPos(chunkPos.x + j, chunkPos.z + k));
                     if (blockPos2 != null) {
-                        worldProperties.setSpawnPos(blockPos2, 0f);
+                        worldProperties.setSpawnPoint(WorldProperties.SpawnPoint.create(world.getRegistryKey(), blockPos2, 0.0F, 0.0F));
                         break;
                     }
                 }
@@ -112,12 +117,14 @@ public abstract class MinecraftServerMixin {
             }
 
             if (bonusHouse && bonusChest) {
-                world.getRegistryManager().getOptional(RegistryKeys.CONFIGURED_FEATURE).flatMap((featureRegistry) -> featureRegistry.getOptional(BONUS_HOUSE_CHEST)).ifPresent(feature -> feature.value().generate(world, serverChunkManager.getChunkGenerator(), world.random, worldProperties.getSpawnPos()));
+                world.getRegistryManager().getOptional(RegistryKeys.CONFIGURED_FEATURE).flatMap((featureRegistry) -> featureRegistry.getOptional(BONUS_HOUSE_CHEST)).ifPresent(feature -> feature.value().generate(world, serverChunkManager.getChunkGenerator(), world.random, worldProperties.getSpawnPoint().getPos()));
             } else if (bonusChest) {
-                world.getRegistryManager().getOptional(RegistryKeys.CONFIGURED_FEATURE).flatMap((featureRegistry) -> featureRegistry.getOptional(MiscConfiguredFeatures.BONUS_CHEST)).ifPresent(feature -> feature.value().generate(world, serverChunkManager.getChunkGenerator(), world.random, worldProperties.getSpawnPos()));
+                world.getRegistryManager().getOptional(RegistryKeys.CONFIGURED_FEATURE).flatMap((featureRegistry) -> featureRegistry.getOptional(MiscConfiguredFeatures.BONUS_CHEST)).ifPresent(feature -> feature.value().generate(world, serverChunkManager.getChunkGenerator(), world.random, worldProperties.getSpawnPoint().getPos()));
             } else if (bonusHouse) {
-                world.getRegistryManager().getOptional(RegistryKeys.CONFIGURED_FEATURE).flatMap((featureRegistry) -> featureRegistry.getOptional(BONUS_HOUSE)).ifPresent(feature -> feature.value().generate(world, serverChunkManager.getChunkGenerator(), world.random, worldProperties.getSpawnPos()));
+                world.getRegistryManager().getOptional(RegistryKeys.CONFIGURED_FEATURE).flatMap((featureRegistry) -> featureRegistry.getOptional(BONUS_HOUSE)).ifPresent(feature -> feature.value().generate(world, serverChunkManager.getChunkGenerator(), world.random, worldProperties.getSpawnPoint().getPos()));
             }
+
+            loadProgress.finish(ChunkLoadProgress.Stage.PREPARE_GLOBAL_SPAWN);
         }
     }
 }

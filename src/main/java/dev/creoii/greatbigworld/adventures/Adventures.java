@@ -36,17 +36,17 @@ public class Adventures implements ModInitializer {
         PayloadTypeRegistry.playC2S().register(AllowDebugHud.RequestC2S.PACKET_ID, AllowDebugHud.RequestC2S.PACKET_CODEC);
 
         EntitySleepEvents.ALLOW_SLEEP_TIME.register((playerEntity, blockPos, b) -> {
-            if (!playerEntity.getWorld().isClient && ((ServerWorld) playerEntity.getWorld()).getGameRules().getBoolean(AdventuresGameRules.SLEEP_DURING_DAY)) {
+            if (!playerEntity.getEntityWorld().isClient() && ((ServerWorld) playerEntity.getEntityWorld()).getGameRules().getBoolean(AdventuresGameRules.SLEEP_DURING_DAY)) {
                 return ActionResult.SUCCESS;
             } else return ActionResult.PASS;
         });
 
         ServerPlayNetworking.registerGlobalReceiver(ShowDeathCoordinates.RequestC2S.PACKET_ID, (requestC2S, context) -> {
-            ServerPlayNetworking.send(context.player(), new ShowDeathCoordinates.SyncS2C(context.player().getWorld().getGameRules().getBoolean(AdventuresGameRules.SHOW_COORDINATES_ON_DEATH)));
+            ServerPlayNetworking.send(context.player(), new ShowDeathCoordinates.SyncS2C(context.player().getEntityWorld().getGameRules().getBoolean(AdventuresGameRules.SHOW_COORDINATES_ON_DEATH)));
         });
 
         ServerPlayNetworking.registerGlobalReceiver(AllowDebugHud.RequestC2S.PACKET_ID, (requestC2S, context) -> {
-            ServerPlayNetworking.send(context.player(), new AllowDebugHud.SyncS2C(context.player().getWorld().getGameRules().getBoolean(AdventuresGameRules.ALLOW_DEBUG_HUD)));
+            ServerPlayNetworking.send(context.player(), new AllowDebugHud.SyncS2C(context.player().getEntityWorld().getGameRules().getBoolean(AdventuresGameRules.ALLOW_DEBUG_HUD)));
         });
     }
 

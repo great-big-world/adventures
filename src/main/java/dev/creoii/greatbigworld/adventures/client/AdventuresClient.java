@@ -30,7 +30,7 @@ public class AdventuresClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         UseItemCallback.EVENT.register((player, world, hand) -> {
-            if (world.isClient && !player.isSpectator() && player instanceof ExtendedHudPlayer extendedHudPlayer) {
+            if (world.isClient() && !player.isSpectator() && player instanceof ExtendedHudPlayer extendedHudPlayer) {
                 ItemStack stack = player.getStackInHand(hand);
                 if (stack.isIn(AdventuresTags.INFO_HUD_ITEMS)) {
                     ExtendedHudPlayer.Type type = ExtendedHudPlayer.Type.COMPASS;
@@ -120,8 +120,8 @@ public class AdventuresClient implements ClientModInitializer {
     }
 
     public static String getDisplayTime(ClientPlayerEntity clientPlayer) {
-        if (clientPlayer.clientWorld != null) {
-            long time = (clientPlayer.clientWorld.getTimeOfDay() + 6000L) % 24000L;
+        if (clientPlayer.getEntityWorld() != null) {
+            long time = (clientPlayer.getEntityWorld().getTimeOfDay() + 6000L) % 24000L;
             long hours = (time / 1000L) % 24L;
             long minutes = (time % 1000L) * 60L / 1000L;
             if (hours == 0L) {
