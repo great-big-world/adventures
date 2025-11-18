@@ -9,6 +9,7 @@ import dev.creoii.greatbigworld.adventures.util.ExtendedDedicatedServer;
 import dev.creoii.greatbigworld.adventures.util.ExtendedLevelProperties;
 import dev.creoii.greatbigworld.floraandfauna.season.Season;
 import dev.creoii.greatbigworld.floraandfauna.season.SeasonManager;
+import dev.creoii.greatbigworld.floraandfauna.util.FloraAndFaunaTags;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.server.MinecraftServer;
@@ -41,7 +42,7 @@ public abstract class MinecraftServerMixin {
     @Unique private static final RegistryKey<ConfiguredFeature<?, ?>> BONUS_HOUSE = RegistryKey.of(RegistryKeys.CONFIGURED_FEATURE, Identifier.of(GreatBigWorld.NAMESPACE, "bonus_house"));
     @Unique private static final RegistryKey<ConfiguredFeature<?, ?>> BONUS_HOUSE_CHEST = RegistryKey.of(RegistryKeys.CONFIGURED_FEATURE, Identifier.of(GreatBigWorld.NAMESPACE, "bonus_house_chest"));
 
-    @Shadow @Nullable public abstract ServerWorld getWorld(RegistryKey<World> key);
+    @Shadow public abstract Iterable<ServerWorld> getWorlds();
 
     @Inject(method = "createWorlds", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/SaveProperties;isDebugWorld()Z"))
     private void gbw$applyWorldStartServerProperties(CallbackInfo ci, @Local ServerWorldProperties serverWorldProperties) {
@@ -59,14 +60,15 @@ public abstract class MinecraftServerMixin {
         }
     }
 
-    @Inject(method = "createWorlds", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/MinecraftServer;initScoreboard(Lnet/minecraft/world/PersistentStateManager;)V"))
+    @Inject(method = "createWorlds", at = @At("TAIL"))
     private void gbw$applyWorldStartSeasonProperty(CallbackInfo ci, @Local ServerWorldProperties serverWorldProperties) {
         MinecraftServer server = (MinecraftServer) (Object) this;
         if (serverWorldProperties instanceof ExtendedLevelProperties extendedLevelProperties) {
-            ServerWorld serverWorld = getWorld(GreatBigWorld.ALTERWORLD_KEY);
-            if (serverWorld != null) {
-                SeasonManager seasonManager = SeasonManager.getInstance(server);
-                seasonManager.setCurrentSeason(serverWorld, Season.values()[extendedLevelProperties.gbw$getStartSeason()], true);
+            SeasonManager seasonManager = SeasonManager.getInstance(server);
+            for (ServerWorld world : getWorlds()) {
+                if (world.getDimensionEntry().isIn(FloraAndFaunaTags.AFFECTED_BY_SEASONS)) {
+                    seasonManager.setCurrentSeason(world, Season.values()[extendedLevelProperties.gbw$getStartSeason()], true);
+                }
             }
         }
     }
