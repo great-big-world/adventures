@@ -50,24 +50,26 @@ public abstract class MinecraftServerMixin {
         if (serverWorldProperties instanceof ExtendedLevelProperties extendedLevelProperties) {
             if (server instanceof ExtendedDedicatedServer dedicatedServer)
                 dedicatedServer.gbw$loadServerProperties(extendedLevelProperties);
-
-            int worldSize = extendedLevelProperties.gbw$getWorldSize();
-            if (worldSize > 0) {
-                for (World world : server.getWorlds()) {
-                    world.getWorldBorder().setSize((worldSize * 2d * 16d) - .5d);
-                }
-            }
         }
     }
 
     @Inject(method = "createWorlds", at = @At("TAIL"))
-    private void gbw$applyWorldStartSeasonProperty(CallbackInfo ci, @Local ServerWorldProperties serverWorldProperties) {
-        MinecraftServer server = (MinecraftServer) (Object) this;
+    private void gbw$applyWorldStartProperties(CallbackInfo ci, @Local ServerWorldProperties serverWorldProperties) {
         if (serverWorldProperties instanceof ExtendedLevelProperties extendedLevelProperties) {
-            SeasonManager seasonManager = SeasonManager.getInstance(server);
-            for (ServerWorld world : getWorlds()) {
-                if (world.getDimensionEntry().isIn(FloraAndFaunaTags.AFFECTED_BY_SEASONS)) {
-                    seasonManager.setCurrentSeason(world, Season.values()[extendedLevelProperties.gbw$getStartSeason()], true);
+            SeasonManager seasonManager = SeasonManager.getInstance((MinecraftServer) (Object) this);
+            Season season = Season.values()[extendedLevelProperties.gbw$getStartSeason()];
+            if (season != Season.SUMMER) {
+                for (ServerWorld world : getWorlds()) {
+                    if (world.getDimensionEntry().isIn(FloraAndFaunaTags.AFFECTED_BY_SEASONS)) {
+                        seasonManager.setCurrentSeason(world, season, true);
+                    }
+                }
+            }
+
+            int worldSize = extendedLevelProperties.gbw$getWorldSize();
+            if (worldSize > 0) {
+                for (ServerWorld world : getWorlds()) {
+                    world.getWorldBorder().setSize((worldSize * 2d * 16d) - .5d);
                 }
             }
         }
