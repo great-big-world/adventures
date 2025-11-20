@@ -27,6 +27,8 @@
   "dimension_type.minecraft.the_end": "End",
   "dimension_type.minecraft.overworld_caves": "Overworld",
 
+  "multiplayer.downloadingTerrain.targeted": "Entering the %s...",
+
   "gamerule.showCoordinatesOnDeath": "Show death coordinates",
   "gamerule.sleepDuringDay": "Sleep during daytime",
   "gamerule.allowDebugHud": "Allow debug HUD",

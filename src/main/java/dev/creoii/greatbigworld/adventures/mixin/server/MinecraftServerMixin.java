@@ -29,7 +29,6 @@ import net.minecraft.world.gen.GeneratorOptions;
 import net.minecraft.world.gen.feature.ConfiguredFeature;
 import net.minecraft.world.gen.feature.MiscConfiguredFeatures;
 import net.minecraft.world.level.ServerWorldProperties;
-import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;

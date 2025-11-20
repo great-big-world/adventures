@@ -32,6 +32,7 @@
     "client.DebugHudMixin",
     "client.GameRendererMixin",
     "client.GeneratorOptionsHolderMixin",
+    "client.LevelLoadingScreenMixin",
     "client.LightmapTextureManagerMixin",
     "client.WorldCreatorMixin",
     "client.WorldListWidgetWorldEntryMixin",
