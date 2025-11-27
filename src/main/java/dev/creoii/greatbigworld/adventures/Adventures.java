@@ -9,6 +9,7 @@ import dev.creoii.greatbigworld.adventures.util.AllowDebugHud;
 import dev.creoii.greatbigworld.adventures.util.ShowDeathCoordinates;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.entity.event.v1.EntitySleepEvents;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.network.RegistryByteBuf;
@@ -19,6 +20,7 @@ import net.minecraft.registry.RegistryKeys;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Identifier;
+import net.minecraft.world.GameRules;
 import net.minecraft.world.dimension.DimensionType;
 
 public class Adventures implements ModInitializer {
@@ -34,6 +36,30 @@ public class Adventures implements ModInitializer {
         PayloadTypeRegistry.playS2C().register(AllowDebugHud.SyncS2C.PACKET_ID, AllowDebugHud.SyncS2C.PACKET_CODEC);
         PayloadTypeRegistry.playC2S().register(ShowDeathCoordinates.RequestC2S.PACKET_ID, ShowDeathCoordinates.RequestC2S.PACKET_CODEC);
         PayloadTypeRegistry.playC2S().register(AllowDebugHud.RequestC2S.PACKET_ID, AllowDebugHud.RequestC2S.PACKET_CODEC);
+
+        ServerTickEvents.START_SERVER_TICK.register(server -> {
+            for (ServerWorld world : server.getWorlds()) {
+                if (!world.getDimension().hasFixedTime()) {
+                    long time = world.getTimeOfDay() % 24000L;
+                    float multiplier = 0f;
+
+                    GameRules gameRules = world.getGameRules();
+                    int dayLength = gameRules.getInt(AdventuresGameRules.LENGTH_OF_DAY);
+                    int nightLength = gameRules.getInt(AdventuresGameRules.LENGTH_OF_NIGHT);
+
+                    if (dayLength > 0 && time < 12000L) {
+                        multiplier = (24000f / 2f) / dayLength;
+                    } else if (nightLength > 0 && time >= 12000L) {
+                        multiplier = (24000f / 2f) / nightLength;
+                    }
+
+                    if (multiplier == 0f)
+                        continue;
+
+                    world.setTimeOfDay(world.getTimeOfDay() + (long) multiplier);
+                }
+            }
+        });
 
         EntitySleepEvents.ALLOW_SLEEP_TIME.register((playerEntity, blockPos, b) -> {
             if (!playerEntity.getEntityWorld().isClient() && ((ServerWorld) playerEntity.getEntityWorld()).getGameRules().getBoolean(AdventuresGameRules.SLEEP_DURING_DAY)) {
