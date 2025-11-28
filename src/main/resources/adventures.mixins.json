@@ -11,6 +11,8 @@
     "server.MinecraftDedicatedServerMixin",
     "server.MinecraftServerMixin",
     "server.ServerPropertiesHandlerMixin",
+    "server.ServerWorldMixin",
+    "server.TimeCommandMixin",
     "world.ChunkGeneratorMixin",
     "world.GameRuleCommandMixin",
     "world.GeneratorOptionsMixin",
@@ -19,13 +21,13 @@
     "world.NoiseChunkGeneratorMixin",
     "world.NoiseConfigMixin",
     "world.ServerChunkLoadingManagerMixin",
-    "world.ServerWorldMixin",
     "world.SpringFeatureMixin",
     "world.StructurePlacementCalculatorMixin",
     "world.WorldMixin"
   ],
   "client": [
     "client.ClientPlayerEntityMixin",
+    "client.ClientWorldMixin",
     "client.CreateWorldScreenMixin",
     "client.CreateWorldScreenWorldTabMixin",
     "client.DeathScreenMixin",

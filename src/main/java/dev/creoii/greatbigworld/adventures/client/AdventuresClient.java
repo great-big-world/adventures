@@ -5,6 +5,7 @@ import dev.creoii.greatbigworld.adventures.Adventures;
 import dev.creoii.greatbigworld.adventures.registry.AdventuresItems;
 import dev.creoii.greatbigworld.adventures.util.*;
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
@@ -26,6 +27,9 @@ import java.util.*;
 public class AdventuresClient implements ClientModInitializer {
     @Nullable
     private static RegistryKey<DimensionType> destinationDimension = null;
+    public static long dayLength = 12000L;
+    public static long nightLength = 10000L;
+    public static double skyTime = 0d;
 
     @Override
     public void onInitializeClient() {
@@ -113,10 +117,49 @@ public class AdventuresClient implements ClientModInitializer {
                 }
             });
         });
+
+        ClientPlayNetworking.registerGlobalReceiver(Adventures.SyncDayLengthS2C.PACKET_ID, (payload, context) -> {
+            long length = payload.length();
+            boolean day = payload.day();
+
+            context.client().execute(() -> {
+                if (day) {
+                    dayLength = length;
+                } else nightLength = length;
+            });
+        });
+
+        ClientTickEvents.START_WORLD_TICK.register(world -> {
+            long total = dayLength + nightLength;
+
+            double target = world.getTimeOfDay() % total;
+            double diff = target - skyTime;
+
+            if (diff > total / 2d)
+                diff -= total;
+            else if (diff < -total / 2d)
+                diff += total;
+
+            skyTime += diff * .2d;
+
+            skyTime = ((skyTime % total) + total) % total;
+        });
     }
 
     public static @Nullable RegistryKey<DimensionType> getDestinationDimension() {
         return destinationDimension;
+    }
+
+    public static double getDayLength() {
+        return dayLength;
+    }
+
+    public static double getNightLength() {
+        return nightLength;
+    }
+
+    public static double getSkyTime() {
+        return skyTime;
     }
 
     public static String getDisplayTime(ClientPlayerEntity clientPlayer) {

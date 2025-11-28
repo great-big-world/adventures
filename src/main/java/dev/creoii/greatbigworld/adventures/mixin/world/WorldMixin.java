@@ -4,10 +4,14 @@ import dev.creoii.greatbigworld.adventures.util.AllowDebugHud;
 import dev.creoii.greatbigworld.adventures.util.ShowDeathCoordinates;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 
 @Mixin(World.class)
-public class WorldMixin implements ShowDeathCoordinates, AllowDebugHud {
+public abstract class WorldMixin implements ShowDeathCoordinates, AllowDebugHud {
+    @Shadow
+    public abstract boolean isClient();
+
     @Unique
     private boolean gbw$showDeathCoordinates;
     @Unique
