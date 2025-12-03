@@ -5,7 +5,7 @@
   "terrain_adaptation": "beard_thin",
   "start_pool": "great_big_world:shack/mountain_start",
   "start_height": {
-    "absolute": 0
+    "absolute": 1
   },
   "spawn_overrides": {},
   "project_start_to_heightmap": "WORLD_SURFACE_WG",
