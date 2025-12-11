@@ -1,19 +1,18 @@
 package dev.creoii.greatbigworld.adventures.client.gui;
 
-import net.minecraft.client.gui.widget.SliderWidget;
-import net.minecraft.text.Text;
-
 import java.util.List;
 import java.util.function.Consumer;
+import net.minecraft.client.gui.components.AbstractSliderButton;
+import net.minecraft.network.chat.Component;
 
-public abstract class OptionSliderWidget<T> extends SliderWidget {
+public abstract class OptionSliderWidget<T> extends AbstractSliderButton {
     public T tValue;
     private final boolean clamp;
     private final Consumer<T> valueApplier;
     private final List<T> values;
 
     public OptionSliderWidget(int x, int y, int width, int height, T value, boolean clamp, Consumer<T> valueApplier, List<T> values) {
-        super(x, y, width, height, Text.empty(), findPercentValue(values, value));
+        super(x, y, width, height, Component.empty(), findPercentValue(values, value));
         tValue = value;
         this.clamp = clamp;
         this.valueApplier = valueApplier;

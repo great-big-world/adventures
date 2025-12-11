@@ -4,15 +4,18 @@ import com.google.common.collect.ImmutableMap;
 import dev.creoii.greatbigworld.GreatBigWorld;
 import dev.creoii.greatbigworld.adventures.client.AdventuresClient;
 import dev.creoii.greatbigworld.adventures.registry.AdventuresItems;
-import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.component.type.LodestoneTrackerComponent;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.*;
-import net.minecraft.world.World;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.GlobalPos;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
+import net.minecraft.util.Mth;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.component.LodestoneTracker;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Nullable;
 
@@ -21,24 +24,24 @@ import java.util.Map;
 @FunctionalInterface
 public interface ExtendedHudPlayer {
     Map<Type, ItemInfoHud> DEFAULT = ImmutableMap.<Type, ItemInfoHud>builder()
-            .put(Type.COMPASS, new ItemInfoHud(clientPlayer -> getCompassTexture(clientPlayer, getCompassTarget(clientPlayer.getEntityWorld(), clientPlayer.getStackInHand(clientPlayer.getActiveHand())), ""), Items.COMPASS, clientPlayer -> {
-                return Text.literal(StringUtils.capitalize(clientPlayer.getHorizontalFacing().getId()));
+            .put(Type.COMPASS, new ItemInfoHud(clientPlayer -> getCompassTexture(clientPlayer, getCompassTarget(clientPlayer.level(), clientPlayer.getItemInHand(clientPlayer.getUsedItemHand())), ""), Items.COMPASS, clientPlayer -> {
+                return Component.literal(StringUtils.capitalize(clientPlayer.getDirection().getName()));
             }))
-            .put(Type.RECOVERY_COMPASS, new ItemInfoHud(clientPlayer -> getCompassTexture(clientPlayer, clientPlayer.getLastDeathPos().orElse(null), "recovery_"), Items.RECOVERY_COMPASS, clientPlayer -> {
-                return Text.literal(StringUtils.capitalize(clientPlayer.getHorizontalFacing().getId()));
+            .put(Type.RECOVERY_COMPASS, new ItemInfoHud(clientPlayer -> getCompassTexture(clientPlayer, clientPlayer.getLastDeathLocation().orElse(null), "recovery_"), Items.RECOVERY_COMPASS, clientPlayer -> {
+                return Component.literal(StringUtils.capitalize(clientPlayer.getDirection().getName()));
             }))
             .put(Type.CLOCK, new ItemInfoHud(ExtendedHudPlayer::getClockTexture, Items.CLOCK, clientPlayer -> {
-                return Text.literal(AdventuresClient.getDisplayTime(clientPlayer));
+                return Component.literal(AdventuresClient.getDisplayTime(clientPlayer));
             }))
             // change texture based on world quadrant?
-            .put(Type.ASTROLABE, new ItemInfoHud(clientPlayer -> Identifier.of(GreatBigWorld.NAMESPACE, "astrolabe"), AdventuresItems.ASTROLABE, clientPlayer -> {
-                return Text.literal(clientPlayer.getBlockX() + ", " + clientPlayer.getBlockY() + ", " + clientPlayer.getBlockZ());
+            .put(Type.ASTROLABE, new ItemInfoHud(clientPlayer -> Identifier.fromNamespaceAndPath(GreatBigWorld.NAMESPACE, "astrolabe"), AdventuresItems.ASTROLABE, clientPlayer -> {
+                return Component.literal(clientPlayer.getBlockX() + ", " + clientPlayer.getBlockY() + ", " + clientPlayer.getBlockZ());
             }))
             .build();
 
     Map<Type, ItemInfoHud> gbw$getItemInfoHuds();
 
-    private static Identifier getCompassTexture(ClientPlayerEntity clientPlayer, @Nullable GlobalPos pos, String prefix) {
+    private static Identifier getCompassTexture(LocalPlayer clientPlayer, @Nullable GlobalPos pos, String prefix) {
         if (pos != null) {
 /*
             float yaw = clientPlayer.getYaw() % 360f;
@@ -46,24 +49,24 @@ public interface ExtendedHudPlayer {
                 yaw += 360f;
             return Identifier.of(GreatBigWorld.NAMESPACE, prefix + "compass_" + (int) (Math.round(yaw / 45f) % 8f));
 */
-            Vec3d playerPos = clientPlayer.getEntityPos();
+            Vec3 playerPos = clientPlayer.position();
 
             BlockPos targetBlockPos = pos.pos();
-            Vec3d targetPos = new Vec3d(targetBlockPos.getX() + .5d, targetBlockPos.getY() + .5d, targetBlockPos.getZ() + .5d);
+            Vec3 targetPos = new Vec3(targetBlockPos.getX() + .5d, targetBlockPos.getY() + .5d, targetBlockPos.getZ() + .5d);
 
-            Vec3d direction = targetPos.subtract(playerPos);
+            Vec3 direction = targetPos.subtract(playerPos);
 
             int segment = getSegment(clientPlayer, direction);
 
-            return Identifier.of(GreatBigWorld.NAMESPACE, prefix + "compass_" + segment);
+            return Identifier.fromNamespaceAndPath(GreatBigWorld.NAMESPACE, prefix + "compass_" + segment);
         }
-        return Identifier.of(GreatBigWorld.NAMESPACE, prefix + "compass_0");
+        return Identifier.fromNamespaceAndPath(GreatBigWorld.NAMESPACE, prefix + "compass_0");
     }
 
-    private static int getSegment(ClientPlayerEntity clientPlayer, Vec3d direction) {
-        float targetYaw = (float) (MathHelper.atan2(direction.getZ(), direction.getX()) * (180f / Math.PI)) - 90f;
+    private static int getSegment(LocalPlayer clientPlayer, Vec3 direction) {
+        float targetYaw = (float) (Mth.atan2(direction.z(), direction.x()) * (180f / Math.PI)) - 90f;
 
-        float playerYaw = clientPlayer.getYaw() % 360f;
+        float playerYaw = clientPlayer.getYRot() % 360f;
         if (playerYaw < 0f) playerYaw += 360f;
 
         float relativeYaw = targetYaw - playerYaw;
@@ -74,20 +77,20 @@ public interface ExtendedHudPlayer {
         return segment;
     }
 
-    private static GlobalPos getCompassTarget(World world, ItemStack stack) {
-        LodestoneTrackerComponent component = stack.get(DataComponentTypes.LODESTONE_TRACKER);
+    private static GlobalPos getCompassTarget(Level world, ItemStack stack) {
+        LodestoneTracker component = stack.get(DataComponents.LODESTONE_TRACKER);
         if (component != null && component.target().isPresent()) {
             return component.target().get();
         }
-        return GlobalPos.create(world.getRegistryKey(), world.getSpawnPoint().getPos());
+        return GlobalPos.of(world.dimension(), world.getRespawnData().pos());
     }
 
-    private static Identifier getClockTexture(ClientPlayerEntity clientPlayer) {
-        long time = clientPlayer.getEntityWorld().getTimeOfDay();
+    private static Identifier getClockTexture(LocalPlayer clientPlayer) {
+        long time = clientPlayer.level().getDayTime();
         if (time >= 13000L) {
-            return Identifier.of(GreatBigWorld.NAMESPACE, "clock_night");
+            return Identifier.fromNamespaceAndPath(GreatBigWorld.NAMESPACE, "clock_night");
         }
-        return Identifier.of(GreatBigWorld.NAMESPACE, "clock_day");
+        return Identifier.fromNamespaceAndPath(GreatBigWorld.NAMESPACE, "clock_day");
     }
 
     enum Type {

@@ -1,33 +1,32 @@
 package dev.creoii.greatbigworld.adventures.util;
 
-import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
-
 import java.util.function.Function;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.item.Item;
 
 public class ItemInfoHud {
-    private final Function<ClientPlayerEntity, Identifier> iconId;
+    private final Function<LocalPlayer, Identifier> iconId;
     private final Item renderItem;
-    private final Function<ClientPlayerEntity, Text> text;
+    private final Function<LocalPlayer, Component> text;
     private boolean active = false;
 
-    public ItemInfoHud(Function<ClientPlayerEntity, Identifier> iconId, Item renderItem, Function<ClientPlayerEntity, Text> text) {
+    public ItemInfoHud(Function<LocalPlayer, Identifier> iconId, Item renderItem, Function<LocalPlayer, Component> text) {
         this.iconId = iconId;
         this.renderItem = renderItem;
         this.text = text;
     }
 
-    public Identifier getIconId(ClientPlayerEntity clientPlayer) {
+    public Identifier getIconId(LocalPlayer clientPlayer) {
         return iconId.apply(clientPlayer);
     }
 
-    public boolean canRender(ClientPlayerEntity clientPlayer) {
-        return isActive() && (clientPlayer.getInventory().containsAny(stack -> stack.isOf(renderItem)) || clientPlayer.currentScreenHandler.getCursorStack().isOf(renderItem));
+    public boolean canRender(LocalPlayer clientPlayer) {
+        return isActive() && (clientPlayer.getInventory().hasAnyMatching(stack -> stack.is(renderItem)) || clientPlayer.containerMenu.getCarried().is(renderItem));
     }
 
-    public Text getText(ClientPlayerEntity clientPlayer) {
+    public Component getText(LocalPlayer clientPlayer) {
         return text.apply(clientPlayer);
     }
 

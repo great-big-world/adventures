@@ -1,12 +1,8 @@
 package dev.creoii.greatbigworld.adventures.mixin.client;
 
 import dev.creoii.greatbigworld.adventures.util.ShowDeathCoordinates;
-import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.screen.DeathScreen;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.text.Text;
-import net.minecraft.text.Texts;
+import net.minecraft.client.gui.ActiveTextCollector;
+import net.minecraft.client.gui.TextAlignment;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -16,26 +12,31 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.List;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.screens.DeathScreen;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ComponentUtils;
 
 @Mixin(DeathScreen.class)
 public abstract class DeathScreenMixin extends Screen {
-    @Shadow @Final private Text message;
+    @Shadow @Final private Component causeOfDeath;
 
-    protected DeathScreenMixin(Text title) {
+    protected DeathScreenMixin(Component title) {
         super(title);
     }
 
-    @Redirect(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawCenteredTextWithShadow(Lnet/minecraft/client/font/TextRenderer;Lnet/minecraft/text/Text;III)V", ordinal = 1))
-    private void gbw$renderDeathCoordinatesMessage(DrawContext instance, TextRenderer textRenderer, Text text, int centerX, int y, int color) {
-        if (client.player != null && client.world != null && ((ShowDeathCoordinates) client.world).gbw$shouldShowDeathCoordinates()) {
-            instance.drawCenteredTextWithShadow(textRenderer, Texts.join(List.of(text, Text.translatable("death.showCoordinates", client.player.getBlockPos().toShortString())), Text.literal(" ")), centerX, y, color);
-        } else instance.drawCenteredTextWithShadow(textRenderer, text, centerX, y, color);
+    @Redirect(method = "visitText", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/ActiveTextCollector;accept(Lnet/minecraft/client/gui/TextAlignment;IILnet/minecraft/network/chat/Component;)V", ordinal = 1))
+    private void gbw$renderDeathCoordinatesMessage(ActiveTextCollector instance, TextAlignment textAlignment, int i, int j, Component component) {
+        if (minecraft.player != null && minecraft.level != null && ((ShowDeathCoordinates) minecraft.level).gbw$shouldShowDeathCoordinates()) {
+            instance.accept(textAlignment, i, j, ComponentUtils.formatList(List.of(component, Component.translatable("death.showCoordinates", minecraft.player.blockPosition().toShortString())), Component.literal(" ")));
+        } else instance.accept(textAlignment, i, j, component);
     }
 
-    @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawCenteredTextWithShadow(Lnet/minecraft/client/font/TextRenderer;Lnet/minecraft/text/Text;III)V", ordinal = 2))
-    private void gbw$renderDeathCoordinates(DrawContext context, int mouseX, int mouseY, float delta, CallbackInfo ci) {
-        if (client.player != null && client.world != null && message == null && ((ShowDeathCoordinates) client.world).gbw$shouldShowDeathCoordinates()) {
-            context.drawCenteredTextWithShadow(textRenderer, Text.literal(client.player.getBlockPos().toShortString()), width / 2, 85, 16777215);
+    @Redirect(method = "visitText", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/ActiveTextCollector;accept(Lnet/minecraft/client/gui/TextAlignment;IILnet/minecraft/network/chat/Component;)V", ordinal = 2))
+    private void gbw$renderDeathCoordinates(ActiveTextCollector instance, TextAlignment textAlignment, int i, int j, Component component) {
+        if (minecraft.player != null && minecraft.level != null && causeOfDeath == null && ((ShowDeathCoordinates) minecraft.level).gbw$shouldShowDeathCoordinates()) {
+            instance.accept(textAlignment, i, 85, Component.literal(minecraft.player.blockPosition().toShortString()));
         }
     }
 }

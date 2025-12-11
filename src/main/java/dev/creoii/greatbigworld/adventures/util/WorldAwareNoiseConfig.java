@@ -1,9 +1,9 @@
 package dev.creoii.greatbigworld.adventures.util;
 
-import net.minecraft.server.world.ServerWorld;
+import net.minecraft.server.level.ServerLevel;
 
 public interface WorldAwareNoiseConfig {
-    ServerWorld gbw$getWorld();
+    ServerLevel gbw$getWorld();
 
-    void gbw$setWorld(ServerWorld serverWorld);
+    void gbw$setWorld(ServerLevel serverWorld);
 }

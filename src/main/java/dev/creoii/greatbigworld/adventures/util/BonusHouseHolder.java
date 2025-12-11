@@ -1,6 +1,6 @@
 package dev.creoii.greatbigworld.adventures.util;
 
-import net.minecraft.world.gen.GeneratorOptions;
+import net.minecraft.world.level.levelgen.WorldOptions;
 import org.jetbrains.annotations.Nullable;
 
 public interface BonusHouseHolder {
@@ -9,7 +9,7 @@ public interface BonusHouseHolder {
     boolean gbw$isBonusHouseEnabled();
 
     @Nullable
-    default GeneratorOptions gbw$withBonusHouse(boolean bonusHouse) {
+    default WorldOptions gbw$withBonusHouse(boolean bonusHouse) {
         return null;
     }
 }

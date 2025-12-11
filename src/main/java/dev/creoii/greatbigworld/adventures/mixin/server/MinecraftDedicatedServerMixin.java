@@ -2,16 +2,16 @@ package dev.creoii.greatbigworld.adventures.mixin.server;
 
 import dev.creoii.greatbigworld.adventures.util.ExtendedDedicatedServer;
 import dev.creoii.greatbigworld.adventures.util.WorldSizeHolder;
-import net.minecraft.server.dedicated.MinecraftDedicatedServer;
-import net.minecraft.server.dedicated.ServerPropertiesHandler;
+import net.minecraft.server.dedicated.DedicatedServer;
+import net.minecraft.server.dedicated.DedicatedServerProperties;
 import org.slf4j.Logger;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
-@Mixin(MinecraftDedicatedServer.class)
+@Mixin(DedicatedServer.class)
 public abstract class MinecraftDedicatedServerMixin implements ExtendedDedicatedServer {
-    @Shadow public abstract ServerPropertiesHandler getProperties();
+    @Shadow public abstract DedicatedServerProperties getProperties();
     @Shadow @Final static Logger LOGGER;
 
     @Override

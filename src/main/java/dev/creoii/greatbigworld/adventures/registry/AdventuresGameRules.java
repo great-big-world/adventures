@@ -1,21 +1,25 @@
 package dev.creoii.greatbigworld.adventures.registry;
 
-import net.fabricmc.fabric.api.gamerule.v1.GameRuleFactory;
-import net.fabricmc.fabric.api.gamerule.v1.GameRuleRegistry;
-import net.minecraft.world.GameRules;
+import com.mojang.brigadier.arguments.BoolArgumentType;
+import com.mojang.serialization.Codec;
+import dev.creoii.greatbigworld.GreatBigWorld;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.flag.FeatureFlagSet;
+import net.minecraft.world.level.gamerules.GameRule;
+import net.minecraft.world.level.gamerules.GameRuleCategory;
+import net.minecraft.world.level.gamerules.GameRuleType;
+import net.minecraft.world.level.gamerules.GameRuleTypeVisitor;
 
 public final class AdventuresGameRules {
-    public static GameRules.Key<GameRules.BooleanRule> SHOW_COORDINATES_ON_DEATH;
-    public static GameRules.Key<GameRules.BooleanRule> SLEEP_DURING_DAY;
-    public static GameRules.Key<GameRules.BooleanRule> ALLOW_DEBUG_HUD;
-    public static GameRules.Key<GameRules.IntRule> LENGTH_OF_DAY;
-    public static GameRules.Key<GameRules.IntRule> LENGTH_OF_NIGHT;
+    public static GameRule<Boolean> SHOW_COORDINATES_ON_DEATH;
+    public static GameRule<Boolean> SLEEP_DURING_DAY;
+    public static GameRule<Boolean> ALLOW_DEBUG_HUD;
 
     public static void register() {
-        SHOW_COORDINATES_ON_DEATH = GameRuleRegistry.register("showCoordinatesOnDeath", GameRules.Category.PLAYER, GameRuleFactory.createBooleanRule(true));
-        SLEEP_DURING_DAY = GameRuleRegistry.register("sleepDuringDay", GameRules.Category.PLAYER, GameRuleFactory.createBooleanRule(false));
-        ALLOW_DEBUG_HUD = GameRuleRegistry.register("allowDebugHud", GameRules.Category.MISC, GameRuleFactory.createBooleanRule(true));
-        LENGTH_OF_DAY = GameRuleRegistry.register("lengthOfDay", GameRules.Category.UPDATES, GameRuleFactory.createIntRule(12000, 0));
-        LENGTH_OF_NIGHT = GameRuleRegistry.register("lengthOfNight", GameRules.Category.UPDATES, GameRuleFactory.createIntRule(10000, 0));
+        SHOW_COORDINATES_ON_DEATH = Registry.register(BuiltInRegistries.GAME_RULE, Identifier.fromNamespaceAndPath(GreatBigWorld.NAMESPACE, "show_coordinates_on_death"), new GameRule<>(GameRuleCategory.PLAYER, GameRuleType.BOOL, BoolArgumentType.bool(), GameRuleTypeVisitor::visitBoolean, Codec.BOOL, value -> value ? 1 : 0, true, FeatureFlagSet.of()));
+        SLEEP_DURING_DAY = Registry.register(BuiltInRegistries.GAME_RULE, Identifier.fromNamespaceAndPath(GreatBigWorld.NAMESPACE, "sleep_during_day"), new GameRule<>(GameRuleCategory.PLAYER, GameRuleType.BOOL, BoolArgumentType.bool(), GameRuleTypeVisitor::visitBoolean, Codec.BOOL, value -> value ? 1 : 0, false, FeatureFlagSet.of()));
+        ALLOW_DEBUG_HUD = Registry.register(BuiltInRegistries.GAME_RULE, Identifier.fromNamespaceAndPath(GreatBigWorld.NAMESPACE, "allow_debug_hud"), new GameRule<>(GameRuleCategory.MISC, GameRuleType.BOOL, BoolArgumentType.bool(), GameRuleTypeVisitor::visitBoolean, Codec.BOOL, value -> value ? 1 : 0, true, FeatureFlagSet.of()));
     }
 }

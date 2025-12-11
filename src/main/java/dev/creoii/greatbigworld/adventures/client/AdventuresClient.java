@@ -5,51 +5,47 @@ import dev.creoii.greatbigworld.adventures.Adventures;
 import dev.creoii.greatbigworld.adventures.registry.AdventuresItems;
 import dev.creoii.greatbigworld.adventures.util.*;
 import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements;
 import net.fabricmc.fabric.api.event.player.UseItemCallback;
-import net.minecraft.client.gl.RenderPipelines;
-import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.text.Text;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Identifier;
-import net.minecraft.world.dimension.DimensionType;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.dimension.DimensionType;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
 public class AdventuresClient implements ClientModInitializer {
     @Nullable
-    private static RegistryKey<DimensionType> destinationDimension = null;
-    public static long dayLength = 12000L;
-    public static long nightLength = 10000L;
-    public static double skyTime = 0d;
+    private static ResourceKey<DimensionType> destinationDimension = null;
 
     @Override
     public void onInitializeClient() {
         UseItemCallback.EVENT.register((player, world, hand) -> {
-            if (world.isClient() && !player.isSpectator() && player instanceof ExtendedHudPlayer extendedHudPlayer) {
-                ItemStack stack = player.getStackInHand(hand);
-                if (stack.isIn(AdventuresTags.INFO_HUD_ITEMS)) {
+            if (world.isClientSide() && !player.isSpectator() && player instanceof ExtendedHudPlayer extendedHudPlayer) {
+                ItemStack stack = player.getItemInHand(hand);
+                if (stack.is(AdventuresTags.INFO_HUD_ITEMS)) {
                     ExtendedHudPlayer.Type type = ExtendedHudPlayer.Type.COMPASS;
-                    if (stack.isOf(Items.RECOVERY_COMPASS)) {
+                    if (stack.is(Items.RECOVERY_COMPASS)) {
                         type = ExtendedHudPlayer.Type.RECOVERY_COMPASS;
-                    } else if (stack.isOf(Items.CLOCK)) {
+                    } else if (stack.is(Items.CLOCK)) {
                         type = ExtendedHudPlayer.Type.CLOCK;
-                    } else if (stack.isOf(AdventuresItems.ASTROLABE)) {
+                    } else if (stack.is(AdventuresItems.ASTROLABE)) {
                         type = ExtendedHudPlayer.Type.ASTROLABE;
                     }
                     extendedHudPlayer.gbw$getItemInfoHuds().get(type).invert();
-                    return ActionResult.SUCCESS;
+                    return InteractionResult.SUCCESS;
                 }
             }
-            return ActionResult.PASS;
+            return InteractionResult.PASS;
         });
 
         ClientPlayConnectionEvents.JOIN.register((clientPlayNetworkHandler, packetSender, minecraftClient) -> {
@@ -57,12 +53,12 @@ public class AdventuresClient implements ClientModInitializer {
             ClientPlayNetworking.send(new AllowDebugHud.RequestC2S());
         });
 
-        HudElementRegistry.attachElementBefore(VanillaHudElements.STATUS_EFFECTS, Identifier.of(GreatBigWorld.NAMESPACE, "item_info_huds"), (context, tickCounter) -> {
-            if (!context.client.options.hudHidden) {
-                ClientPlayerEntity clientPlayer = context.client.player;
-                if (clientPlayer != null && context.client.world != null && clientPlayer instanceof ExtendedHudPlayer extendedHudPlayer) {
+        HudElementRegistry.attachElementBefore(VanillaHudElements.STATUS_EFFECTS, Identifier.fromNamespaceAndPath(GreatBigWorld.NAMESPACE, "item_info_huds"), (context, tickCounter) -> {
+            if (!context.minecraft.options.hideGui) {
+                LocalPlayer clientPlayer = context.minecraft.player;
+                if (clientPlayer != null && context.minecraft.level != null && clientPlayer instanceof ExtendedHudPlayer extendedHudPlayer) {
                     List<Identifier> sprites = new ArrayList<>();
-                    List<Text> texts = new ArrayList<>();
+                    List<Component> texts = new ArrayList<>();
                     Map<ExtendedHudPlayer.Type, ItemInfoHud> itemInfoHuds = extendedHudPlayer.gbw$getItemInfoHuds();
                     itemInfoHuds.forEach((type, itemInfoHud) -> {
                         if (itemInfoHud.isActive() && itemInfoHud.canRender(clientPlayer)) {
@@ -76,17 +72,17 @@ public class AdventuresClient implements ClientModInitializer {
                         }
                     });
                     if (!sprites.isEmpty()) {
-                        context.getMatrices().pushMatrix();
-                        context.getMatrices().scale(1.5f, 1.5f);
+                        context.pose().pushMatrix();
+                        context.pose().scale(1.5f, 1.5f);
                         for (int i = 0; i < sprites.size(); ++i) {
                             Identifier sprite = sprites.get(i);
-                            context.drawTexture(RenderPipelines.GUI_TEXTURED, sprite.withPrefixedPath("textures/gui/hud/icon/").withSuffixedPath(".png"), 2, 2 + (i * 8), 0f, 0f, 7, 7, 7, 7);
+                            context.blit(RenderPipelines.GUI_TEXTURED, sprite.withPrefix("textures/gui/hud/icon/").withSuffix(".png"), 2, 2 + (i * 8), 0f, 0f, 7, 7, 7, 7);
                         }
-                        context.getMatrices().popMatrix();
+                        context.pose().popMatrix();
 
                         for (int i = 0; i < texts.size(); ++i) {
-                            Text text = texts.get(i);
-                            context.drawTextWithShadow(context.client.textRenderer, text, 17, 5 + (i * 12), 0xffffff);
+                            Component text = texts.get(i);
+                            context.drawString(context.minecraft.font, text, 17, 5 + (i * 12), 0xffffff);
                         }
                     }
                 }
@@ -94,7 +90,7 @@ public class AdventuresClient implements ClientModInitializer {
         });
 
         ClientPlayNetworking.registerGlobalReceiver(Adventures.TeleportDestinationS2C.PACKET_ID, (payload, context) -> {
-            RegistryKey<DimensionType> registryKey = payload.destinationDimension();
+            ResourceKey<DimensionType> registryKey = payload.destinationDimension();
             context.client().execute(() -> {
                 destinationDimension = registryKey;
             });
@@ -103,7 +99,7 @@ public class AdventuresClient implements ClientModInitializer {
         ClientPlayNetworking.registerGlobalReceiver(ShowDeathCoordinates.SyncS2C.PACKET_ID, (payload, context) -> {
             boolean value = payload.value();
             context.client().execute(() -> {
-                if (context.client().world instanceof ShowDeathCoordinates showDeathCoordinates) {
+                if (context.client().level instanceof ShowDeathCoordinates showDeathCoordinates) {
                     showDeathCoordinates.gbw$setShowDeathCoordinates(value);
                 }
             });
@@ -112,59 +108,20 @@ public class AdventuresClient implements ClientModInitializer {
         ClientPlayNetworking.registerGlobalReceiver(AllowDebugHud.SyncS2C.PACKET_ID, (payload, context) -> {
             boolean value = payload.value();
             context.client().execute(() -> {
-                if (context.client().world instanceof AllowDebugHud allowDebugHud) {
+                if (context.client().level instanceof AllowDebugHud allowDebugHud) {
                     allowDebugHud.gbw$setAllowDebugHud(value);
                 }
             });
         });
-
-        ClientPlayNetworking.registerGlobalReceiver(Adventures.SyncDayLengthS2C.PACKET_ID, (payload, context) -> {
-            long length = payload.length();
-            boolean day = payload.day();
-
-            context.client().execute(() -> {
-                if (day) {
-                    dayLength = length;
-                } else nightLength = length;
-            });
-        });
-
-        ClientTickEvents.START_WORLD_TICK.register(world -> {
-            long total = dayLength + nightLength;
-
-            double target = world.getTimeOfDay() % total;
-            double diff = target - skyTime;
-
-            if (diff > total / 2d)
-                diff -= total;
-            else if (diff < -total / 2d)
-                diff += total;
-
-            skyTime += diff * .2d;
-
-            skyTime = ((skyTime % total) + total) % total;
-        });
     }
 
-    public static @Nullable RegistryKey<DimensionType> getDestinationDimension() {
+    public static @Nullable ResourceKey<DimensionType> getDestinationDimension() {
         return destinationDimension;
     }
 
-    public static double getDayLength() {
-        return dayLength;
-    }
-
-    public static double getNightLength() {
-        return nightLength;
-    }
-
-    public static double getSkyTime() {
-        return skyTime;
-    }
-
-    public static String getDisplayTime(ClientPlayerEntity clientPlayer) {
-        if (clientPlayer.getEntityWorld() != null) {
-            long time = (clientPlayer.getEntityWorld().getTimeOfDay() + 6000L) % 24000L;
+    public static String getDisplayTime(LocalPlayer clientPlayer) {
+        if (clientPlayer.level() != null) {
+            long time = (clientPlayer.level().getDayTime() + 6000L) % 24000L;
             long hours = (time / 1000L) % 24L;
             long minutes = (time % 1000L) * 60L / 1000L;
             if (hours == 0L) {

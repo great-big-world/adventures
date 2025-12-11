@@ -1,23 +1,23 @@
 package dev.creoii.greatbigworld.adventures.mixin.world;
 
 import dev.creoii.greatbigworld.adventures.util.WorldAwareNoiseConfig;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.world.gen.noise.NoiseConfig;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.levelgen.RandomState;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 
-@Mixin(NoiseConfig.class)
+@Mixin(RandomState.class)
 public class NoiseConfigMixin implements WorldAwareNoiseConfig {
     @Unique
-    private ServerWorld gbw$serverWorld;
+    private ServerLevel gbw$serverWorld;
 
     @Override
-    public ServerWorld gbw$getWorld() {
+    public ServerLevel gbw$getWorld() {
         return gbw$serverWorld;
     }
 
     @Override
-    public void gbw$setWorld(ServerWorld serverWorld) {
+    public void gbw$setWorld(ServerLevel serverWorld) {
         gbw$serverWorld = serverWorld;
     }
 }

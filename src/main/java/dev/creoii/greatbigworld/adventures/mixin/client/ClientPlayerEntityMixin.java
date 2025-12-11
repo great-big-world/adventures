@@ -2,16 +2,6 @@ package dev.creoii.greatbigworld.adventures.mixin.client;
 
 import dev.creoii.greatbigworld.adventures.util.ExtendedHudPlayer;
 import dev.creoii.greatbigworld.adventures.util.ItemInfoHud;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayNetworkHandler;
-import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.recipebook.ClientRecipeBook;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.stat.StatHandler;
-import net.minecraft.util.PlayerInput;
-import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -19,17 +9,27 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.Map;
+import net.minecraft.client.ClientRecipeBook;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.multiplayer.ClientPacketListener;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.stats.StatsCounter;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Input;
+import net.minecraft.world.level.Level;
 
-@Mixin(ClientPlayerEntity.class)
+@Mixin(LocalPlayer.class)
 public abstract class ClientPlayerEntityMixin extends LivingEntity implements ExtendedHudPlayer {
     @Unique private Map<Type, ItemInfoHud> itemInfoHuds;
 
-    protected ClientPlayerEntityMixin(EntityType<? extends LivingEntity> entityType, World world) {
+    protected ClientPlayerEntityMixin(EntityType<? extends LivingEntity> entityType, Level world) {
         super(entityType, world);
     }
 
     @Inject(method = "<init>", at = @At("TAIL"))
-    private void gbw$initItemInfoHuds(MinecraftClient client, ClientWorld world, ClientPlayNetworkHandler networkHandler, StatHandler stats, ClientRecipeBook recipeBook, PlayerInput lastPlayerInput, boolean lastSprinting, CallbackInfo ci) {
+    private void gbw$initItemInfoHuds(Minecraft client, ClientLevel world, ClientPacketListener networkHandler, StatsCounter stats, ClientRecipeBook recipeBook, Input lastPlayerInput, boolean lastSprinting, CallbackInfo ci) {
         itemInfoHuds = ExtendedHudPlayer.DEFAULT;
     }
 

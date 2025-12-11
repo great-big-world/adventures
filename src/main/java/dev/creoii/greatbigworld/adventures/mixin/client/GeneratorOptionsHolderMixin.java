@@ -1,11 +1,11 @@
 package dev.creoii.greatbigworld.adventures.mixin.client;
 
 import dev.creoii.greatbigworld.adventures.util.BonusHouseHolder;
-import net.minecraft.client.world.GeneratorOptionsHolder;
+import net.minecraft.client.gui.screens.worldselection.WorldCreationContext;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 
-@Mixin(GeneratorOptionsHolder.class)
+@Mixin(WorldCreationContext.class)
 public class GeneratorOptionsHolderMixin implements BonusHouseHolder {
     @Unique
     private boolean bonusHouseEnabled = false;

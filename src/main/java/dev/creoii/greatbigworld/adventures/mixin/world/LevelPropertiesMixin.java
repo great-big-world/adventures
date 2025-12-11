@@ -5,11 +5,11 @@ import com.mojang.serialization.Lifecycle;
 import dev.creoii.greatbigworld.adventures.util.ExtendedLevelProperties;
 import dev.creoii.greatbigworld.adventures.util.WorldSize;
 import dev.creoii.greatbigworld.floraandfauna.season.Season;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.registry.DynamicRegistryManager;
-import net.minecraft.world.gen.GeneratorOptions;
-import net.minecraft.world.level.LevelInfo;
-import net.minecraft.world.level.LevelProperties;
+import net.minecraft.core.RegistryAccess;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.LevelSettings;
+import net.minecraft.world.level.levelgen.WorldOptions;
+import net.minecraft.world.level.storage.PrimaryLevelData;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -17,7 +17,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(LevelProperties.class)
+@Mixin(PrimaryLevelData.class)
 public class LevelPropertiesMixin implements ExtendedLevelProperties {
     @Unique private int worldSize = WorldSize.INFINITE.getSize();
     @Unique private int startSeason = Season.SUMMER.ordinal();
@@ -54,15 +54,15 @@ public class LevelPropertiesMixin implements ExtendedLevelProperties {
     }
 
     @SuppressWarnings("deprecation")
-    @Inject(method = "readProperties", at = @At("RETURN"))
-    private static <T> void gbw$readExtendedProperties(Dynamic<T> dynamic, LevelInfo info, LevelProperties.SpecialProperty specialProperty, GeneratorOptions generatorOptions, Lifecycle lifecycle, CallbackInfoReturnable<LevelProperties> cir) {
+    @Inject(method = "parse", at = @At("RETURN"))
+    private static <T> void gbw$readExtendedProperties(Dynamic<T> dynamic, LevelSettings info, PrimaryLevelData.SpecialWorldProperty specialProperty, WorldOptions generatorOptions, Lifecycle lifecycle, CallbackInfoReturnable<PrimaryLevelData> cir) {
         ((ExtendedLevelProperties) cir.getReturnValue()).gbw$setWorldSize(dynamic.get("worldSize").asInt(WorldSize.INFINITE.getSize()));
         ((ExtendedLevelProperties) cir.getReturnValue()).gbw$setStartSeason(dynamic.get("startSeason").asInt(Season.SUMMER.ordinal()));
         ((ExtendedLevelProperties) cir.getReturnValue()).gbw$setBonusHouseEnabled(dynamic.get("bonusHouse").asBoolean(false));
     }
 
-    @Inject(method = "updateProperties", at = @At("TAIL"))
-    private void gbw$updateExtendedProperties(DynamicRegistryManager registryManager, NbtCompound levelNbt, NbtCompound playerNbt, CallbackInfo ci) {
+    @Inject(method = "setTagData", at = @At("TAIL"))
+    private void gbw$updateExtendedProperties(RegistryAccess registryManager, CompoundTag levelNbt, CompoundTag playerNbt, CallbackInfo ci) {
         levelNbt.putInt("worldSize", worldSize);
         levelNbt.putInt("startSeason", startSeason);
         levelNbt.putBoolean("bonusHouse", bonusHouse);

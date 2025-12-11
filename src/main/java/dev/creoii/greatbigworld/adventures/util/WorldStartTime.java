@@ -1,6 +1,6 @@
 package dev.creoii.greatbigworld.adventures.util;
 
-import net.minecraft.text.Text;
+import net.minecraft.network.chat.Component;
 
 public enum WorldStartTime {
     SUNRISE(23000L),
@@ -20,7 +20,7 @@ public enum WorldStartTime {
         return time;
     }
 
-    public Text getTranslatableName() {
-        return Text.translatable("time." + name().toLowerCase());
+    public Component getTranslatableName() {
+        return Component.translatable("time." + name().toLowerCase());
     }
 }

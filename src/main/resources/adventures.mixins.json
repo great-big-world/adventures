@@ -12,9 +12,7 @@
     "server.MinecraftServerMixin",
     "server.ServerPropertiesHandlerMixin",
     "server.ServerWorldMixin",
-    "server.TimeCommandMixin",
     "world.ChunkGeneratorMixin",
-    "world.GameRuleCommandMixin",
     "world.GeneratorOptionsMixin",
     "world.LevelInfoMixin",
     "world.LevelPropertiesMixin",
@@ -27,7 +25,6 @@
   ],
   "client": [
     "client.ClientPlayerEntityMixin",
-    "client.ClientWorldMixin",
     "client.CreateWorldScreenMixin",
     "client.CreateWorldScreenWorldTabMixin",
     "client.DeathScreenMixin",

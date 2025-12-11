@@ -2,8 +2,7 @@ package dev.creoii.greatbigworld.adventures.mixin.client;
 
 import com.llamalad7.mixinextras.sugar.Local;
 import dev.creoii.greatbigworld.adventures.util.ExtendedWorldCreator;
-import net.minecraft.client.gui.screen.world.WorldListWidget;
-import net.minecraft.world.level.LevelInfo;
+import net.minecraft.client.gui.screens.worldselection.WorldSelectionList;
 import net.minecraft.world.level.storage.LevelSummary;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -12,9 +11,9 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(WorldListWidget.WorldEntry.class)
+@Mixin(WorldSelectionList.WorldListEntry.class)
 public class WorldListWidgetWorldEntryMixin {
-    @Shadow @Final LevelSummary level;
+    @Shadow @Final LevelSummary summary;
 
     /*@Inject(method = "recreate", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/world/GeneratorOptionsHolder;initializeIndexedFeaturesLists()V"))
     private void gbw$copyStartOptionsForWorldRecreation(CallbackInfo ci, @Local LevelInfo levelInfo) {

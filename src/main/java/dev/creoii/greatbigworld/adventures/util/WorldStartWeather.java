@@ -1,19 +1,18 @@
 package dev.creoii.greatbigworld.adventures.util;
 
-import net.minecraft.text.Text;
-import net.minecraft.util.math.random.Random;
-import net.minecraft.world.level.LevelProperties;
-
 import java.util.function.BiConsumer;
+import net.minecraft.network.chat.Component;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.storage.PrimaryLevelData;
 
 public enum WorldStartWeather {
     CLEAR((levelProperties, random) -> {}),
     RAIN((levelProperties, random) -> {
         levelProperties.setRaining(true);
-        levelProperties.setRainTime(random.nextBetween(9000, 180000));
+        levelProperties.setRainTime(random.nextIntBetweenInclusive(9000, 180000));
     }),
     THUNDER((levelProperties, random) -> {
-        int duration = random.nextBetween(9000, 180000);
+        int duration = random.nextIntBetweenInclusive(9000, 180000);
         levelProperties.setRaining(true);
         levelProperties.setRainTime(duration);
         levelProperties.setThundering(true);
@@ -26,17 +25,17 @@ public enum WorldStartWeather {
         }
     });
 
-    private final BiConsumer<LevelProperties, Random> weather;
+    private final BiConsumer<PrimaryLevelData, RandomSource> weather;
 
-    WorldStartWeather(BiConsumer<LevelProperties, Random> weather) {
+    WorldStartWeather(BiConsumer<PrimaryLevelData, RandomSource> weather) {
         this.weather = weather;
     }
 
-    public Text getTranslatableName() {
-        return Text.translatable("weather." + name().toLowerCase());
+    public Component getTranslatableName() {
+        return Component.translatable("weather." + name().toLowerCase());
     }
 
-    public void apply(LevelProperties levelProperties, Random random) {
+    public void apply(PrimaryLevelData levelProperties, RandomSource random) {
         weather.accept(levelProperties, random);
     }
 }

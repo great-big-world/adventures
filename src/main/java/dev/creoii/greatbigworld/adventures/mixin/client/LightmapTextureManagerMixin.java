@@ -2,29 +2,29 @@ package dev.creoii.greatbigworld.adventures.mixin.client;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import dev.creoii.greatbigworld.adventures.client.AdventuresClient;
 import dev.creoii.greatbigworld.adventures.util.UndergroundHelper;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.LightmapTextureManager;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.LightType;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.LightTexture;
+import net.minecraft.util.Mth;
+import net.minecraft.world.attribute.EnvironmentAttributes;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.LightLayer;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 
-@Mixin(LightmapTextureManager.class)
+@Mixin(LightTexture.class)
 public class LightmapTextureManagerMixin {
-    @Shadow @Final private MinecraftClient client;
+    @Shadow @Final private Minecraft minecraft;
     @Unique private final float[] MOON_PHASE_BRIGHTNESS = {0f, -.035f, -.07f, -.105f, -.15f, -.105f, -.07f, -.035f};
 
-    @WrapOperation(method = "update", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/LightmapTextureManager;getDarkness(Lnet/minecraft/entity/LivingEntity;FF)F"))
-    private float gbw$modifyDarknessForMoonPhase(LightmapTextureManager instance, LivingEntity entity, float factor, float delta, Operation<Float> original) {
+    @WrapOperation(method = "updateLightTexture", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/LightTexture;calculateDarknessScale(Lnet/minecraft/world/entity/LivingEntity;FF)F"))
+    private float gbw$modifyDarknessForMoonPhase(LightTexture instance, LivingEntity entity, float factor, float delta, Operation<Float> original) {
         float darkness = original.call(instance, entity, factor, delta);
-        if (client.world != null && client.player != null && !client.player.isSpectator()) {
-            int moonPhase = client.world.getMoonPhase();
+        if (minecraft.level != null && minecraft.player != null && !minecraft.player.isSpectator()) {
+            int moonPhase = minecraft.level.environmentAttributes().getDimensionValue(EnvironmentAttributes.MOON_PHASE).index();
             if (moonPhase == 3 || moonPhase == 5) {
                 return -.105f * getTimeInfluence();
             }
@@ -32,18 +32,18 @@ public class LightmapTextureManagerMixin {
             float abovegroundDarkness = darkness - (MOON_PHASE_BRIGHTNESS[moonPhase] * getTimeInfluence());
             float undergroundDarkness = darkness + .105f;
 
-            return MathHelper.lerp(UndergroundHelper.sampleLight(client.world, entity.getBlockPos(), LightType.SKY), undergroundDarkness, abovegroundDarkness);
+            return Mth.lerp(UndergroundHelper.sampleLight(minecraft.level, entity.blockPosition(), LightLayer.SKY), undergroundDarkness, abovegroundDarkness);
         }
         return darkness;
     }
 
     @Unique
     private float getTimeInfluence() {
-        long dayLength = AdventuresClient.dayLength;
-        long nightLength = AdventuresClient.nightLength;
+        long dayLength = 12000L;
+        long nightLength = 10000L;
         long total = dayLength + nightLength;
 
-        long timeOfDay = client.world.getTimeOfDay() % total;
+        long timeOfDay = minecraft.level.getDayTime() % total;
         if (timeOfDay >= dayLength && timeOfDay < dayLength + (nightLength * .3d)) {
             return (float) (timeOfDay - dayLength) / 3000f;
         } else if (timeOfDay >= (nightLength * .3d) && timeOfDay < (total - 1000L)) {

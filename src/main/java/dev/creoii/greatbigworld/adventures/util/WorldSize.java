@@ -1,6 +1,6 @@
 package dev.creoii.greatbigworld.adventures.util;
 
-import net.minecraft.text.Text;
+import net.minecraft.network.chat.Component;
 
 public enum WorldSize {
     ONE(1),
@@ -31,7 +31,7 @@ public enum WorldSize {
         return size;
     }
 
-    public Text getTranslatableName(int size) {
-        return this == INFINITE || size < 0 ? Text.translatable("worldSize.infinite") : Text.translatable("worldSize.tooltip", size, size);
+    public Component getTranslatableName(int size) {
+        return this == INFINITE || size < 0 ? Component.translatable("worldSize.infinite") : Component.translatable("worldSize.tooltip", size, size);
     }
 }

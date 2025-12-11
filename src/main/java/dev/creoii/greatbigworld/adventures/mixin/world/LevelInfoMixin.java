@@ -3,17 +3,17 @@ package dev.creoii.greatbigworld.adventures.mixin.world;
 import dev.creoii.greatbigworld.adventures.util.BonusHouseHolder;
 import dev.creoii.greatbigworld.adventures.util.ExtendedWorldCreator;
 import dev.creoii.greatbigworld.adventures.util.WorldStartWeather;
-import net.minecraft.resource.DataConfiguration;
 import net.minecraft.world.Difficulty;
-import net.minecraft.world.GameMode;
-import net.minecraft.world.level.LevelInfo;
+import net.minecraft.world.level.GameType;
+import net.minecraft.world.level.LevelSettings;
+import net.minecraft.world.level.WorldDataConfiguration;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(LevelInfo.class)
+@Mixin(LevelSettings.class)
 public class LevelInfoMixin implements ExtendedWorldCreator, BonusHouseHolder {
     @Unique private long gbw$startTime;
     @Unique private int gbw$startSeason;
@@ -72,7 +72,7 @@ public class LevelInfoMixin implements ExtendedWorldCreator, BonusHouseHolder {
     }
 
     @Inject(method = "withDifficulty", at = @At("RETURN"))
-    private void gbw$fixWithDifficulty(Difficulty difficulty, CallbackInfoReturnable<LevelInfo> cir) {
+    private void gbw$fixWithDifficulty(Difficulty difficulty, CallbackInfoReturnable<LevelSettings> cir) {
         ExtendedWorldCreator extendedWorldCreator = (ExtendedWorldCreator) (Object) cir.getReturnValue();
         extendedWorldCreator.gbw$setWorldSize(gbw$worldSize);
         extendedWorldCreator.gbw$setStartTime(gbw$startTime);
@@ -83,8 +83,8 @@ public class LevelInfoMixin implements ExtendedWorldCreator, BonusHouseHolder {
         bonusHouseHolder.gbw$setBonusHouseEnabled(bonusHouseEnabled);
     }
 
-    @Inject(method = "withGameMode", at = @At("RETURN"))
-    private void gbw$fixWithGameMode(GameMode mode, CallbackInfoReturnable<LevelInfo> cir) {
+    @Inject(method = "withGameType", at = @At("RETURN"))
+    private void gbw$fixWithGameMode(GameType mode, CallbackInfoReturnable<LevelSettings> cir) {
         ExtendedWorldCreator extendedWorldCreator = (ExtendedWorldCreator) (Object) cir.getReturnValue();
         extendedWorldCreator.gbw$setWorldSize(gbw$worldSize);
         extendedWorldCreator.gbw$setStartTime(gbw$startTime);
@@ -95,8 +95,8 @@ public class LevelInfoMixin implements ExtendedWorldCreator, BonusHouseHolder {
         bonusHouseHolder.gbw$setBonusHouseEnabled(bonusHouseEnabled);
     }
 
-    @Inject(method = "withCopiedGameRules", at = @At("RETURN"))
-    private void gbw$fixWithCopiedGameRules(CallbackInfoReturnable<LevelInfo> cir) {
+    @Inject(method = "copy", at = @At("RETURN"))
+    private void gbw$fixWithCopiedGameRules(CallbackInfoReturnable<LevelSettings> cir) {
         ExtendedWorldCreator extendedWorldCreator = (ExtendedWorldCreator) (Object) cir.getReturnValue();
         extendedWorldCreator.gbw$setWorldSize(gbw$worldSize);
         extendedWorldCreator.gbw$setStartTime(gbw$startTime);
@@ -108,7 +108,7 @@ public class LevelInfoMixin implements ExtendedWorldCreator, BonusHouseHolder {
     }
 
     @Inject(method = "withDataConfiguration", at = @At("RETURN"))
-    private void gbw$fixWithDataConfiguration(DataConfiguration dataConfiguration, CallbackInfoReturnable<LevelInfo> cir) {
+    private void gbw$fixWithDataConfiguration(WorldDataConfiguration dataConfiguration, CallbackInfoReturnable<LevelSettings> cir) {
         ExtendedWorldCreator extendedWorldCreator = (ExtendedWorldCreator) (Object) cir.getReturnValue();
         extendedWorldCreator.gbw$setWorldSize(gbw$worldSize);
         extendedWorldCreator.gbw$setStartTime(gbw$startTime);

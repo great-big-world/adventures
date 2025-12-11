@@ -2,15 +2,15 @@ package dev.creoii.greatbigworld.adventures.mixin.world;
 
 import dev.creoii.greatbigworld.adventures.util.AllowDebugHud;
 import dev.creoii.greatbigworld.adventures.util.ShowDeathCoordinates;
-import net.minecraft.world.World;
+import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 
-@Mixin(World.class)
+@Mixin(Level.class)
 public abstract class WorldMixin implements ShowDeathCoordinates, AllowDebugHud {
     @Shadow
-    public abstract boolean isClient();
+    public abstract boolean isClientSide();
 
     @Unique
     private boolean gbw$showDeathCoordinates;

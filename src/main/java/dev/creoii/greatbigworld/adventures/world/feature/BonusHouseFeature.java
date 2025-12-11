@@ -1,16 +1,16 @@
 package dev.creoii.greatbigworld.adventures.world.feature;
 
 import com.mojang.serialization.Codec;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.ChestBlock;
-import net.minecraft.inventory.LootableInventory;
-import net.minecraft.loot.LootTables;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.Heightmap;
-import net.minecraft.world.gen.feature.Feature;
-import net.minecraft.world.gen.feature.util.FeatureContext;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.RandomizableContainer;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.ChestBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.levelgen.Heightmap;
+import net.minecraft.world.level.levelgen.feature.Feature;
+import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
+import net.minecraft.world.level.storage.loot.BuiltInLootTables;
 
 public class BonusHouseFeature extends Feature<BonusHouseFeatureConfig> {
     public BonusHouseFeature(Codec<BonusHouseFeatureConfig> configCodec) {
@@ -18,16 +18,16 @@ public class BonusHouseFeature extends Feature<BonusHouseFeatureConfig> {
     }
 
     @Override
-    public boolean generate(FeatureContext<BonusHouseFeatureConfig> context) {
-        BlockPos origin = context.getWorld().getTopPosition(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, context.getOrigin());
+    public boolean place(FeaturePlaceContext<BonusHouseFeatureConfig> context) {
+        BlockPos origin = context.level().getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, context.origin());
 
         int chunkX = (origin.getX() >> 4) << 4;
         int chunkZ = (origin.getZ() >> 4) << 4;
         BlockPos pos = new BlockPos(chunkX + 8, origin.getY(), chunkZ + 8);
 
-        Direction entrance = Direction.Type.HORIZONTAL.random(context.getRandom());
+        Direction entrance = Direction.Plane.HORIZONTAL.getRandomDirection(context.random());
 
-        BlockPos.Mutable mutable = new BlockPos.Mutable();
+        BlockPos.MutableBlockPos mutable = new BlockPos.MutableBlockPos();
         for (int z = -3; z <= 3; ++z) {
             mutable.setZ(pos.getZ() + z);
             for (int y = 0; y <= 4; ++y) {
@@ -36,40 +36,40 @@ public class BonusHouseFeature extends Feature<BonusHouseFeatureConfig> {
                     mutable.setX(pos.getX() + x);
 
                     if (Math.abs(x) != 3 && y != 0 && y != 4 && Math.abs(z) != 3) {
-                        context.getWorld().setBlockState(mutable, Blocks.AIR.getDefaultState(), 2);
+                        context.level().setBlock(mutable, Blocks.AIR.defaultBlockState(), 2);
                         continue;
                     }
 
                     if ((y == 1 || y == 2) && ((entrance == Direction.NORTH && z == -3 && x == 0) || (entrance == Direction.SOUTH && z == 3 && x == 0) || (entrance == Direction.WEST  && x == -3 && z == 0) || (entrance == Direction.EAST  && x == 3  && z == 0))) {
-                        context.getWorld().setBlockState(mutable, Blocks.AIR.getDefaultState(), 2);
+                        context.level().setBlock(mutable, Blocks.AIR.defaultBlockState(), 2);
                         continue;
                     }
 
-                    BlockState state = y == 0 ? Blocks.STONE.getDefaultState() : Blocks.OAK_PLANKS.getDefaultState();
-                    context.getWorld().setBlockState(mutable, state, 2);
+                    BlockState state = y == 0 ? Blocks.STONE.defaultBlockState() : Blocks.OAK_PLANKS.defaultBlockState();
+                    context.level().setBlock(mutable, state, 2);
                 }
             }
         }
 
-        BlockPos torchPos = new BlockPos(pos.getX() + context.getRandom().nextBetween(-2, 2), pos.getY() + 1, pos.getZ() + context.getRandom().nextBetween(-2, 2));
-        if (context.getConfig().hasChest()) {
-            BlockPos chestPos = new BlockPos(pos.getX() + context.getRandom().nextBetween(-2, 2), pos.getY() + 1, pos.getZ() + context.getRandom().nextBetween(-2, 2));
+        BlockPos torchPos = new BlockPos(pos.getX() + context.random().nextIntBetweenInclusive(-2, 2), pos.getY() + 1, pos.getZ() + context.random().nextIntBetweenInclusive(-2, 2));
+        if (context.config().hasChest()) {
+            BlockPos chestPos = new BlockPos(pos.getX() + context.random().nextIntBetweenInclusive(-2, 2), pos.getY() + 1, pos.getZ() + context.random().nextIntBetweenInclusive(-2, 2));
             Direction facing = Direction.NORTH;
-            for (Direction direction : Direction.Type.HORIZONTAL.getShuffled(context.getRandom())) {
-                if (context.getWorld().isAir(chestPos.offset(direction))) {
+            for (Direction direction : Direction.Plane.HORIZONTAL.shuffledCopy(context.random())) {
+                if (context.level().isEmptyBlock(chestPos.relative(direction))) {
                     facing = direction;
                     break;
                 }
             }
-            context.getWorld().setBlockState(chestPos, Blocks.CHEST.getDefaultState().with(ChestBlock.FACING, facing), 2);
-            LootableInventory.setLootTable(context.getWorld(), context.getRandom(), chestPos, LootTables.SPAWN_BONUS_CHEST);
+            context.level().setBlock(chestPos, Blocks.CHEST.defaultBlockState().setValue(ChestBlock.FACING, facing), 2);
+            RandomizableContainer.setBlockEntityLootTable(context.level(), context.random(), chestPos, BuiltInLootTables.SPAWN_BONUS_CHEST);
 
             while (chestPos.equals(torchPos)) {
-                torchPos = new BlockPos(pos.getX() + context.getRandom().nextBetween(-2, 2), pos.getY() + 1, pos.getZ() + context.getRandom().nextBetween(-2, 2));
+                torchPos = new BlockPos(pos.getX() + context.random().nextIntBetweenInclusive(-2, 2), pos.getY() + 1, pos.getZ() + context.random().nextIntBetweenInclusive(-2, 2));
             }
         }
 
-        context.getWorld().setBlockState(torchPos, Blocks.TORCH.getDefaultState(), 2);
+        context.level().setBlock(torchPos, Blocks.TORCH.defaultBlockState(), 2);
 
         return true;
     }

@@ -2,45 +2,39 @@ package dev.creoii.greatbigworld.adventures.mixin.client;
 
 import dev.creoii.greatbigworld.adventures.util.ExtendedLevelProperties;
 import dev.creoii.greatbigworld.adventures.util.ExtendedWorldCreator;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.world.CreateWorldScreen;
-import net.minecraft.client.gui.screen.world.WorldCreator;
-import net.minecraft.client.world.GeneratorOptionsHolder;
-import net.minecraft.registry.CombinedDynamicRegistries;
-import net.minecraft.registry.ServerDynamicRegistryType;
-import net.minecraft.util.math.random.LocalRandom;
-import net.minecraft.world.SaveProperties;
-import net.minecraft.world.level.LevelInfo;
-import net.minecraft.world.level.LevelProperties;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import java.nio.file.Path;
+import net.minecraft.client.gui.screens.worldselection.CreateWorldScreen;
+import net.minecraft.client.gui.screens.worldselection.WorldCreationUiState;
+import net.minecraft.core.LayeredRegistryAccess;
+import net.minecraft.server.RegistryLayer;
+import net.minecraft.world.level.levelgen.SingleThreadedRandomSource;
+import net.minecraft.world.level.storage.PrimaryLevelData;
+import net.minecraft.world.level.storage.WorldData;
 
 @Mixin(CreateWorldScreen.class)
 public class CreateWorldScreenMixin {
     @Shadow @Final
-    WorldCreator worldCreator;
+    WorldCreationUiState uiState;
 
-    @Inject(method = "startServer", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/MinecraftClient;createIntegratedServerLoader()Lnet/minecraft/server/integrated/IntegratedServerLoader;"))
-    private void gbw$applyWorldOptions(CombinedDynamicRegistries<ServerDynamicRegistryType> combinedDynamicRegistries, SaveProperties saveProperties, CallbackInfoReturnable<Boolean> cir) {
-        if (saveProperties instanceof LevelProperties levelProperties && worldCreator instanceof ExtendedWorldCreator extendedWorldCreator) {
-            extendedWorldCreator.gbw$getStartWeather().apply(levelProperties, new LocalRandom(levelProperties.getGeneratorOptions().getSeed()));
-            levelProperties.setTimeOfDay(extendedWorldCreator.gbw$getStartTime());
+    @Inject(method = "createNewWorld", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Minecraft;createWorldOpenFlows()Lnet/minecraft/client/gui/screens/worldselection/WorldOpenFlows;"))
+    private void gbw$applyWorldOptions(LayeredRegistryAccess<RegistryLayer> combinedDynamicRegistries, WorldData saveProperties, CallbackInfoReturnable<Boolean> cir) {
+        if (saveProperties instanceof PrimaryLevelData levelProperties && uiState instanceof ExtendedWorldCreator extendedWorldCreator) {
+            extendedWorldCreator.gbw$getStartWeather().apply(levelProperties, new SingleThreadedRandomSource(levelProperties.worldGenOptions().seed()));
+            levelProperties.setDayTime(extendedWorldCreator.gbw$getStartTime());
 
             if (levelProperties instanceof ExtendedLevelProperties extendedLevelProperties) {
                 int worldSize = extendedWorldCreator.gbw$getWorldSize();
                 extendedLevelProperties.gbw$setWorldSize(worldSize);
-                if (worldSize > 0 && levelProperties.getWorldBorder().isPresent())
-                    levelProperties.getWorldBorder().get().size = (worldSize * 2d * 16d) - .5d;
-                else if (worldSize == 0 && levelProperties.getWorldBorder().isPresent())
-                    levelProperties.getWorldBorder().get().size = 15.5d;
+                if (worldSize > 0 && levelProperties.getLegacyWorldBorderSettings().isPresent())
+                    levelProperties.getLegacyWorldBorderSettings().get().size = (worldSize * 2d * 16d) - .5d;
+                else if (worldSize == 0 && levelProperties.getLegacyWorldBorderSettings().isPresent())
+                    levelProperties.getLegacyWorldBorderSettings().get().size = 15.5d;
 
                 extendedLevelProperties.gbw$setStartSeason(extendedWorldCreator.gbw$getStartSeason());
             }

@@ -1,67 +1,43 @@
 package dev.creoii.greatbigworld.adventures.mixin.server;
 
-import dev.creoii.greatbigworld.adventures.registry.AdventuresGameRules;
 import dev.creoii.greatbigworld.adventures.util.WorldSizeHolder;
-import net.minecraft.registry.DynamicRegistryManager;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.core.Holder;
+import net.minecraft.core.RegistryAccess;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.random.RandomSequencesState;
-import net.minecraft.world.GameRules;
-import net.minecraft.world.MutableWorldProperties;
-import net.minecraft.world.World;
-import net.minecraft.world.dimension.DimensionOptions;
-import net.minecraft.world.dimension.DimensionType;
-import net.minecraft.world.level.ServerWorldProperties;
-import net.minecraft.world.level.storage.LevelStorage;
-import net.minecraft.world.spawner.SpecialSpawner;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.RandomSequences;
+import net.minecraft.world.level.CustomSpawner;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.dimension.DimensionType;
+import net.minecraft.world.level.dimension.LevelStem;
+import net.minecraft.world.level.storage.LevelStorageSource;
+import net.minecraft.world.level.storage.ServerLevelData;
+import net.minecraft.world.level.storage.WritableLevelData;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.List;
 import java.util.concurrent.Executor;
 
-@Mixin(ServerWorld.class)
-public abstract class ServerWorldMixin extends World {
-    @Shadow
-    public abstract GameRules getGameRules();
-
-    protected ServerWorldMixin(MutableWorldProperties properties, RegistryKey<World> registryRef, DynamicRegistryManager registryManager, RegistryEntry<DimensionType> dimensionEntry, boolean isClient, boolean debugWorld, long seed, int maxChainedNeighborUpdates) {
+@Mixin(ServerLevel.class)
+public abstract class ServerWorldMixin extends Level {
+    protected ServerWorldMixin(WritableLevelData properties, ResourceKey<Level> registryRef, RegistryAccess registryManager, Holder<DimensionType> dimensionEntry, boolean isClient, boolean debugWorld, long seed, int maxChainedNeighborUpdates) {
         super(properties, registryRef, registryManager, dimensionEntry, isClient, debugWorld, seed, maxChainedNeighborUpdates);
     }
 
     @Inject(method = "<init>", at = @At("TAIL"))
-    private void gbw$setChunkGeneratorWorldSize(MinecraftServer server, Executor workerExecutor, LevelStorage.Session session, ServerWorldProperties properties, RegistryKey<World> worldKey, DimensionOptions dimensionOptions, boolean debugWorld, long seed, List<SpecialSpawner> spawners, boolean shouldTickTime, RandomSequencesState randomSequenceState, CallbackInfo ci) {
-        if (dimensionOptions.chunkGenerator() instanceof WorldSizeHolder worldSizeHolder && properties instanceof WorldSizeHolder worldSizeHolder1) {
+    private void gbw$setChunkGeneratorWorldSize(MinecraftServer server, Executor workerExecutor, LevelStorageSource.LevelStorageAccess session, ServerLevelData properties, ResourceKey<Level> worldKey, LevelStem dimensionOptions, boolean debugWorld, long seed, List<CustomSpawner> spawners, boolean shouldTickTime, RandomSequences randomSequenceState, CallbackInfo ci) {
+        if (dimensionOptions.generator() instanceof WorldSizeHolder worldSizeHolder && properties instanceof WorldSizeHolder worldSizeHolder1) {
             worldSizeHolder.gbw$setWorldSize(worldSizeHolder1.gbw$getWorldSize());
         }
     }
 
-    @Redirect(method = "tick(Ljava/util/function/BooleanSupplier;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/world/ServerWorld;setTimeOfDay(J)V"))
-    private void gbw$sleepToNight(ServerWorld serverWorld, long timeOfDay){
-        if (serverWorld.isDay()) {
-            serverWorld.setTimeOfDay(getGameRules().getInt(AdventuresGameRules.LENGTH_OF_DAY) + 1000L);
-        } else serverWorld.setTimeOfDay(timeOfDay);
-    }
-
-    @ModifyConstant(method = "tick", constant = @Constant(longValue = 24000L))
-    private long gbw$modifyTotalDayLength(long constant) {
-        GameRules gameRules = getGameRules();
-        return gameRules.getInt(AdventuresGameRules.LENGTH_OF_DAY) + gameRules.getInt(AdventuresGameRules.LENGTH_OF_NIGHT);
-    }
-
-    @Override
-    public boolean isNightAndNatural() {
-        GameRules gameRules = getGameRules();
-        long total = gameRules.getInt(AdventuresGameRules.LENGTH_OF_DAY) + gameRules.getInt(AdventuresGameRules.LENGTH_OF_NIGHT);
-        if (!getDimension().natural()) {
-            return false;
-        } else {
-            int i = (int)(getTimeOfDay() % total);
-            return i >= gameRules.getInt(AdventuresGameRules.LENGTH_OF_DAY) + 600 && i <= total - 600;
-        }
+    @Redirect(method = "tick(Ljava/util/function/BooleanSupplier;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerLevel;setDayTime(J)V"))
+    private void gbw$sleepToNight(ServerLevel serverWorld, long timeOfDay){
+        if (serverWorld.isBrightOutside()) {
+            serverWorld.setDayTime(12000L + 1000L);
+        } else serverWorld.setDayTime(timeOfDay);
     }
 }
