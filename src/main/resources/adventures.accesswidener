@@ -7,5 +7,4 @@ accessible method net/minecraft/world/level/levelgen/WorldOptions <init> (JZZLja
 accessible field net/minecraft/client/gui/GuiGraphics minecraft Lnet/minecraft/client/Minecraft;
 accessible field net/minecraft/world/level/border/WorldBorder$Settings size D
 mutable field net/minecraft/world/level/border/WorldBorder$Settings size D
-accessible field net/minecraft/entity/ItemEntity itemAge I
 accessible field net/minecraft/world/food/FoodData foodLevel I
