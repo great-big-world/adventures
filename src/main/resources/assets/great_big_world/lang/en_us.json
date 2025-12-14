@@ -29,9 +29,9 @@
 
   "multiplayer.downloadingTerrain.targeted": "Entering the %s...",
 
-  "gamerule.showCoordinatesOnDeath": "Show death coordinates",
-  "gamerule.sleepDuringDay": "Sleep during daytime",
-  "gamerule.allowDebugHud": "Allow debug HUD",
+  "gamerule.great_big_world.show_coordinates_on_death": "Show death coordinates",
+  "gamerule.great_big_world.sleep_during_day": "Sleep during daytime",
+  "gamerule.great_big_world.allow_debug_hud": "Allow debug HUD",
 
   "death.showCoordinates": "at %s",
 
