@@ -10,6 +10,7 @@
     "entity.PlayerEntityMixin",
     "server.MinecraftDedicatedServerMixin",
     "server.MinecraftServerMixin",
+    "server.ServerPlayerMixin",
     "server.ServerPropertiesHandlerMixin",
     "server.ServerWorldMixin",
     "world.ChunkGeneratorMixin",

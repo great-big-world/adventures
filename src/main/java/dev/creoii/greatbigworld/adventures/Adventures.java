@@ -38,7 +38,7 @@ public class Adventures implements ModInitializer {
         PayloadTypeRegistry.playC2S().register(ShowDeathCoordinates.RequestC2S.PACKET_ID, ShowDeathCoordinates.RequestC2S.PACKET_CODEC);
         PayloadTypeRegistry.playC2S().register(AllowDebugHud.RequestC2S.PACKET_ID, AllowDebugHud.RequestC2S.PACKET_CODEC);
 
-        GameRuleEvents.changeCallback(AdventuresGameRules.SHOW_COORDINATES_ON_DEATH).register((value, server) -> {
+        GameRuleEvents.changeCallback(AdventuresGameRules.SHOW_DEATH_COORDINATES).register((value, server) -> {
             for (ServerLevel world : server.getAllLevels()) {
                 if (world instanceof ShowDeathCoordinates showDeathCoordinates) {
                     showDeathCoordinates.gbw$setShowDeathCoordinates(value);
@@ -62,7 +62,7 @@ public class Adventures implements ModInitializer {
         });
 
         ServerPlayNetworking.registerGlobalReceiver(ShowDeathCoordinates.RequestC2S.PACKET_ID, (requestC2S, context) -> {
-            ServerPlayNetworking.send(context.player(), new ShowDeathCoordinates.SyncS2C(context.player().level().getGameRules().get(AdventuresGameRules.SHOW_COORDINATES_ON_DEATH)));
+            ServerPlayNetworking.send(context.player(), new ShowDeathCoordinates.SyncS2C(context.player().level().getGameRules().get(AdventuresGameRules.SHOW_DEATH_COORDINATES)));
         });
 
         ServerPlayNetworking.registerGlobalReceiver(AllowDebugHud.RequestC2S.PACKET_ID, (requestC2S, context) -> {
