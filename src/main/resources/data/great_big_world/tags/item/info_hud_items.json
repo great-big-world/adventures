@@ -2,7 +2,6 @@
   "values": [
     "minecraft:compass",
     "minecraft:recovery_compass",
-    "minecraft:clock",
-    "great_big_world:astrolabe"
+    "minecraft:clock"
   ]
 }
