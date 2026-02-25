@@ -75,8 +75,8 @@ public class AdventuresClient implements ClientModInitializer {
                         context.pose().pushMatrix();
                         context.pose().scale(1.5f, 1.5f);
                         for (int i = 0; i < sprites.size(); ++i) {
-                            Identifier sprite = sprites.get(i);
-                            context.blit(RenderPipelines.GUI_TEXTURED, sprite.withPrefix("textures/gui/hud/icon/").withSuffix(".png"), 2, 2 + (i * 8), 0f, 0f, 7, 7, 7, 7);
+                            Identifier sprite = sprites.get(i).withPrefix("textures/gui/hud/icon/").withSuffix(".png");
+                            context.blit(RenderPipelines.GUI_TEXTURED, sprite, 2, 2 + (i * 8), 0f, 0f, 7, 7, 7, 7);
                         }
                         context.pose().popMatrix();
 
