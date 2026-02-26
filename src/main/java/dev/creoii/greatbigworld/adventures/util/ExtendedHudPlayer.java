@@ -3,7 +3,6 @@ package dev.creoii.greatbigworld.adventures.util;
 import com.google.common.collect.ImmutableMap;
 import dev.creoii.greatbigworld.GreatBigWorld;
 import dev.creoii.greatbigworld.adventures.client.AdventuresClient;
-import dev.creoii.greatbigworld.adventures.registry.AdventuresItems;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.GlobalPos;
@@ -32,10 +31,6 @@ public interface ExtendedHudPlayer {
             }))
             .put(Type.CLOCK, new ItemInfoHud(ExtendedHudPlayer::getClockTexture, Items.CLOCK, clientPlayer -> {
                 return Component.literal(AdventuresClient.getDisplayTime(clientPlayer));
-            }))
-            // change texture based on world quadrant?
-            .put(Type.ASTROLABE, new ItemInfoHud(clientPlayer -> Identifier.fromNamespaceAndPath(GreatBigWorld.NAMESPACE, "astrolabe"), AdventuresItems.ASTROLABE, clientPlayer -> {
-                return Component.literal(clientPlayer.getBlockX() + ", " + clientPlayer.getBlockY() + ", " + clientPlayer.getBlockZ());
             }))
             .build();
 

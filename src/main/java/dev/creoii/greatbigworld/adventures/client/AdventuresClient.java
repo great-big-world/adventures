@@ -1,8 +1,6 @@
 package dev.creoii.greatbigworld.adventures.client;
 
 import dev.creoii.greatbigworld.GreatBigWorld;
-import dev.creoii.greatbigworld.adventures.Adventures;
-import dev.creoii.greatbigworld.adventures.registry.AdventuresItems;
 import dev.creoii.greatbigworld.adventures.util.*;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
@@ -14,19 +12,13 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.dimension.DimensionType;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
 public class AdventuresClient implements ClientModInitializer {
-    @Nullable
-    private static ResourceKey<DimensionType> destinationDimension = null;
-
     @Override
     public void onInitializeClient() {
         UseItemCallback.EVENT.register((player, world, hand) -> {
@@ -38,8 +30,6 @@ public class AdventuresClient implements ClientModInitializer {
                         type = ExtendedHudPlayer.Type.RECOVERY_COMPASS;
                     } else if (stack.is(Items.CLOCK)) {
                         type = ExtendedHudPlayer.Type.CLOCK;
-                    } else if (stack.is(AdventuresItems.ASTROLABE)) {
-                        type = ExtendedHudPlayer.Type.ASTROLABE;
                     }
                     extendedHudPlayer.gbw$getItemInfoHuds().get(type).invert();
                     return InteractionResult.SUCCESS;
@@ -89,13 +79,6 @@ public class AdventuresClient implements ClientModInitializer {
             }
         });
 
-        ClientPlayNetworking.registerGlobalReceiver(Adventures.TeleportDestinationS2C.PACKET_ID, (payload, context) -> {
-            ResourceKey<DimensionType> registryKey = payload.destinationDimension();
-            context.client().execute(() -> {
-                destinationDimension = registryKey;
-            });
-        });
-
         ClientPlayNetworking.registerGlobalReceiver(ShowDeathCoordinates.SyncS2C.PACKET_ID, (payload, context) -> {
             boolean value = payload.value();
             context.client().execute(() -> {
@@ -113,10 +96,6 @@ public class AdventuresClient implements ClientModInitializer {
                 }
             });
         });
-    }
-
-    public static @Nullable ResourceKey<DimensionType> getDestinationDimension() {
-        return destinationDimension;
     }
 
     public static String getDisplayTime(LocalPlayer clientPlayer) {

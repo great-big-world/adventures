@@ -25,10 +25,7 @@ public class LightmapTextureManagerMixin {
         float darkness = original.call(instance, entity, factor, delta);
         if (minecraft.level != null && minecraft.player != null && !minecraft.player.isSpectator()) {
             int moonPhase = minecraft.level.environmentAttributes().getDimensionValue(EnvironmentAttributes.MOON_PHASE).index();
-            if (moonPhase == 3 || moonPhase == 5) {
-                return -.105f * getTimeInfluence();
-            }
-
+            
             float abovegroundDarkness = darkness - (MOON_PHASE_BRIGHTNESS[moonPhase] * getTimeInfluence());
             float undergroundDarkness = darkness + .105f;
 
@@ -40,7 +37,7 @@ public class LightmapTextureManagerMixin {
     @Unique
     private float getTimeInfluence() {
         long dayLength = 12000L;
-        long nightLength = 10000L;
+        long nightLength = 12000L;
         long total = dayLength + nightLength;
 
         long timeOfDay = minecraft.level.getDayTime() % total;

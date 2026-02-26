@@ -4,8 +4,6 @@
   "package": "dev.creoii.greatbigworld.adventures.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
-    "EndPortalBlockMixin",
-    "entity.EntityMixin",
     "entity.LivingEntityMixin",
     "entity.PlayerEntityMixin",
     "server.MinecraftDedicatedServerMixin",
