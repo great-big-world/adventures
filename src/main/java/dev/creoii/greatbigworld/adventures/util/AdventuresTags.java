@@ -5,7 +5,10 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.Block;
 
 public final class AdventuresTags {
+    public static final TagKey<Block> LEASHABLE = TagKey.create(Registries.BLOCK, Identifier.fromNamespaceAndPath(GreatBigWorld.NAMESPACE, "leashable"));
+    public static final TagKey<Block> THIN_LEASHABLE = TagKey.create(Registries.BLOCK, Identifier.fromNamespaceAndPath(GreatBigWorld.NAMESPACE, "thin_leashable"));
     public static final TagKey<Item> INFO_HUD_ITEMS = TagKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath(GreatBigWorld.NAMESPACE, "info_hud_items"));
 }

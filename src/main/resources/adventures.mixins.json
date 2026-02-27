@@ -5,7 +5,10 @@
   "compatibilityLevel": "JAVA_21",
   "plugin": "dev.creoii.greatbigworld.adventures.util.AdventuresMixinPlugin",
   "mixins": [
+    "LeadItemMixin",
+    "LightningRodBlockMixin",
     "client.compat.SodiumGameOptionPagesMixin",
+    "entity.LeashFenceKnotEntityMixin",
     "entity.LivingEntityMixin",
     "entity.PlayerEntityMixin",
     "server.MinecraftDedicatedServerMixin",
@@ -32,6 +35,7 @@
     "client.DebugHudMixin",
     "client.GameRendererMixin",
     "client.GeneratorOptionsHolderMixin",
+    "client.LeashKnotRendererMixin",
     "client.LevelLoadingScreenMixin",
     "client.LightmapTextureManagerMixin",
     "client.WorldCreatorMixin",

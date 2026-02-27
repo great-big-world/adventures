@@ -6,10 +6,12 @@ import dev.creoii.greatbigworld.util.OptionsAPI;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements;
 import net.fabricmc.fabric.api.event.player.UseItemCallback;
 import net.minecraft.client.OptionInstance;
+import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
@@ -21,8 +23,12 @@ import net.minecraft.world.item.Items;
 import java.util.*;
 
 public class AdventuresClient implements ClientModInitializer {
+    public static final ModelLayerLocation THIN_LEASH_KNOT = new ModelLayerLocation(Identifier.fromNamespaceAndPath(GreatBigWorld.NAMESPACE, "thin_leash_knot"), "main");
+
     @Override
     public void onInitializeClient() {
+        EntityModelLayerRegistry.registerModelLayer(THIN_LEASH_KNOT, ThinLeashKnotModel::createBodyLayer);
+
         UseItemCallback.EVENT.register((player, world, hand) -> {
             if (world.isClientSide() && !player.isSpectator() && player instanceof ExtendedHudPlayer extendedHudPlayer) {
                 ItemStack stack = player.getItemInHand(hand);
