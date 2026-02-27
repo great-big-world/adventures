@@ -25,7 +25,7 @@ public class LightmapTextureManagerMixin {
         float darkness = original.call(instance, entity, factor, delta);
         if (minecraft.level != null && minecraft.player != null && !minecraft.player.isSpectator()) {
             int moonPhase = minecraft.level.environmentAttributes().getDimensionValue(EnvironmentAttributes.MOON_PHASE).index();
-            
+
             float abovegroundDarkness = darkness - (MOON_PHASE_BRIGHTNESS[moonPhase] * getTimeInfluence());
             float undergroundDarkness = darkness + .105f;
 

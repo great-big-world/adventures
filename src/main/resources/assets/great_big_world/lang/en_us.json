@@ -21,6 +21,11 @@
   "worldSize.tooltip": "%s x %s",
   "worldSize.infinite": "Infinite",
 
+  "options.dynamicDarknessQuality": "Dynamic Darkness Quality",
+  "options.dynamicDarknessQuality.high": "High",
+  "options.dynamicDarknessQuality.normal": "Normal",
+  "options.dynamicDarknessQuality.low": "Low",
+
   "dimension_type.minecraft.overworld": "Overworld",
   "dimension_type.great_big_world.the_alterworld": "Alterworld",
   "dimension_type.minecraft.the_nether": "Nether",

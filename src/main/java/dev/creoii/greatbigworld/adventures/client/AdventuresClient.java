@@ -2,12 +2,14 @@ package dev.creoii.greatbigworld.adventures.client;
 
 import dev.creoii.greatbigworld.GreatBigWorld;
 import dev.creoii.greatbigworld.adventures.util.*;
+import dev.creoii.greatbigworld.util.OptionsAPI;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements;
 import net.fabricmc.fabric.api.event.player.UseItemCallback;
+import net.minecraft.client.OptionInstance;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
@@ -96,6 +98,14 @@ public class AdventuresClient implements ClientModInitializer {
                 }
             });
         });
+
+        OptionsAPI.registerVideoOption(Identifier.fromNamespaceAndPath(GreatBigWorld.NAMESPACE, "dynamic_darkness_quality"), new OptionInstance<>(
+                "options.dynamicDarknessQuality",
+                OptionInstance.noTooltip(),
+                (optionText, value) -> DynamicDarknessQuality.NAMES[value.ordinal()],
+                new OptionInstance.Enum<>(Arrays.asList(DynamicDarknessQuality.values()), DynamicDarknessQuality.CODEC),
+                DynamicDarknessQuality.NORMAL,
+                value -> {}));
     }
 
     public static String getDisplayTime(LocalPlayer clientPlayer) {

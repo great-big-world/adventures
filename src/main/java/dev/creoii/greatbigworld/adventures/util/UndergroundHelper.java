@@ -1,11 +1,17 @@
 package dev.creoii.greatbigworld.adventures.util;
 
+import dev.creoii.greatbigworld.GreatBigWorld;
+import dev.creoii.greatbigworld.util.OptionsAPI;
+import net.minecraft.client.OptionInstance;
 import net.minecraft.core.BlockPos;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LightLayer;
-import net.minecraft.world.level.block.state.BlockState;
 
 public final class UndergroundHelper {
+    private static final int SEARCH_RADIUS = 1;
+    private static final Identifier DYNAMIC_DARKNESS_OPTION_ID = Identifier.fromNamespaceAndPath(GreatBigWorld.NAMESPACE, "dynamic_darkness_quality");
+
     /**
      * @return A float from 0-1 determining how much skylight is around the center position.
      */
@@ -13,10 +19,15 @@ public final class UndergroundHelper {
         int total = 0;
         int lightSum = 0;
 
-        for (BlockPos pos : BlockPos.betweenClosed(center.offset(-1, -1, -1), center.offset(1, 2, 1))) {
-            BlockState state = world.getBlockState(pos);
+        int searchRadius = SEARCH_RADIUS;
+        if (world.isClientSide()) {
+            @SuppressWarnings("unchecked")
+            OptionInstance<DynamicDarknessQuality> optionInstance = (OptionInstance<DynamicDarknessQuality>) OptionsAPI.getOption(DYNAMIC_DARKNESS_OPTION_ID);
+            searchRadius = optionInstance.get().getQuality();
+        }
 
-            int opacity = state.getLightBlock();
+        for (BlockPos pos : BlockPos.betweenClosed(center.offset(-searchRadius, -searchRadius, -searchRadius), center.offset(searchRadius, searchRadius, searchRadius))) {
+            int opacity = world.getBlockState(pos).getLightBlock();
 
             if (opacity >= 15)
                 continue;

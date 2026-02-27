@@ -3,7 +3,9 @@
   "minVersion": "0.8",
   "package": "dev.creoii.greatbigworld.adventures.mixin",
   "compatibilityLevel": "JAVA_21",
+  "plugin": "dev.creoii.greatbigworld.adventures.util.AdventuresMixinPlugin",
   "mixins": [
+    "client.compat.SodiumGameOptionPagesMixin",
     "entity.LivingEntityMixin",
     "entity.PlayerEntityMixin",
     "server.MinecraftDedicatedServerMixin",
