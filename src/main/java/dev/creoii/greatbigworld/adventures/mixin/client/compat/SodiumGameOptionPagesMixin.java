@@ -26,8 +26,8 @@ public class SodiumGameOptionPagesMixin {
     private StorageEventHandler vanillaStorage;
 
     @ModifyExpressionValue(method = "buildQualityPage", at = @At(value = "INVOKE", target = "Lnet/caffeinemc/mods/sodium/api/config/structure/OptionGroupBuilder;addOption(Lnet/caffeinemc/mods/sodium/api/config/structure/OptionBuilder;)Lnet/caffeinemc/mods/sodium/api/config/structure/OptionGroupBuilder;", ordinal = 1), remap = false)
-    private OptionGroupBuilder gbw$addSodiumSeasonTransitionQualityOption(OptionGroupBuilder original, @Local(argsOnly = true) ConfigBuilder builder) {
-        return original.addOption(builder.createEnumOption(Identifier.fromNamespaceAndPath("sodium", "dynamic_darkness_quality"), DynamicDarknessQuality.class).setName(Component.translatable("options.dynamicDarknessQuality")).setTooltip(Component.empty()).setElementNameProvider(EnumOptionBuilder.nameProviderFrom(DynamicDarknessQuality.NAMES)).setBinding(quality -> {}, () -> {
+    private OptionGroupBuilder gbw$addSodiumDynamicDarknessQualityOption(OptionGroupBuilder original, @Local(argsOnly = true) ConfigBuilder builder) {
+        return original.addOption(builder.createEnumOption(Identifier.fromNamespaceAndPath("sodium", "dynamic_darkness_quality"), DynamicDarknessQuality.class).setName(Component.translatable("options.dynamicDarknessQuality")).setTooltip(Component.translatable("options.dynamicDarknessQuality.tooltip")).setElementNameProvider(EnumOptionBuilder.nameProviderFrom(DynamicDarknessQuality.NAMES)).setBinding(quality -> {}, () -> {
             @SuppressWarnings("unchecked")
             OptionInstance<DynamicDarknessQuality> optionInstance = (OptionInstance<DynamicDarknessQuality>) OptionsAPI.getOption(Identifier.fromNamespaceAndPath(GreatBigWorld.NAMESPACE, "dynamic_darkness_quality"));
             return optionInstance.get();
