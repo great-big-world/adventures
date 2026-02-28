@@ -4,21 +4,15 @@ import dev.creoii.greatbigworld.GreatBigWorld;
 import dev.creoii.greatbigworld.adventures.util.*;
 import dev.creoii.greatbigworld.util.OptionsAPI;
 import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements;
-import net.fabricmc.fabric.api.event.player.UseItemCallback;
 import net.minecraft.client.OptionInstance;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 
 import java.util.*;
 
@@ -27,29 +21,10 @@ public class AdventuresClient implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
+        AdventuresClientNetworking.register();
+        AdventuresClientEvents.register();
+
         EntityModelLayerRegistry.registerModelLayer(THIN_LEASH_KNOT, ThinLeashKnotModel::createBodyLayer);
-
-        UseItemCallback.EVENT.register((player, world, hand) -> {
-            if (world.isClientSide() && !player.isSpectator() && player instanceof ExtendedHudPlayer extendedHudPlayer) {
-                ItemStack stack = player.getItemInHand(hand);
-                if (stack.is(AdventuresTags.INFO_HUD_ITEMS)) {
-                    ExtendedHudPlayer.Type type = ExtendedHudPlayer.Type.COMPASS;
-                    if (stack.is(Items.RECOVERY_COMPASS)) {
-                        type = ExtendedHudPlayer.Type.RECOVERY_COMPASS;
-                    } else if (stack.is(Items.CLOCK)) {
-                        type = ExtendedHudPlayer.Type.CLOCK;
-                    }
-                    extendedHudPlayer.gbw$getItemInfoHuds().get(type).invert();
-                    return InteractionResult.SUCCESS;
-                }
-            }
-            return InteractionResult.PASS;
-        });
-
-        ClientPlayConnectionEvents.JOIN.register((clientPlayNetworkHandler, packetSender, minecraftClient) -> {
-            ClientPlayNetworking.send(new ShowDeathCoordinates.RequestC2S());
-            ClientPlayNetworking.send(new AllowDebugHud.RequestC2S());
-        });
 
         HudElementRegistry.attachElementBefore(VanillaHudElements.STATUS_EFFECTS, Identifier.fromNamespaceAndPath(GreatBigWorld.NAMESPACE, "item_info_huds"), (context, tickCounter) -> {
             if (!context.minecraft.options.hideGui) {
@@ -85,24 +60,6 @@ public class AdventuresClient implements ClientModInitializer {
                     }
                 }
             }
-        });
-
-        ClientPlayNetworking.registerGlobalReceiver(ShowDeathCoordinates.SyncS2C.PACKET_ID, (payload, context) -> {
-            boolean value = payload.value();
-            context.client().execute(() -> {
-                if (context.client().level instanceof ShowDeathCoordinates showDeathCoordinates) {
-                    showDeathCoordinates.gbw$setShowDeathCoordinates(value);
-                }
-            });
-        });
-
-        ClientPlayNetworking.registerGlobalReceiver(AllowDebugHud.SyncS2C.PACKET_ID, (payload, context) -> {
-            boolean value = payload.value();
-            context.client().execute(() -> {
-                if (context.client().level instanceof AllowDebugHud allowDebugHud) {
-                    allowDebugHud.gbw$setAllowDebugHud(value);
-                }
-            });
         });
 
         OptionsAPI.registerVideoOption(Identifier.fromNamespaceAndPath(GreatBigWorld.NAMESPACE, "dynamic_darkness_quality"), new OptionInstance<>(
