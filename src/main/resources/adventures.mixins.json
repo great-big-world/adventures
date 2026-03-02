@@ -7,7 +7,6 @@
   "mixins": [
     "LeadItemMixin",
     "LightningRodBlockMixin",
-    "client.compat.SodiumGameOptionPagesMixin",
     "entity.LeashFenceKnotEntityMixin",
     "entity.LivingEntityMixin",
     "entity.PlayerEntityMixin",
@@ -28,6 +27,7 @@
     "world.WorldMixin"
   ],
   "client": [
+    "client.compat.SodiumGameOptionPagesMixin",
     "client.ClientPlayerEntityMixin",
     "client.CreateWorldScreenMixin",
     "client.CreateWorldScreenWorldTabMixin",
