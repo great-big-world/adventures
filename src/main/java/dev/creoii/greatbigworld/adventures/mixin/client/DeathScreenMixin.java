@@ -9,11 +9,9 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
-import java.util.List;
 import net.minecraft.client.gui.screens.DeathScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.ComponentUtils;
 
 @Mixin(DeathScreen.class)
 public abstract class DeathScreenMixin extends Screen {
@@ -21,13 +19,6 @@ public abstract class DeathScreenMixin extends Screen {
 
     protected DeathScreenMixin(Component title) {
         super(title);
-    }
-
-    @Redirect(method = "visitText", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/ActiveTextCollector;accept(Lnet/minecraft/client/gui/TextAlignment;IILnet/minecraft/network/chat/Component;)V", ordinal = 1))
-    private void gbw$renderDeathCoordinatesMessage(ActiveTextCollector instance, TextAlignment textAlignment, int i, int j, Component component) {
-        if (minecraft.player != null && minecraft.level != null && ((ShowDeathCoordinates) minecraft.level).gbw$shouldShowDeathCoordinates()) {
-            instance.accept(textAlignment, i, j, component.copy().append(Component.translatable("death.showCoordinates", minecraft.player.blockPosition().toShortString())));
-        } else instance.accept(textAlignment, i, j, component);
     }
 
     @Redirect(method = "visitText", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/ActiveTextCollector;accept(Lnet/minecraft/client/gui/TextAlignment;IILnet/minecraft/network/chat/Component;)V", ordinal = 2))
