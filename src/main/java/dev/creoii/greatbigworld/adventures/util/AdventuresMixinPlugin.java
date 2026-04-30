@@ -12,7 +12,7 @@ import java.util.Set;
 
 public class AdventuresMixinPlugin implements IMixinConfigPlugin {
     private static final Map<String, String> MOD_DEPENDENT_MIXINS = new ImmutableMap.Builder<String, String>()
-            .put("dev.creoii.greatbigworld.floraandfauna.mixin.client.compat.sodium.SodiumGameOptionPagesMixin", "sodium")
+            .put("dev.creoii.greatbigworld.adventures.mixin.client.compat.SodiumGameOptionPagesMixin", "sodium")
             .build();
 
     @Override
