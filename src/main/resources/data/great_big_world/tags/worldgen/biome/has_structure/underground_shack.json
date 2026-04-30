@@ -3,6 +3,7 @@
   "values": [
     "minecraft:lush_caves",
     "minecraft:dripstone_caves",
-    "minecraft:deep_dark"
+    "minecraft:deep_dark",
+    "great_big_world:alter_dripstone_caves"
   ]
 }
