@@ -103,10 +103,50 @@
         },
         {
           "type": "minecraft:item",
-          "name": "minecraft:book",
+          "weight": 1,
+          "name": "great_big_world:knowledge_book",
           "functions": [
             {
-              "function": "minecraft:enchant_randomly"
+              "function": "great_big_world:random_knowledge",
+              "count": {
+                "type": "minecraft:uniform",
+                "min_inclusive": 1,
+                "max_inclusive": 2
+              },
+              "knowledge": [
+                {
+                  "type": "banner_pattern",
+                  "data": "minecraft:creeper"
+                },
+                {
+                  "type": "armor_trim",
+                  "data": "minecraft:ward"
+                },
+                {
+                  "type": "armor_trim",
+                  "data": "minecraft:shaper"
+                },
+                {
+                  "type": "enchantment",
+                  "data": "minecraft:unbreaking"
+                },
+                {
+                  "type": "enchantment",
+                  "data": "minecraft:silk_touch"
+                },
+                {
+                  "type": "enchantment",
+                  "data": "minecraft:curse_of_binding"
+                },
+                {
+                  "type": "banner_pattern",
+                  "data": "minecraft:miner"
+                },
+                {
+                  "type": "banner_pattern",
+                  "data": "minecraft:shelter"
+                }
+              ]
             }
           ]
         },

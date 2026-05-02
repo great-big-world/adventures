@@ -180,7 +180,51 @@
         {
           "type": "minecraft:item",
           "weight": 1,
-          "name": "minecraft:globe_banner_pattern"
+          "name": "great_big_world:knowledge_book",
+          "functions": [
+            {
+              "function": "great_big_world:random_knowledge",
+              "count": {
+                "type": "minecraft:uniform",
+                "min_inclusive": 1,
+                "max_inclusive": 2
+              },
+              "knowledge": [
+                {
+                  "type": "banner_pattern",
+                  "data": "minecraft:globe"
+                },
+                {
+                  "type": "armor_trim",
+                  "data": "minecraft:raiser"
+                },
+                {
+                  "type": "armor_trim",
+                  "data": "minecraft:sentry"
+                },
+                {
+                  "type": "enchantment",
+                  "data": "minecraft:channeling"
+                },
+                {
+                  "type": "enchantment",
+                  "data": "minecraft:wind_burst"
+                },
+                {
+                  "type": "enchantment",
+                  "data": "minecraft:curse_of_vanishing"
+                },
+                {
+                  "type": "banner_pattern",
+                  "data": "minecraft:howl"
+                },
+                {
+                  "type": "banner_pattern",
+                  "data": "minecraft:shelter"
+                }
+              ]
+            }
+          ]
         }
       ]
     }
