@@ -2,10 +2,12 @@ package dev.creoii.greatbigworld.adventures.mixin.client;
 
 import dev.creoii.greatbigworld.adventures.util.ExtendedHudPlayer;
 import dev.creoii.greatbigworld.adventures.util.ItemInfoHud;
+import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.Map;
@@ -36,5 +38,10 @@ public abstract class ClientPlayerEntityMixin extends LivingEntity implements Ex
     @Override
     public Map<Type, ItemInfoHud> gbw$getItemInfoHuds() {
         return itemInfoHuds;
+    }
+
+    @Redirect(method = "shouldStopRunSprinting", at = @At(value = "FIELD", target = "Lnet/minecraft/client/player/LocalPlayer;horizontalCollision:Z", opcode = Opcodes.GETFIELD))
+    private boolean gbw$allowSprintWhileClimbing(LocalPlayer instance) {
+        return instance.horizontalCollision && !onClimbable();
     }
 }
