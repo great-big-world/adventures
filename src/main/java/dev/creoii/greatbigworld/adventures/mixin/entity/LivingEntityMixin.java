@@ -30,7 +30,7 @@ public abstract class LivingEntityMixin {
 
         Direction moveDir = g < 0d ? Direction.DOWN : Direction.UP;
         if (living.isSprinting() && moveDir == Direction.getFacingAxis(living, Direction.Axis.Y)) {
-            g += moveDir == Direction.DOWN ? -.15d : .15d;
+            g += moveDir == Direction.DOWN ? -.1d : .1d;
         }
 
         return g;
